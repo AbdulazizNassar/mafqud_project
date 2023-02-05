@@ -1,15 +1,16 @@
 
-class User{
+class currentUser{
 
   final String uid;
 
-  User({required this.uid});
+  currentUser({required this.uid});
 
 }
 
 class UserData{
-  final String firstName, lastName, email,password,phoneNum;
+  final String uid,firstName, lastName, email,password,phoneNum;
   UserData({
+    required this.uid,
     required this.firstName,
     required this.lastName,
     required this.email,
