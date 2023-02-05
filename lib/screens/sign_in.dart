@@ -4,7 +4,7 @@ import 'package:mafqud_project/shared/size_config.dart';
 
 class SignIn extends StatefulWidget {
   final Function toggleView;
-  SignIn({required this.toggleView});
+  const SignIn({required this.toggleView});
 
   @override
   _SignInState createState() => _SignInState();
@@ -22,7 +22,7 @@ class _SignInState extends State<SignIn> {
               children: <Widget>[
                 Container(
                   height: MediaQuery.of(context).size.height,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: primaryColor,
                   ),
                 ),
@@ -43,7 +43,7 @@ class _SignInState extends State<SignIn> {
                             bottom: SizeConfig.defaultSize * 2,
                             left: SizeConfig.defaultSize * 2,
                             right: SizeConfig.defaultSize * 2),
-                        height: SizeConfig.defaultSize * 40,
+                        height: SizeConfig.defaultSize * 45,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                           color: Colors.white,
@@ -99,7 +99,7 @@ class _SignInState extends State<SignIn> {
                             Align(
                               alignment: Alignment.centerRight,
                               child: InkWell(
-                                child: Text(
+                                child: const Text(
                                   'Forgot your password?',
                                   style: TextStyle(color: Colors.grey),
                                 ),
@@ -110,11 +110,23 @@ class _SignInState extends State<SignIn> {
                               height: SizeConfig.defaultSize * 2,
                             ),
                             ButtonTheme(
-                              height: SizeConfig.defaultSize * 5,
+                              height: SizeConfig.defaultSize * 3,
                               minWidth: MediaQuery.of(context).size.width,
                               child: ElevatedButton(
-                                child: Text(
+                                child: const Text(
                                   'Login',
+                                  style: TextStyle(
+                                      fontSize: 22, color: Colors.white),
+                                ),
+                                onPressed: () {},
+                              ),
+                            ),
+                            ButtonTheme(
+                              height: SizeConfig.defaultSize * 3,
+                              minWidth: MediaQuery.of(context).size.width,
+                              child: ElevatedButton(
+                                child: const Text(
+                                  'Sign in with Google',
                                   style: TextStyle(
                                       fontSize: 22, color: Colors.white),
                                 ),
@@ -127,7 +139,7 @@ class _SignInState extends State<SignIn> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
-                                Text(
+                                const Text(
                                   "Don't have an account? ",
                                   style: TextStyle(color: Colors.grey),
                                 ),
@@ -135,7 +147,7 @@ class _SignInState extends State<SignIn> {
                                   onTap: () {
                                     widget.toggleView();
                                   },
-                                  child: Text(
+                                  child: const Text(
                                     'Sign Up',
                                     style: TextStyle(
                                         color: primaryColor,
@@ -166,9 +178,9 @@ class _SignInState extends State<SignIn> {
                         ),
                       ],
                     ),
-                    child: Center(
+                    child: const Center(
                       child: Text(
-                        'Jobseeker App',
+                        'Sign In',
                         style: TextStyle(
                             color: primaryColor,
                             fontWeight: FontWeight.bold,

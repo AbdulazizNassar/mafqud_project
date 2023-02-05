@@ -12,5 +12,5 @@ const textInputDecoration = InputDecoration(
   ),
 );
 
-const primaryColor = Color(0xFF353b48);
-const textColor = Color(0xFF3C4046);
+const primaryColor = Colors.blue;
+const textColor = Colors.black;

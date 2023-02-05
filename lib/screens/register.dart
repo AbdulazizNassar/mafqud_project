@@ -192,7 +192,7 @@ class _RegisterState extends State<Register> {
                     ),
                     child: const Center(
                       child: Text(
-                        'Jobseeker App',
+                        'Register',
                         style: TextStyle(
                             color: primaryColor,
                             fontWeight: FontWeight.bold,
