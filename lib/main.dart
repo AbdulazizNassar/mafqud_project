@@ -1,8 +1,11 @@
-
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:mafqud_project/screens/auth.dart';
+import 'package:mafqud_project/screens/Authentication/auth.dart';
+import 'package:mafqud_project/screens/wrapper.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 

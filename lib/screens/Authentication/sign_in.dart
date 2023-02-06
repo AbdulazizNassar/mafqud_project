@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mafqud_project/shared/constants.dart';
 import 'package:mafqud_project/shared/size_config.dart';
 import 'package:mafqud_project/services/auth.dart';
+import 'package:mafqud_project/shared/loading.dart';
+import 'package:mafqud_project/services/auth.dart';
 
 class SignIn extends StatefulWidget {
   final Function toggleView;
@@ -12,10 +14,18 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
+
+  GlobalKey<FormState> _formState = new GlobalKey<FormState>();
+  bool loading = false;
+  String errorMessage = "";
+
+  String email = "";
+  String password = "";
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return Scaffold(
+    return loading ? Loading() : Scaffold(
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
@@ -36,6 +46,7 @@ class _SignInState extends State<SignIn> {
                         left: SizeConfig.defaultSize * 3,
                         right: SizeConfig.defaultSize * 3),
                     child: Form(
+                      key: _formState,
                       child: Container(
                         margin:
                         EdgeInsets.only(top: SizeConfig.defaultSize * 28),
@@ -52,6 +63,7 @@ class _SignInState extends State<SignIn> {
                         child: Column(
                           children: <Widget>[
                             TextFormField(
+                              onSaved: (val) => email = val!,
                               decoration: InputDecoration(
                                 labelText: 'Email',
                                 labelStyle: TextStyle(color: primaryColor),
@@ -70,14 +82,16 @@ class _SignInState extends State<SignIn> {
                                     borderSide:
                                     BorderSide(color: primaryColor)),
                               ),
+
                             ),
                             SizedBox(
                               height: SizeConfig.defaultSize * 2,
                             ),
                             TextFormField(
+                              onSaved: (val) => password = val!,
                               decoration: InputDecoration(
                                 labelText: 'Password',
-                                labelStyle: TextStyle(color: primaryColor),
+                                labelStyle: const TextStyle(color: primaryColor),
                                 prefixIcon: Icon(
                                   Icons.lock,
                                   size: SizeConfig.defaultSize * 2,
@@ -91,8 +105,13 @@ class _SignInState extends State<SignIn> {
                                 focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10),
                                     borderSide:
-                                    BorderSide(color: primaryColor)),
+                                    const BorderSide(color: primaryColor)),
                               ),
+                              validator: (val) => val!.length < 6 ? "Incorrect Password" : null,
+                              obscureText: true,
+                              onChanged: (val){
+                                setState(() => password = val);
+                              },
                             ),
                             SizedBox(
                               height: SizeConfig.defaultSize * 2,
@@ -119,7 +138,11 @@ class _SignInState extends State<SignIn> {
                                   style: TextStyle(
                                       fontSize: 22, color: Colors.white),
                                 ),
-                                onPressed: () {},
+                                onPressed: () async {
+                                  if (_formState.currentState!.validate()){
+
+                                  }
+                                },
                               ),
                             ),
                             ButtonTheme(

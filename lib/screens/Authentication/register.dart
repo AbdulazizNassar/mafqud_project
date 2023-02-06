@@ -1,6 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mafqud_project/services/auth.dart';
 import 'package:mafqud_project/shared/size_config.dart';
 import 'package:mafqud_project/shared/constants.dart';
+import 'package:mafqud_project/shared/loading.dart';
+
 
 class Register extends StatefulWidget {
   final Function toggleView;
@@ -11,10 +15,24 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+
+  final GlobalKey<FormState> _formState = GlobalKey<FormState>();
+  bool loading = false;
+  String errorMessage = "";
+
+  var email, password;
+  signup() async {
+    var formData = _formState.currentState;
+    if(formData!.validate()){
+      formData.save();
+      AuthService().registerWithEmailAndPassword(email, password);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return Scaffold(
+    return loading ? Loading() :Scaffold(
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
@@ -22,12 +40,12 @@ class _RegisterState extends State<Register> {
               children: <Widget>[
                 Container(
                   height: MediaQuery.of(context).size.height,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: primaryColor,
                   ),
                 ),
                 SizedBox(
-                  height: SizeConfig.defaultSize * 5,
+                  height: SizeConfig.defaultSize * 0,
                 ),
                 Center(
                   child: Padding(
@@ -35,6 +53,7 @@ class _RegisterState extends State<Register> {
                         left: SizeConfig.defaultSize * 3,
                         right: SizeConfig.defaultSize * 3),
                     child: Form(
+                      key: _formState,
                       child: Container(
                         margin:
                         EdgeInsets.only(top: SizeConfig.defaultSize * 20),
@@ -51,6 +70,7 @@ class _RegisterState extends State<Register> {
                         child: Column(
                           children: <Widget>[
                             TextFormField(
+                              onSaved: (val){email = val!;},
                               decoration: InputDecoration(
                                 labelText: 'Email',
                                 labelStyle: TextStyle(color: primaryColor),
@@ -74,7 +94,9 @@ class _RegisterState extends State<Register> {
                               height: SizeConfig.defaultSize * 2,
                             ),
                             TextFormField(
+                              onSaved: (val) {password = val!;},
                               obscureText: true,
+                              validator: (val) => val!.length < 6 ? "error" : null,
                               decoration: InputDecoration(
                                 labelText: 'Password',
                                 labelStyle: TextStyle(color: primaryColor),
@@ -123,7 +145,7 @@ class _RegisterState extends State<Register> {
                             Align(
                               alignment: Alignment.centerRight,
                               child: InkWell(
-                                child: Text(
+                                child: const Text(
                                   'Forgot your password?',
                                   style: TextStyle(color: Colors.grey),
                                 ),
@@ -142,7 +164,12 @@ class _RegisterState extends State<Register> {
                                   style: TextStyle(
                                       fontSize: 22, color: Colors.white),
                                 ),
-                                onPressed: () {},
+                                onPressed: () async {
+                                  UserCredential response = await signup();
+                                  print("=====================");
+                                  print(response.user);
+                                  print("======================");
+                                },
                               ),
                             ),
                             SizedBox(
