@@ -25,7 +25,7 @@ class _RegisterState extends State<Register> {
     var formData = _formState.currentState;
     if(formData!.validate()){
       formData.save();
-      AuthService().registerWithEmailAndPassword(email, password);
+     errorMessage = AuthService().registerWithEmailAndPassword(email, password);
     }
   }
 
@@ -96,7 +96,7 @@ class _RegisterState extends State<Register> {
                             TextFormField(
                               onSaved: (val) {password = val!;},
                               obscureText: true,
-                              validator: (val) => val!.length < 6 ? "error" : null,
+                              validator: (val) => val!.length < 6 ? "Password must be at least 6 characters long" : null,
                               decoration: InputDecoration(
                                 labelText: 'Password',
                                 labelStyle: TextStyle(color: primaryColor),
@@ -165,10 +165,9 @@ class _RegisterState extends State<Register> {
                                       fontSize: 22, color: Colors.white),
                                 ),
                                 onPressed: () async {
+                                  
                                   UserCredential response = await signup();
-                                  print("=====================");
-                                  print(response.user);
-                                  print("======================");
+
                                 },
                               ),
                             ),

@@ -3,9 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:mafqud_project/screens/Authentication/auth.dart';
 import 'package:mafqud_project/screens/wrapper.dart';
 
+import 'firebase_options.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(MyApp());
 }
 
