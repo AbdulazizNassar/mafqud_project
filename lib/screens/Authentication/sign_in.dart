@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mafqud_project/shared/constants.dart';
 import 'package:mafqud_project/shared/size_config.dart';
+import 'package:mafqud_project/services/auth.dart';
 
 class SignIn extends StatefulWidget {
   final Function toggleView;
@@ -174,7 +175,7 @@ class _SignInState extends State<SignIn> {
                         BoxShadow(
                           color: Colors.grey.withOpacity(0.5),
                           blurRadius: 6,
-                          offset: Offset(0, 2), // changes position of shadow
+                          offset: const Offset(0, 2), // changes position of shadow
                         ),
                       ],
                     ),

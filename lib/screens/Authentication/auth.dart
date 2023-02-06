@@ -16,9 +16,7 @@ class _AuthState extends State<Auth> {
   @override
   Widget build(BuildContext context) {
     if (showSignIn) {
-      return SignIn(
-        toggleView: toggleView,
-      );
+      return SignIn(toggleView: toggleView,);
     } else {
       return Register(toggleView: toggleView);
     }
