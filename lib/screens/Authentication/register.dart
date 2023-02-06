@@ -17,13 +17,17 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
 
   final GlobalKey<FormState> _formState = GlobalKey<FormState>();
-  bool loading = false;
+  bool loading = true;
   String errorMessage = "";
-  String fww = "";
+
   var email, password;
   signup() async {
     var formData = _formState.currentState;
     if(formData!.validate()){
+      setState(() {
+        loading = false;
+        errorMessage = "Please supply a valid email";
+      });
       formData.save();
      errorMessage = AuthService().registerWithEmailAndPassword(email, password);
     }
