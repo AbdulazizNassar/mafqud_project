@@ -19,7 +19,7 @@ class _RegisterState extends State<Register> {
   final GlobalKey<FormState> _formState = GlobalKey<FormState>();
   bool loading = false;
   String errorMessage = "";
-
+  String fwifw = "";
   var email, password;
   signup() async {
     var formData = _formState.currentState;
