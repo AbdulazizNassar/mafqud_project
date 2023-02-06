@@ -11,6 +11,7 @@ class Loading extends StatelessWidget {
           color: Colors.white,
           size: 50.0,
         ),
+
       ),
     );
   }

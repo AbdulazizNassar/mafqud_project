@@ -16,16 +16,21 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
 
   GlobalKey<FormState> _formState = new GlobalKey<FormState>();
-  bool loading = false;
-  String errorMessage = "";
 
-  String email = "";
-  String password = "";
+  var email, password;
 
+  signInWithEmailAndPassword() async{
+    var formData = _formState.currentState;
+    if(formData!.validate()){
+      formData.save();
+       AuthService().signInWithEmailAndPassword(email: email, password: password);
+     
+    }
+  }
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return loading ? Loading() : Scaffold(
+    return Scaffold(
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
@@ -109,9 +114,6 @@ class _SignInState extends State<SignIn> {
                               ),
                               validator: (val) => val!.length < 6 ? "Incorrect Password" : null,
                               obscureText: true,
-                              onChanged: (val){
-                                setState(() => password = val);
-                              },
                             ),
                             SizedBox(
                               height: SizeConfig.defaultSize * 2,
@@ -139,10 +141,8 @@ class _SignInState extends State<SignIn> {
                                       fontSize: 22, color: Colors.white),
                                 ),
                                 onPressed: () async {
-                                  if (_formState.currentState!.validate()){
-
+                                  await signInWithEmailAndPassword();
                                   }
-                                },
                               ),
                             ),
                             ButtonTheme(
@@ -154,7 +154,9 @@ class _SignInState extends State<SignIn> {
                                   style: TextStyle(
                                       fontSize: 22, color: Colors.white),
                                 ),
-                                onPressed: () {},
+                                onPressed: () async {
+                                  await AuthService().signInWithGoogle();
+                                },
                               ),
                             ),
                             SizedBox(

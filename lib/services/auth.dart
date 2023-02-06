@@ -41,9 +41,10 @@ class AuthService {
         return('The account already exists for that email.');
       }
     } catch (e) {
-      print(e);
+      return e;
     }
   }
+
 
   Future<UserCredential> signInWithGoogle() async {
     // Trigger the authentication flow
