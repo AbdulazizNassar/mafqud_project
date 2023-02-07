@@ -25,6 +25,7 @@ class MyApp extends StatelessWidget {
         appBarTheme: AppBarTheme(color: Colors.blue, elevation: 2),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
+      initialRoute: "Auth",
       routes: {
         "Auth": (context) => Auth(),
         "SignIn": (context) => SignIn(),

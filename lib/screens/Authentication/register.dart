@@ -162,12 +162,8 @@ class _RegisterState extends State<Register> {
                                         fontSize: 22, color: Colors.white),
                                   ),
                                   onPressed: () async {
-                                    UserCredential response = await signup();
-                                    if(response.credential!.accessToken != null){
-                                      Navigator.of(context).pushNamed("Home");
+                                   await signup();
                                     }
-
-                                  },
                                 ),
                               ),
                               SizedBox(
