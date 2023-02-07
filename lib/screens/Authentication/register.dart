@@ -17,7 +17,10 @@ class _RegisterState extends State<Register> {
     if (formData!.validate()) {
       formData.save();
       UserCredential response =
-          AuthService().registerWithEmailAndPassword(email, password);
+      await AuthService().registerWithEmailAndPassword(email, password);
+      if(response != null){
+      Navigator.of(context).pushNamed("Home");
+      }
     }
   }
 
@@ -51,7 +54,7 @@ class _RegisterState extends State<Register> {
                           margin:
                               EdgeInsets.only(top: SizeConfig.defaultSize * 20),
                           padding: EdgeInsets.only(
-                              top: SizeConfig.defaultSize * 6,
+                              top: SizeConfig.defaultSize * 5,
                               bottom: SizeConfig.defaultSize * 2,
                               left: SizeConfig.defaultSize * 2,
                               right: SizeConfig.defaultSize * 2),
@@ -166,10 +169,8 @@ class _RegisterState extends State<Register> {
                                       style: TextStyle(
                                           fontSize: 22, color: Colors.white),
                                     ),
-                                    onPressed: () async {
-                                      if (await signup() != null)
-                                        Navigator.of(context).pushNamed('Home');
-                                    }),
+                                    onPressed: () async { await signup();}
+                              ),
                               ),
                               SizedBox(
                                 height: SizeConfig.defaultSize * 2,

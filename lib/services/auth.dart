@@ -1,9 +1,6 @@
-import 'dart:js';
-
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:mafqud_project/models/currentUser.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -12,13 +9,17 @@ class AuthService {
 
   Stream<User?> get authStateChanges => _auth.authStateChanges();
 
+  createUserModel(UserCredential user){
+
+  }
+
   // sign in with email and password
-  Future<String> signInWithEmailAndPassword(
+     signInWithEmailAndPassword(
       {required String email, required String password}) async {
     try {
-      await AuthService()
+      final UserCredential credential = await AuthService()
           .signInWithEmailAndPassword(email: email, password: password);
-      return "";
+      return credential;
     } on FirebaseAuthException catch (e) {
       return e.toString();
     }
@@ -32,6 +33,7 @@ class AuthService {
         email: email,
         password: password,
       );
+
       return credential;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {

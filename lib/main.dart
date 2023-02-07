@@ -4,6 +4,7 @@ import 'package:mafqud_project/Screens/homepage/Home.dart';
 import 'package:mafqud_project/screens/Authentication/register.dart';
 import 'package:mafqud_project/screens/Authentication/sign_in.dart';
 import 'Screens/Authentication/auth.dart';
+import 'MainScreen.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -25,8 +26,9 @@ class MyApp extends StatelessWidget {
         appBarTheme: AppBarTheme(color: Colors.blue, elevation: 2),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      initialRoute: "Auth",
+      initialRoute: "MainScreen",
       routes: {
+        "MainScreen" : (context) => MainScreen(),
         "Auth": (context) => Auth(),
         "SignIn": (context) => SignIn(),
         "Register": (context) => Register(),

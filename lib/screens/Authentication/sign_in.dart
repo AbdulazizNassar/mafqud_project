@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mafqud_project/shared/constants.dart';
 import 'package:mafqud_project/shared/size_config.dart';
@@ -19,8 +20,11 @@ class _SignInState extends State<SignIn> {
     var formData = _formState.currentState;
     if (formData!.validate()) {
       formData.save();
-      AuthService()
+      UserCredential response =  await AuthService()
           .signInWithEmailAndPassword(email: email, password: password);
+      if (response != null ){
+        Navigator.of(context).pushNamed("Home");
+      }
     }
   }
 
