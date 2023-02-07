@@ -6,9 +6,6 @@ import 'package:mafqud_project/shared/loading.dart';
 import 'package:mafqud_project/services/auth.dart';
 
 class SignIn extends StatefulWidget {
-  final Function toggleView;
-  const SignIn({required this.toggleView});
-
   @override
   _SignInState createState() => _SignInState();
 }
@@ -24,7 +21,6 @@ class _SignInState extends State<SignIn> {
     if(formData!.validate()){
       formData.save();
        AuthService().signInWithEmailAndPassword(email: email, password: password);
-     
     }
   }
   @override
@@ -171,7 +167,7 @@ class _SignInState extends State<SignIn> {
                                 ),
                                 GestureDetector(
                                   onTap: () {
-                                    widget.toggleView();
+                                    Navigator.of(context).pushNamed("Register");
                                   },
                                   child: const Text(
                                     'Sign Up',

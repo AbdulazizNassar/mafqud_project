@@ -3,12 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:mafqud_project/services/auth.dart';
 import 'package:mafqud_project/shared/size_config.dart';
 import 'package:mafqud_project/shared/constants.dart';
-import 'package:mafqud_project/shared/loading.dart';
 
 
 class Register extends StatefulWidget {
-  final Function toggleView;
-  Register({required this.toggleView});
+
 
   @override
   _RegisterState createState() => _RegisterState();
@@ -165,6 +163,9 @@ class _RegisterState extends State<Register> {
                                   ),
                                   onPressed: () async {
                                     UserCredential response = await signup();
+                                    if(response.credential!.accessToken != null){
+                                      Navigator.of(context).pushNamed("Home");
+                                    }
 
                                   },
                                 ),
@@ -181,7 +182,7 @@ class _RegisterState extends State<Register> {
                                   ),
                                   GestureDetector(
                                     onTap: () {
-                                      widget.toggleView();
+                                      Navigator.of(context).pushNamed("SignIn");
                                     },
                                     child: const Text(
                                       'Sign In',
