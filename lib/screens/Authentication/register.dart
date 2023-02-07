@@ -4,23 +4,20 @@ import 'package:mafqud_project/services/auth.dart';
 import 'package:mafqud_project/shared/size_config.dart';
 import 'package:mafqud_project/shared/constants.dart';
 
-
 class Register extends StatefulWidget {
-
-
   @override
   _RegisterState createState() => _RegisterState();
 }
 
 class _RegisterState extends State<Register> {
-
   final GlobalKey<FormState> _formState = GlobalKey<FormState>();
   var email, password;
   signup() async {
     var formData = _formState.currentState;
-    if(formData!.validate()){
+    if (formData!.validate()) {
       formData.save();
-      AuthService().registerWithEmailAndPassword(email, password);
+      UserCredential response =
+          AuthService().registerWithEmailAndPassword(email, password);
     }
   }
 
@@ -52,7 +49,7 @@ class _RegisterState extends State<Register> {
                         key: _formState,
                         child: Container(
                           margin:
-                          EdgeInsets.only(top: SizeConfig.defaultSize * 20),
+                              EdgeInsets.only(top: SizeConfig.defaultSize * 20),
                           padding: EdgeInsets.only(
                               top: SizeConfig.defaultSize * 6,
                               bottom: SizeConfig.defaultSize * 2,
@@ -66,8 +63,12 @@ class _RegisterState extends State<Register> {
                           child: Column(
                             children: <Widget>[
                               TextFormField(
-                                onSaved: (val){ email= val!;},
-                                validator: (val) => val!.isEmpty ? "Please supply a valid email":null,
+                                onSaved: (val) {
+                                  email = val!;
+                                },
+                                validator: (val) => val!.isEmpty
+                                    ? "Please supply a valid email"
+                                    : null,
                                 decoration: InputDecoration(
                                   labelText: 'Email',
                                   labelStyle: TextStyle(color: primaryColor),
@@ -84,16 +85,20 @@ class _RegisterState extends State<Register> {
                                   focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
                                       borderSide:
-                                      BorderSide(color: primaryColor)),
+                                          BorderSide(color: primaryColor)),
                                 ),
                               ),
                               SizedBox(
                                 height: SizeConfig.defaultSize * 2,
                               ),
                               TextFormField(
-                                onSaved: (val) {password = val!;},
+                                onSaved: (val) {
+                                  password = val!;
+                                },
                                 obscureText: true,
-                                validator: (val) => val!.length < 6 ? "Password must be at least 6 characters long" : null,
+                                validator: (val) => val!.length < 6
+                                    ? "Password must be at least 6 characters long"
+                                    : null,
                                 decoration: InputDecoration(
                                   labelText: 'Password',
                                   labelStyle: TextStyle(color: primaryColor),
@@ -110,7 +115,7 @@ class _RegisterState extends State<Register> {
                                   focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
                                       borderSide:
-                                      BorderSide(color: primaryColor)),
+                                          BorderSide(color: primaryColor)),
                                 ),
                               ),
                               SizedBox(
@@ -133,7 +138,7 @@ class _RegisterState extends State<Register> {
                                   focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
                                       borderSide:
-                                      BorderSide(color: primaryColor)),
+                                          BorderSide(color: primaryColor)),
                                 ),
                               ),
                               SizedBox(
@@ -156,15 +161,15 @@ class _RegisterState extends State<Register> {
                                 height: SizeConfig.defaultSize * 5,
                                 minWidth: MediaQuery.of(context).size.width,
                                 child: ElevatedButton(
-                                  child: const Text(
-                                    'Register',
-                                    style: TextStyle(
-                                        fontSize: 22, color: Colors.white),
-                                  ),
-                                  onPressed: () async {
-                                   await signup();
-                                    }
-                                ),
+                                    child: const Text(
+                                      'Register',
+                                      style: TextStyle(
+                                          fontSize: 22, color: Colors.white),
+                                    ),
+                                    onPressed: () async {
+                                      if (await signup() != null)
+                                        Navigator.of(context).pushNamed('Home');
+                                    }),
                               ),
                               SizedBox(
                                 height: SizeConfig.defaultSize * 2,
@@ -225,7 +230,6 @@ class _RegisterState extends State<Register> {
                 ],
               ),
             ],
-
           ),
         ),
       ),

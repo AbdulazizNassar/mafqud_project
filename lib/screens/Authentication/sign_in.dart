@@ -11,18 +11,19 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
-
   GlobalKey<FormState> _formState = new GlobalKey<FormState>();
 
   var email, password;
 
-  signInWithEmailAndPassword() async{
+  signInWithEmailAndPassword() async {
     var formData = _formState.currentState;
-    if(formData!.validate()){
+    if (formData!.validate()) {
       formData.save();
-       AuthService().signInWithEmailAndPassword(email: email, password: password);
+      AuthService()
+          .signInWithEmailAndPassword(email: email, password: password);
     }
   }
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -50,7 +51,7 @@ class _SignInState extends State<SignIn> {
                       key: _formState,
                       child: Container(
                         margin:
-                        EdgeInsets.only(top: SizeConfig.defaultSize * 28),
+                            EdgeInsets.only(top: SizeConfig.defaultSize * 28),
                         padding: EdgeInsets.only(
                             top: SizeConfig.defaultSize * 6,
                             bottom: SizeConfig.defaultSize * 2,
@@ -81,9 +82,8 @@ class _SignInState extends State<SignIn> {
                                 focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10),
                                     borderSide:
-                                    BorderSide(color: primaryColor)),
+                                        BorderSide(color: primaryColor)),
                               ),
-
                             ),
                             SizedBox(
                               height: SizeConfig.defaultSize * 2,
@@ -92,7 +92,8 @@ class _SignInState extends State<SignIn> {
                               onSaved: (val) => password = val!,
                               decoration: InputDecoration(
                                 labelText: 'Password',
-                                labelStyle: const TextStyle(color: primaryColor),
+                                labelStyle:
+                                    const TextStyle(color: primaryColor),
                                 prefixIcon: Icon(
                                   Icons.lock,
                                   size: SizeConfig.defaultSize * 2,
@@ -106,9 +107,10 @@ class _SignInState extends State<SignIn> {
                                 focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10),
                                     borderSide:
-                                    const BorderSide(color: primaryColor)),
+                                        const BorderSide(color: primaryColor)),
                               ),
-                              validator: (val) => val!.length < 6 ? "Incorrect Password" : null,
+                              validator: (val) =>
+                                  val!.length < 6 ? "Incorrect Password" : null,
                               obscureText: true,
                             ),
                             SizedBox(
@@ -131,15 +133,14 @@ class _SignInState extends State<SignIn> {
                               height: SizeConfig.defaultSize * 3,
                               minWidth: MediaQuery.of(context).size.width,
                               child: ElevatedButton(
-                                child: const Text(
-                                  'Login',
-                                  style: TextStyle(
-                                      fontSize: 22, color: Colors.white),
-                                ),
-                                onPressed: () async {
-                                  await signInWithEmailAndPassword();
-                                  }
-                              ),
+                                  child: const Text(
+                                    'Login',
+                                    style: TextStyle(
+                                        fontSize: 22, color: Colors.white),
+                                  ),
+                                  onPressed: () async {
+                                    await signInWithEmailAndPassword();
+                                  }),
                             ),
                             ButtonTheme(
                               height: SizeConfig.defaultSize * 3,
@@ -196,7 +197,8 @@ class _SignInState extends State<SignIn> {
                         BoxShadow(
                           color: Colors.grey.withOpacity(0.5),
                           blurRadius: 6,
-                          offset: const Offset(0, 2), // changes position of shadow
+                          offset:
+                              const Offset(0, 2), // changes position of shadow
                         ),
                       ],
                     ),
