@@ -1,10 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mafqud_project/shared/AlertBox.dart';
 import 'package:mafqud_project/shared/constants.dart';
 import 'package:mafqud_project/shared/size_config.dart';
 import 'package:mafqud_project/services/auth.dart';
 import 'package:mafqud_project/shared/loading.dart';
 import 'package:mafqud_project/services/auth.dart';
+import 'package:regexed_validator/regexed_validator.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class SignIn extends StatefulWidget {
   @override
@@ -12,7 +15,7 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
-  GlobalKey<FormState> _formState = new GlobalKey<FormState>();
+  final GlobalKey<FormState> _formState = GlobalKey<FormState>();
 
   var email, password;
 
@@ -20,9 +23,9 @@ class _SignInState extends State<SignIn> {
     var formData = _formState.currentState;
     if (formData!.validate()) {
       formData.save();
-      UserCredential response =  await AuthService()
-          .signInWithEmailAndPassword(email: email, password: password);
-      if (response != null ){
+      UserCredential response =
+          await AuthService().signInWithEmailAndPassword(email, password);
+      if (response != null) {
         Navigator.of(context).pushNamed("Home");
       }
     }
@@ -32,36 +35,31 @@ class _SignInState extends State<SignIn> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            Stack(
-              children: <Widget>[
-                Container(
-                  height: MediaQuery.of(context).size.height,
-                  decoration: const BoxDecoration(
-                    color: primaryColor,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              Stack(
+                children: <Widget>[
+                  Container(
+                    height: MediaQuery.of(context).size.height,
+                    decoration: const BoxDecoration(
+                      color: primaryColor,
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: SizeConfig.defaultSize * 5,
-                ),
-                Center(
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                        left: SizeConfig.defaultSize * 3,
-                        right: SizeConfig.defaultSize * 3),
+                  SizedBox(
+                    height: SizeConfig.defaultSize * 0,
+                  ),
+                  Center(
                     child: Form(
                       key: _formState,
                       child: Container(
-                        margin:
-                            EdgeInsets.only(top: SizeConfig.defaultSize * 28),
                         padding: EdgeInsets.only(
-                            top: SizeConfig.defaultSize * 6,
-                            bottom: SizeConfig.defaultSize * 2,
+                            top: SizeConfig.defaultSize * 15,
+                            bottom: SizeConfig.defaultSize * 12,
                             left: SizeConfig.defaultSize * 2,
                             right: SizeConfig.defaultSize * 2),
-                        height: SizeConfig.defaultSize * 45,
+                        height: MediaQuery.of(context).size.height,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                           color: Colors.white,
@@ -69,7 +67,15 @@ class _SignInState extends State<SignIn> {
                         child: Column(
                           children: <Widget>[
                             TextFormField(
-                              onSaved: (val) => email = val!,
+                              onSaved: (val) {
+                                email = val!;
+                              },
+                              validator: (val) {
+                                if (!validator.email(val!)) {
+                                  return "Please enter a valid email";
+                                }
+                                return null;
+                              },
                               decoration: InputDecoration(
                                 labelText: 'Email',
                                 labelStyle: TextStyle(color: primaryColor),
@@ -90,10 +96,12 @@ class _SignInState extends State<SignIn> {
                               ),
                             ),
                             SizedBox(
-                              height: SizeConfig.defaultSize * 2,
+                              height: SizeConfig.defaultSize * 3,
                             ),
                             TextFormField(
-                              onSaved: (val) => password = val!,
+                              onSaved: (val) {
+                                password = val!;
+                              },
                               decoration: InputDecoration(
                                 labelText: 'Password',
                                 labelStyle:
@@ -113,12 +121,10 @@ class _SignInState extends State<SignIn> {
                                     borderSide:
                                         const BorderSide(color: primaryColor)),
                               ),
-                              validator: (val) =>
-                                  val!.length < 6 ? "Incorrect Password" : null,
+                              validator: (val) => val!.isEmpty
+                                  ? "password cannot be empty"
+                                  : null,
                               obscureText: true,
-                            ),
-                            SizedBox(
-                              height: SizeConfig.defaultSize * 2,
                             ),
                             Align(
                               alignment: Alignment.centerRight,
@@ -143,11 +149,16 @@ class _SignInState extends State<SignIn> {
                                         fontSize: 22, color: Colors.white),
                                   ),
                                   onPressed: () async {
-                                    await signInWithEmailAndPassword();
+                                    try {
+                                      await signInWithEmailAndPassword();
+                                    } catch (e) {
+                                      setState(() => errorAlert(context,
+                                          "Account is not registered"));
+                                    }
                                   }),
                             ),
                             ButtonTheme(
-                              height: SizeConfig.defaultSize * 3,
+                              height: SizeConfig.defaultSize * 5,
                               minWidth: MediaQuery.of(context).size.width,
                               child: ElevatedButton(
                                 child: const Text(
@@ -188,38 +199,38 @@ class _SignInState extends State<SignIn> {
                       ),
                     ),
                   ),
-                ),
-                Center(
-                  child: Container(
-                    margin: EdgeInsets.only(top: SizeConfig.defaultSize * 26),
-                    height: SizeConfig.defaultSize * 5,
-                    width: SizeConfig.defaultSize * 20,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          blurRadius: 6,
-                          offset:
-                              const Offset(0, 2), // changes position of shadow
+                  Center(
+                    child: Container(
+                      margin: EdgeInsets.only(top: SizeConfig.defaultSize * 1),
+                      height: SizeConfig.defaultSize * 5,
+                      width: SizeConfig.defaultSize * 20,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            blurRadius: 6,
+                            offset: const Offset(
+                                0, 2), // changes position of shadow
+                          ),
+                        ],
+                      ),
+                      child: const Center(
+                        child: Text(
+                          'Sign In',
+                          style: TextStyle(
+                              color: primaryColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18),
                         ),
-                      ],
-                    ),
-                    child: const Center(
-                      child: Text(
-                        'Sign In',
-                        style: TextStyle(
-                            color: primaryColor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18),
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

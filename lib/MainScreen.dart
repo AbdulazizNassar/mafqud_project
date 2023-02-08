@@ -84,48 +84,49 @@ class MainScreen extends StatelessWidget {
               duration: duration,
               delay: const Duration(milliseconds: 200),
               child: SizedBox(
-                width: 150 ,
+                width: 150,
                 child: ElevatedButton.icon(
-                  onPressed: (){Navigator.of(context).pushNamed("Auth");},
-                  icon: const Icon(
-                    Icons.email,
-                    color: Colors.white,
-                    size: 30.0,
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    shadowColor: Colors.grey,
-                    padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-                  ),
-                  label: const Text("Continue with email")
-            ),
+                    onPressed: () {
+                      Navigator.of(context).pushNamed("Auth");
+                    },
+                    icon: const Icon(
+                      Icons.email,
+                      color: Colors.white,
+                      size: 30.0,
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      shadowColor: Colors.grey,
+                      padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+                    ),
+                    label: const Text("Continue with email")),
               ),
             ),
+
             ///
             const SizedBox(
               height: 15,
             ),
 
-            /// GITHUB BTN
+            /// Google BTN
             FadeInUp(
-              duration: duration,
-              delay: const Duration(milliseconds: 200),
-              child: Container(
-                child:ElevatedButton(
-                  child: Text("Continue with Google"),
-                  onPressed: () async{
-                    UserCredential response = await AuthService().signInWithGoogle();
-                    if(response != null){
+                duration: duration,
+                delay: const Duration(milliseconds: 200),
+                child: ElevatedButton.icon(
+                  label: const Text("Continue with Google"),
+                  icon: const ImageIcon(AssetImage("assets/googleIcon.png")),
+                  onPressed: () async {
+                    UserCredential response =
+                        await AuthService().signInWithGoogle();
+                    if (response != null) {
                       Navigator.of(context).pushNamed("Home");
                     }
-                    },
+                  },
                   style: ElevatedButton.styleFrom(
                     shadowColor: Colors.grey,
                     padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                   ),
-              ),
+                )),
 
-            ),
-            ),
             ///
             const SizedBox(
               height: 40,

@@ -9,38 +9,29 @@ class AuthService {
 
   Stream<User?> get authStateChanges => _auth.authStateChanges();
 
-  createUserModel(UserCredential user){
-
-  }
+  createUserModel(UserCredential user) {}
 
   // sign in with email and password
-     signInWithEmailAndPassword(
-      {required String email, required String password}) async {
+  signInWithEmailAndPassword(String email, String password) async {
     try {
-      final UserCredential credential = await AuthService()
-          .signInWithEmailAndPassword(email: email, password: password);
+      final dynamic credential = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
       return credential;
-    } on FirebaseAuthException catch (e) {
-      return e.toString();
+    } catch (e) {
+      return e;
     }
   }
 
   // register with email and password
   registerWithEmailAndPassword(String email, String password) async {
     try {
-      final UserCredential credential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      final dynamic credential = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
-
       return credential;
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        return ('The password provided is too weak.');
-      } else if (e.code == 'email-already-in-use') {
-        return ('The account already exists for that email.');
-      }
+      return e.code;
     } catch (e) {
       return e;
     }
