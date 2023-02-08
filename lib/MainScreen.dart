@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:mafqud_project/screens/Authentication/sign_in.dart';
+import 'services/auth.dart';
 
 class MainScreen extends StatelessWidget {
   final Duration duration = const Duration(milliseconds: 800);
@@ -84,7 +86,7 @@ class MainScreen extends StatelessWidget {
               child: SizedBox(
                 width: 150 ,
                 child: ElevatedButton.icon(
-                  onPressed: (){Navigator.of(context).pushNamed("SignIn");},
+                  onPressed: (){Navigator.of(context).pushNamed("Auth");},
                   icon: const Icon(
                     Icons.email,
                     color: Colors.white,
@@ -94,7 +96,7 @@ class MainScreen extends StatelessWidget {
                     shadowColor: Colors.grey,
                     padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
                   ),
-                  label: const Text("Login")
+                  label: const Text("Continue with email")
             ),
               ),
             ),
@@ -107,19 +109,22 @@ class MainScreen extends StatelessWidget {
             FadeInUp(
               duration: duration,
               delay: const Duration(milliseconds: 200),
-              child: ElevatedButton.icon(
-                  onPressed: (){Navigator.of(context).pushNamed("Register");},
-                  icon: const Icon(
-                    Icons.email,
-                    color: Colors.white,
-                    size: 30.0,
-                  ),
+              child: Container(
+                child:ElevatedButton(
+                  child: Text("Continue with Google"),
+                  onPressed: () async{
+                    UserCredential response = await AuthService().signInWithGoogle();
+                    if(response != null){
+                      Navigator.of(context).pushNamed("Home");
+                    }
+                    },
                   style: ElevatedButton.styleFrom(
                     shadowColor: Colors.grey,
                     padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                   ),
-                  label: const Text("Create an account")
               ),
+
+            ),
             ),
             ///
             const SizedBox(
