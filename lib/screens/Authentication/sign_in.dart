@@ -26,7 +26,7 @@ class _SignInState extends State<SignIn> {
       UserCredential response =
           await AuthService().signInWithEmailAndPassword(email, password);
       if (response != null) {
-        Navigator.of(context).pushNamed("Home");
+        Navigator.of(context).pushReplacementNamed("Home");
       }
     }
   }

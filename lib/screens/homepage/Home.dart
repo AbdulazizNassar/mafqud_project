@@ -8,10 +8,58 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  String dropdownValue = 'Electronics';
   @override
   Widget build(BuildContext context) {
-    return const Placeholder(
-      child: Text("data"),
-    );
+    return  Scaffold(
+      appBar: AppBar(
+        title: Text('Home'),
+        backgroundColor: Colors.blue[900],
+        centerTitle: true,
+      ),
+      body: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            children: [
+              SizedBox(height: 70,),
+              Text('Search an item',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
+              SizedBox(height: 10,),
+              TextField(
+                onChanged: (value) => null,
+                decoration: const InputDecoration(
+                    labelText: 'Search', suffixIcon: Icon(Icons.search)),
+              ),
+              SizedBox(height: 70,),
+              Text(' Or by Categories ',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
+              SizedBox(height: 30,),
+              DropdownButton<String>(
+                    isExpanded: true,
+                    value: dropdownValue,
+                    style: ,
+                    items: <String>['Electronics', 'Personal items', 'Animals']
+                        .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(
+                              value,
+                              style: TextStyle(fontSize: 30),
+                            ),
+                          );
+                        }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        dropdownValue = newValue!;
+                      });
+                      },
+                  ),
+              TextButton(
+                onPressed: () {},
+                child: Text("Search"),
+              )
+                ],
+              ),
+          )
+
+      );
   }
 }
