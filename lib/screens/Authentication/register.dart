@@ -23,7 +23,7 @@ class _RegisterState extends State<Register> {
       UserCredential response =
           await AuthService().registerWithEmailAndPassword(email, password);
       if (response != null) {
-        Navigator.of(context).pushNamed("Home");
+        Navigator.of(context).pushReplacementNamed("Home");
       }
     }
   }

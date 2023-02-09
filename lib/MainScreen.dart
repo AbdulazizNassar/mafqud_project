@@ -14,6 +14,10 @@ class MainScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Welcome'),
+        backgroundColor: Colors.blue[900],
+      ),
       backgroundColor: const Color.fromARGB(255, 239, 239, 239),
       body: Container(
         margin: const EdgeInsets.all(8),
@@ -39,9 +43,7 @@ class MainScreen extends StatelessWidget {
             ),
 
             ///
-            const SizedBox(
-              height: 15,
-            ),
+
 
             /// TITLE
             FadeInUp(
