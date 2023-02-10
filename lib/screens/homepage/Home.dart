@@ -20,9 +20,10 @@ class _HomeState extends State<Home> {
       body: Padding(
           padding: const EdgeInsets.all(10),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: 70,),
-              Text('Search an item',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
+              Text('Search an item:',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
               SizedBox(height: 10,),
               TextField(
                 onChanged: (value) => null,
@@ -30,19 +31,18 @@ class _HomeState extends State<Home> {
                     labelText: 'Search', suffixIcon: Icon(Icons.search)),
               ),
               SizedBox(height: 70,),
-              Text(' Or by Categories ',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
+              Text(' Or by Categories: ',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
               SizedBox(height: 30,),
               DropdownButton<String>(
                     isExpanded: true,
                     value: dropdownValue,
-                    style: ,
                     items: <String>['Electronics', 'Personal items', 'Animals']
                         .map<DropdownMenuItem<String>>((String value) {
                           return DropdownMenuItem<String>(
                             value: value,
                             child: Text(
                               value,
-                              style: TextStyle(fontSize: 30),
+                              style: TextStyle(fontSize:17),
                             ),
                           );
                         }).toList(),
@@ -52,9 +52,12 @@ class _HomeState extends State<Home> {
                       });
                       },
                   ),
-              TextButton(
-                onPressed: () {},
-                child: Text("Search"),
+              SizedBox(height: 30,),
+              Center(
+                child: TextButton(
+                  onPressed: () {},
+                  child: Text("Search", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20,),),
+                ),
               )
                 ],
               ),
