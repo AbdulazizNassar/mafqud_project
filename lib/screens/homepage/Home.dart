@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mafqud_project/screens/posts/posts.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -52,10 +53,12 @@ class _HomeState extends State<Home> {
                       });
                       },
                   ),
-              SizedBox(height: 30,),
+              SizedBox(height: 100,),
               Center(
                 child: TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).pushNamed("Posts");
+                  },
                   child: Text("Search", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20,),),
                 ),
               )

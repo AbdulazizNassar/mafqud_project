@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:mafqud_project/Screens/homepage/Home.dart';
 import 'package:mafqud_project/screens/Authentication/register.dart';
 import 'package:mafqud_project/screens/Authentication/sign_in.dart';
+import 'package:mafqud_project/screens/posts/addPost.dart';
+import 'package:mafqud_project/screens/posts/posts.dart';
 import 'Screens/Authentication/auth.dart';
 import 'MainScreen.dart';
 import 'firebase_options.dart';
@@ -33,6 +35,8 @@ class MyApp extends StatelessWidget {
         "SignIn": (context) => SignIn(),
         "Register": (context) => Register(),
         "Home": (context) => const Home(),
+        "Posts": (context) => Posts(),
+        "AddPost": (context) => AddPosts(),
       },
     );
   }

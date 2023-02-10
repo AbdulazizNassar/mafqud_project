@@ -89,7 +89,7 @@ class MainScreen extends StatelessWidget {
                 width: 150,
                 child: ElevatedButton.icon(
                     onPressed: () {
-                      Navigator.of(context).pushNamed("Auth");
+                      Navigator.of(context).pushReplacementNamed("Auth");
                     },
                     icon: const Icon(
                       Icons.email,
@@ -120,7 +120,7 @@ class MainScreen extends StatelessWidget {
                     UserCredential response =
                         await AuthService().signInWithGoogle();
                     if (response != null) {
-                      Navigator.of(context).pushNamed("Home");
+                      Navigator.of(context).pushReplacementNamed("Home");
                     }
                   },
                   style: ElevatedButton.styleFrom(
