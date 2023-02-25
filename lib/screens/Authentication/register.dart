@@ -14,7 +14,7 @@ class Register extends StatefulWidget {
 
 class _RegisterState extends State<Register> {
   final GlobalKey<FormState> _formState = GlobalKey<FormState>();
-  var email, password, idNum, PhoneNum;
+  var email, password, idNum, PhoneNum, name;
 
   signup() async {
     var formData = _formState.currentState;
@@ -63,6 +63,39 @@ class _RegisterState extends State<Register> {
                         ),
                         child: Column(
                           children: <Widget>[
+                            TextFormField(
+                              onSaved: (val) {
+                                name = val!;
+                              },
+                              validator: (val) {
+                                if (!validator.name(val!)) {
+                                  return "Cannot be empty";
+                                }
+                                return null;
+                              },
+                              decoration: InputDecoration(
+                                labelText: 'Name',
+                                labelStyle:
+                                    const TextStyle(color: primaryColor),
+                                prefixIcon: Icon(
+                                  Icons.abc,
+                                  size: SizeConfig.defaultSize * 4,
+                                  color: primaryColor,
+                                ),
+                                filled: true,
+                                enabledBorder: UnderlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide.none,
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide:
+                                        const BorderSide(color: primaryColor)),
+                              ),
+                            ),
+                            SizedBox(
+                              height: SizeConfig.defaultSize * 2,
+                            ),
                             TextFormField(
                               onSaved: (val) {
                                 email = val!;
