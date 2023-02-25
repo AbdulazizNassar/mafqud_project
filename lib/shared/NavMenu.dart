@@ -5,8 +5,11 @@ import 'package:mafqud_project/screens/homepage/Home.dart';
 import 'package:mafqud_project/services/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 User? user = AuthService().currentUser;
+final CollectionReference _userCollection =
+    FirebaseFirestore.instance.collection('users');
 
 class NavMenu extends StatelessWidget {
   const NavMenu({super.key});
@@ -40,20 +43,31 @@ class NavMenu extends StatelessWidget {
               top: 24 + MediaQuery.of(context).padding.top,
               bottom: 24,
             ),
-            child: Column(children: [
-              const FlutterLogo(
-                size: 80,
-              ),
-              const SizedBox(height: 12),
-              Text(
-                "",
-                style: const TextStyle(fontSize: 28, color: Colors.white),
-              ),
-              Text(
-                "${user!.email}",
-                style: const TextStyle(fontSize: 16, color: Colors.white),
-              ),
-            ]),
+            child: FutureBuilder(
+                future:
+                    _userCollection.where("uid", isEqualTo: user!.uid).get(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Column(children: [
+                      const FlutterLogo(
+                        size: 80,
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        // ignore: unnecessary_string_interpolations
+                        "${snapshot.data!.docs[0].get("name")!}",
+                        style:
+                            const TextStyle(fontSize: 28, color: Colors.white),
+                      ),
+                      Text(
+                        "${user!.email}",
+                        style:
+                            const TextStyle(fontSize: 16, color: Colors.white),
+                      ),
+                    ]);
+                  }
+                  return Text("loading");
+                }),
           ),
         ),
       );

@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:mafqud_project/models/currentUser.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -11,12 +12,19 @@ class AuthService {
 
   Future createUserModel(
       String name, String email, String ID, String phoneNum) async {
-    await _firestore.collection("users").add({
+    await _firestore.collection("users").doc(currentUser!.uid).set({
       'name': name,
       'email': email,
       'ID': int.parse(ID),
       'phoneNum': phoneNum,
+      "uid": _auth.currentUser!.uid,
     });
+    UserData(
+        uid: currentUser!.uid,
+        Name: name,
+        email: email,
+        phoneNum: phoneNum,
+        id: ID);
   }
 
   // sign in with email and password

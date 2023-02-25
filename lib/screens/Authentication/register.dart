@@ -68,12 +68,8 @@ class _RegisterState extends State<Register> {
                               onSaved: (val) {
                                 name = val!;
                               },
-                              validator: (val) {
-                                if (!validator.name(val!)) {
-                                  return "Cannot be empty";
-                                }
-                                return null;
-                              },
+                              validator: (val) =>
+                                  val!.isEmpty ? "Cannot be empty" : null,
                               decoration: InputDecoration(
                                 labelText: 'Name',
                                 labelStyle:
