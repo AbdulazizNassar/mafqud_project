@@ -1,15 +1,32 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mafqud_project/models/currentUser.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   User? get currentUser => _auth.currentUser;
 
   Stream<User?> get authStateChanges => _auth.authStateChanges();
+  //document IDs
 
-  createUserModel(UserCredential user) {}
+  Future createUserModel(
+      String name, String email, String ID, String phoneNum) async {
+    await _firestore.collection("users").doc(currentUser!.uid).set({
+      'name': name,
+      'email': email,
+      'ID': int.parse(ID),
+      'phoneNum': phoneNum,
+      "uid": _auth.currentUser!.uid,
+    });
+    UserData(
+        uid: currentUser!.uid,
+        Name: name,
+        email: email,
+        phoneNum: phoneNum,
+        id: ID);
+  }
 
   // sign in with email and password
   signInWithEmailAndPassword(String email, String password) async {
@@ -23,12 +40,14 @@ class AuthService {
   }
 
   // register with email and password
-  registerWithEmailAndPassword(String email, String password) async {
+  registerWithEmailAndPassword(String name, String email, String password,
+      String ID, String phoneNum) async {
     try {
       final dynamic credential = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
+      createUserModel(name, email, ID, phoneNum);
       return credential;
     } on FirebaseAuthException catch (e) {
       return e.code;

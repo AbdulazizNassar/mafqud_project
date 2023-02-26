@@ -20,8 +20,8 @@ class _RegisterState extends State<Register> {
     var formData = _formState.currentState;
     if (formData!.validate()) {
       formData.save();
-      UserCredential response =
-          await AuthService().registerWithEmailAndPassword(email, password);
+      UserCredential response = await AuthService()
+          .registerWithEmailAndPassword(name, email, password, idNum, PhoneNum);
       if (response != null) {
         Navigator.of(context).pushReplacementNamed("Home");
       }
@@ -63,16 +63,13 @@ class _RegisterState extends State<Register> {
                         ),
                         child: Column(
                           children: <Widget>[
+                            //Name Field
                             TextFormField(
                               onSaved: (val) {
                                 name = val!;
                               },
-                              validator: (val) {
-                                if (!validator.name(val!)) {
-                                  return "Cannot be empty";
-                                }
-                                return null;
-                              },
+                              validator: (val) =>
+                                  val!.isEmpty ? "Cannot be empty" : null,
                               decoration: InputDecoration(
                                 labelText: 'Name',
                                 labelStyle:
@@ -96,6 +93,8 @@ class _RegisterState extends State<Register> {
                             SizedBox(
                               height: SizeConfig.defaultSize * 2,
                             ),
+
+                            //Email Field
                             TextFormField(
                               onSaved: (val) {
                                 email = val!;
@@ -129,6 +128,8 @@ class _RegisterState extends State<Register> {
                             SizedBox(
                               height: SizeConfig.defaultSize * 2,
                             ),
+
+                            //password Field
                             TextFormField(
                               onSaved: (val) {
                                 password = val!;
@@ -160,6 +161,8 @@ class _RegisterState extends State<Register> {
                             SizedBox(
                               height: SizeConfig.defaultSize * 2,
                             ),
+
+                            //ID num Field
                             TextFormField(
                               onSaved: (val) {
                                 idNum = val!;
@@ -190,6 +193,8 @@ class _RegisterState extends State<Register> {
                             SizedBox(
                               height: SizeConfig.defaultSize * 2,
                             ),
+
+                            //phone num Field
                             TextFormField(
                               onSaved: (val) {
                                 PhoneNum = val!;
