@@ -7,10 +7,19 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+List<String> docIDs = [];
 User? user = AuthService().currentUser;
 CollectionReference _userCollection =
     FirebaseFirestore.instance.collection('users');
-String myUsername = '';
+int indexOfUser = 0;
+Future getDocIDs() async {
+  //store all docIDs in List
+  await _userCollection
+      .get()
+      .then((snapshot) => snapshot.docs.forEach((document) {
+            docIDs.add(document.reference.id);
+          }));
+}
 
 class NavMenu extends StatefulWidget {
   const NavMenu({super.key});
@@ -20,6 +29,13 @@ class NavMenu extends StatefulWidget {
 }
 
 class _NavMenuState extends State<NavMenu> {
+  @override
+  void initState() {
+    getDocIDs();
+    indexOfUser = docIDs.indexOf(user!.uid);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -53,9 +69,11 @@ Widget buildHeader(BuildContext context) => Material(
             bottom: 24,
           ),
           child: FutureBuilder(
-              future: _userCollection.where("uid", isEqualTo: user!.uid).get(),
+              future: _userCollection.doc(docIDs[indexOfUser]).get(),
               builder: (context, snapshot) {
-                if (snapshot.hasData) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  Map<String, dynamic> data =
+                      snapshot.data!.data() as Map<String, dynamic>;
                   return Column(children: [
                     const FlutterLogo(
                       size: 80,
@@ -63,15 +81,16 @@ Widget buildHeader(BuildContext context) => Material(
                     const SizedBox(height: 12),
                     Text(
                       // ignore: unnecessary_string_interpolations
-                      "${snapshot.data!.docs[0].get("name")!}",
+                      "${data['name']}",
                       style: const TextStyle(fontSize: 28, color: Colors.white),
                     ),
                     Text(
-                      "${user!.email}",
+                      "${data['email']}",
                       style: const TextStyle(fontSize: 16, color: Colors.white),
                     ),
                   ]);
                 }
+
                 return Text("loading");
               }),
         ),

@@ -9,6 +9,7 @@ class AuthService {
   User? get currentUser => _auth.currentUser;
 
   Stream<User?> get authStateChanges => _auth.authStateChanges();
+  //document IDs
 
   Future createUserModel(
       String name, String email, String ID, String phoneNum) async {
