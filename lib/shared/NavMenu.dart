@@ -4,25 +4,20 @@ import 'package:mafqud_project/MainScreen.dart';
 import 'package:mafqud_project/screens/homepage/Home.dart';
 import 'package:mafqud_project/services/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:mafqud_project/shared/loading.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
-List<String> docIDs = [];
 
 User? user = AuthService().currentUser;
 
 CollectionReference _userCollection =
     FirebaseFirestore.instance.collection('users');
-int indexOfUser = 0;
 
-Future getDocIDs() async {
-  //store all docIDs in List
-  await _userCollection
-      .get()
-      .then((snapshot) => snapshot.docs.forEach((document) {
-            docIDs.add(document.reference.id);
-          }));
-}
+final users = _userCollection
+    .doc(user!.uid)
+    .get()
+    .then((value) => value)
+    .then((value) => value.data());
 
 class NavMenu extends StatefulWidget {
   const NavMenu({super.key});
@@ -32,13 +27,6 @@ class NavMenu extends StatefulWidget {
 }
 
 class _NavMenuState extends State<NavMenu> {
-  @override
-  void initState() {
-    getDocIDs();
-    indexOfUser = docIDs.indexOf(user!.uid);
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -72,11 +60,12 @@ Widget buildHeader(BuildContext context) => Material(
             bottom: 24,
           ),
           child: FutureBuilder(
-              future: _userCollection.doc(docIDs[0]).get(),
+              future: users,
               builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  Map<String, dynamic> data =
-                      snapshot.data!.data() as Map<String, dynamic>;
+                if (snapshot.connectionState == ConnectionState.done &&
+                    snapshot.hasData) {
+                  final data = Map<String, dynamic>.from(
+                      snapshot.data as Map<dynamic, dynamic>);
                   return Column(children: [
                     const FlutterLogo(
                       size: 80,
@@ -92,9 +81,9 @@ Widget buildHeader(BuildContext context) => Material(
                       style: const TextStyle(fontSize: 16, color: Colors.white),
                     ),
                   ]);
+                } else {
+                  return Loading();
                 }
-
-                return Text("loading");
               }),
         ),
       ),
