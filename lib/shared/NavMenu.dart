@@ -8,10 +8,13 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 List<String> docIDs = [];
+
 User? user = AuthService().currentUser;
+
 CollectionReference _userCollection =
     FirebaseFirestore.instance.collection('users');
 int indexOfUser = 0;
+
 Future getDocIDs() async {
   //store all docIDs in List
   await _userCollection
@@ -52,7 +55,7 @@ class _NavMenuState extends State<NavMenu> {
 }
 
 Widget buildHeader(BuildContext context) => Material(
-      color: Colors.blue,
+      color: Colors.blue[900],
       child: InkWell(
         onTap: () {
           //close Nav menu
@@ -63,13 +66,13 @@ Widget buildHeader(BuildContext context) => Material(
           //   ));
         },
         child: Container(
-          color: Colors.blue,
+          color: Colors.blue[900],
           padding: EdgeInsets.only(
             top: 24 + MediaQuery.of(context).padding.top,
             bottom: 24,
           ),
           child: FutureBuilder(
-              future: _userCollection.doc(docIDs[indexOfUser]).get(),
+              future: _userCollection.doc(docIDs[0]).get(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   Map<String, dynamic> data =
