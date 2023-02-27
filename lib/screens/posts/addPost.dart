@@ -1,6 +1,8 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mafqud_project/shared/NavMenu.dart';
 
 import '../../shared/constants.dart';
 import '../../shared/size_config.dart';
@@ -18,6 +20,24 @@ class _AddPostsState extends State<AddPosts> {
   var title, description, category;
   var selectedValue;
   final _formKey = GlobalKey<FormState>();
+  CollectionReference posts = FirebaseFirestore.instance.collection("Posts");
+
+  createPost() async{
+    var data = _formKey.currentState;
+    if (data!.validate()) {
+      data.save();
+      await posts.add({
+        "title" : title,
+        "description" : description,
+        "category": category,
+        "userID" : user?.uid}
+
+      );
+      Navigator.of(context).pushNamed("Posts");
+    }
+
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +64,12 @@ class _AddPostsState extends State<AddPosts> {
               ),
               SizedBox(height: 7,),
               TextFormField(
+                validator: (val) {
+                  if (val!.length == 0){
+                    return "Title is required";
+                  }
+
+                },
                 maxLines: 1,
                 maxLength: 30,
                 onSaved: (val){
@@ -70,6 +96,12 @@ class _AddPostsState extends State<AddPosts> {
               ),
               SizedBox(height: 7,),
               TextFormField(
+                validator: (val) {
+                if (val!.length == 0){
+                   return "Description is required";
+                }
+
+                },
                 maxLines: 4,
                 maxLength: 250,
                 onSaved: (val){
@@ -142,7 +174,7 @@ class _AddPostsState extends State<AddPosts> {
               ),
               const SizedBox(height: 30),
               TextButton(
-                onPressed: () {},
+                onPressed: () async {await createPost();},
                 child: const Text('Create post'),
               ),
             ],
