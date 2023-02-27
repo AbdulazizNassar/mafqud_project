@@ -8,13 +8,15 @@ import 'package:mafqud_project/shared/loading.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-User? user = AuthService().currentUser;
+// current logged in user
+User? userAuth = AuthService().currentUser;
 
 CollectionReference _userCollection =
     FirebaseFirestore.instance.collection('users');
 
-final users = _userCollection
-    .doc(user!.uid)
+//return current user doc
+final userDoc = _userCollection
+    .doc(userAuth!.uid)
     .get()
     .then((value) => value)
     .then((value) => value.data());
@@ -27,18 +29,21 @@ class NavMenu extends StatefulWidget {
 }
 
 class _NavMenuState extends State<NavMenu> {
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
-    return Drawer(
-      child: SingleChildScrollView(
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              buildHeader(context),
-              buildMenuItems(context),
-            ]),
-      ),
-    );
+    return isLoading
+        ? Loading()
+        : Drawer(
+            child: SingleChildScrollView(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    buildHeader(context),
+                    buildMenuItems(context),
+                  ]),
+            ),
+          );
   }
 }
 
@@ -60,12 +65,12 @@ Widget buildHeader(BuildContext context) => Material(
             bottom: 24,
           ),
           child: FutureBuilder(
-              future: users,
+              future: userDoc,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done &&
                     snapshot.hasData) {
                   final data = Map<String, dynamic>.from(
-                      snapshot.data as Map<dynamic, dynamic>);
+                      snapshot.data as Map<String, dynamic>);
                   return Column(children: [
                     const FlutterLogo(
                       size: 80,
@@ -81,9 +86,8 @@ Widget buildHeader(BuildContext context) => Material(
                       style: const TextStyle(fontSize: 16, color: Colors.white),
                     ),
                   ]);
-                } else {
-                  return Loading();
                 }
+                return Loading();
               }),
         ),
       ),
@@ -103,7 +107,7 @@ Widget buildMenuItems(BuildContext context) => Container(
             leading: const Icon(Icons.history_outlined),
             title: const Text("History"),
             onTap: () {
-              // Navigator.pop(context);
+              // TODO Navigator.pop(context);
               // Navigator.of(context).pushNamed(MaterialPageRoute(
               //   builder: (context) => const //Page
               // ));
@@ -140,7 +144,7 @@ signOutConfirm(context) {
   Alert(
     context: context,
     title: "Do you want to sign out ? ",
-    image: Image.asset("assets/logout.jpg"),
+    image: Image.asset("assets/logout.png"),
     style: const AlertStyle(
       titleStyle: TextStyle(
         color: Colors.red,

@@ -19,24 +19,25 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   @override
+  bool isLoading = false;
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Mafqud',
       theme: ThemeData(
         backgroundColor: Colors.white,
-        appBarTheme: AppBarTheme(color: Colors.blue, elevation: 2),
+        appBarTheme: const AppBarTheme(color: Colors.blue, elevation: 2),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       initialRoute: "MainScreen",
       routes: {
-        "MainScreen": (context) => MainScreen(),
+        "MainScreen": (context) => const MainScreen(),
         "Auth": (context) => Auth(),
         "SignIn": (context) => SignIn(),
         "Register": (context) => Register(),
         "Home": (context) => const Home(),
-        "Posts": (context) => Posts(),
-        "AddPost": (context) => AddPosts(),
+        "Posts": (context) => const Posts(),
+        "AddPost": (context) => const AddPosts(),
       },
     );
   }

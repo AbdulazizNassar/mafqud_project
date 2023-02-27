@@ -225,16 +225,6 @@ class _RegisterState extends State<Register> {
                             SizedBox(
                               height: SizeConfig.defaultSize * 8,
                             ),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: InkWell(
-                                child: const Text(
-                                  'Forgot your password?',
-                                  style: TextStyle(color: Colors.grey),
-                                ),
-                                onTap: () {},
-                              ),
-                            ),
                             SizedBox(
                               height: SizeConfig.defaultSize * 2,
                             ),
@@ -245,7 +235,7 @@ class _RegisterState extends State<Register> {
                                   child: const Text(
                                     'Register',
                                     style: TextStyle(
-                                        fontSize: 22, color: Colors.white),
+                                        fontSize: 30, color: Colors.white),
                                   ),
                                   onPressed: () async {
                                     try {

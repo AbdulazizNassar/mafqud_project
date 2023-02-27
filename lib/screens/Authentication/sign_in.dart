@@ -4,10 +4,8 @@ import 'package:mafqud_project/shared/AlertBox.dart';
 import 'package:mafqud_project/shared/constants.dart';
 import 'package:mafqud_project/shared/size_config.dart';
 import 'package:mafqud_project/services/auth.dart';
-import 'package:mafqud_project/shared/loading.dart';
-import 'package:mafqud_project/services/auth.dart';
 import 'package:regexed_validator/regexed_validator.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
+import '../../services/firebase_exceptions.dart';
 
 class SignIn extends StatefulWidget {
   @override
@@ -78,7 +76,8 @@ class _SignInState extends State<SignIn> {
                               },
                               decoration: InputDecoration(
                                 labelText: 'Email',
-                                labelStyle: TextStyle(color: primaryColor),
+                                labelStyle:
+                                    const TextStyle(color: primaryColor),
                                 prefixIcon: Icon(
                                   Icons.mail,
                                   size: SizeConfig.defaultSize * 2,
@@ -92,7 +91,7 @@ class _SignInState extends State<SignIn> {
                                 focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10),
                                     borderSide:
-                                        BorderSide(color: primaryColor)),
+                                        const BorderSide(color: primaryColor)),
                               ),
                             ),
                             SizedBox(
@@ -133,7 +132,13 @@ class _SignInState extends State<SignIn> {
                                   'Forgot your password?',
                                   style: TextStyle(color: Colors.grey),
                                 ),
-                                onTap: () {},
+                                onTap: () async {
+                                  AuthStatus status = await AuthService()
+                                      .resetPassword(email: email);
+                                  setState(() {
+                                    confirmationAlert(context, status.name);
+                                  });
+                                },
                               ),
                             ),
                             SizedBox(

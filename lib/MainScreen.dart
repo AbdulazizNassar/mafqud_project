@@ -42,9 +42,6 @@ class MainScreen extends StatelessWidget {
               ),
             ),
 
-            ///
-
-
             /// TITLE
             FadeInUp(
               duration: duration,
@@ -78,10 +75,9 @@ class MainScreen extends StatelessWidget {
               ),
             ),
 
-            ///
             Expanded(child: Container()),
 
-            /// GOOGLE BTN
+            /// Email BTN
             FadeInUp(
               duration: duration,
               delay: const Duration(milliseconds: 200),
@@ -125,7 +121,7 @@ class MainScreen extends StatelessWidget {
                   },
                   style: ElevatedButton.styleFrom(
                     shadowColor: Colors.grey,
-                    padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                    padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
                   ),
                 )),
 

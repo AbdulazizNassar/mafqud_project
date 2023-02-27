@@ -2,8 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mafqud_project/models/currentUser.dart';
+import 'firebase_exceptions.dart';
 
 class AuthService {
+  static late AuthStatus _status;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   User? get currentUser => _auth.currentUser;
@@ -79,8 +81,16 @@ class AuthService {
     try {
       return await _auth.signOut();
     } catch (error) {
-      print(error.toString());
       return null;
     }
+  }
+
+  Future<AuthStatus> resetPassword({required String email}) async {
+    await _auth
+        .sendPasswordResetEmail(email: email)
+        .then((value) => _status = AuthStatus.successful)
+        .catchError(
+            (e) => _status = AuthExceptionHandler.handleAuthException(e));
+    return _status;
   }
 }
