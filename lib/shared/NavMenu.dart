@@ -53,7 +53,6 @@ Widget buildHeader(BuildContext context) => Material(
         onTap: () {
           //close Nav menu
           Navigator.pop(context);
-
           // Navigator.of(context).push(MaterialPageRoute(
           //   builder: (context) =>
           //   ));
