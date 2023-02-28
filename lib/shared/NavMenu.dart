@@ -1,6 +1,7 @@
 // ignore: file_names
 import 'package:flutter/material.dart';
 import 'package:mafqud_project/MainScreen.dart';
+import 'package:mafqud_project/screens/RateUs.dart';
 import 'package:mafqud_project/screens/homepage/Home.dart';
 import 'package:mafqud_project/services/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -125,7 +126,10 @@ Widget buildMenuItems(BuildContext context) => Container(
           ListTile(
             leading: const Icon(Icons.star_border_outlined),
             title: const Text("Rate Us"),
-            onTap: () {},
+            onTap: () {
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => const Rating()));
+            },
           ),
           const Divider(color: Colors.black54),
           ListTile(
@@ -160,8 +164,8 @@ signOutConfirm(context) {
       DialogButton(
           child: const Text("Sign out"),
           onPressed: () async {
-            await AuthService().signOut();
             Navigator.pop(context);
+            await AuthService().signOut();
             Navigator.of(context).pushReplacement(
                 MaterialPageRoute(builder: ((context) => const MainScreen())));
           }),
