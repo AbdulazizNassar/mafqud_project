@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:mafqud_project/services/auth.dart';
 import 'package:mafqud_project/shared/NavMenu.dart';
@@ -17,6 +16,7 @@ class _RatingState extends State<Rating> {
   late double _rating;
   IconData? _selectedIcon;
   String confirm = '';
+  late Icon icon;
   bool isLoading = false;
   var user = AuthService().currentUser;
   CollectionReference ratingCollection =
@@ -54,22 +54,27 @@ class _RatingState extends State<Rating> {
                     ElevatedButton(
                       child: const Text("send"),
                       onPressed: () async {
-                        setState(() {
-                          isLoading = true;
-                        });
-
-                        await ratingCollection.doc(user!.uid).set({
-                          "rating": _rating,
-                          "uid": user!.uid,
-                        });
-                        setState(() {
-                          isLoading = false;
-                          confirm = "Thank you for rating !";
-                        });
+                        if (!(_rating.isNaN)) {
+                          setState(() {
+                            isLoading = true;
+                          });
+                          await ratingCollection.doc(user!.uid).set({
+                            "rating": _rating,
+                            "uid": user!.uid,
+                          });
+                          setState(() {
+                            isLoading = false;
+                            confirm = "  Thank you for rating !";
+                          });
+                        } else {
+                          setState(() {
+                            confirm = "Please Select at least 1 star";
+                          });
+                        }
                       },
                     ),
                     const SizedBox(height: 20.0),
-                    _confirmation(confirm),
+                    if (confirm.isNotEmpty) _confirmation(confirm),
                   ],
                 ),
               ),
@@ -79,8 +84,9 @@ class _RatingState extends State<Rating> {
 
   Widget _ratingBar() {
     return RatingBar.builder(
-      minRating: 1,
+      minRating: 0,
       allowHalfRating: true,
+      initialRating: 1,
       unratedColor: Colors.amber.withAlpha(50),
       itemCount: 5,
       itemSize: 50.0,
@@ -113,24 +119,17 @@ class _RatingState extends State<Rating> {
         ],
       );
 
-  Widget _confirmation(String text) => Column(
+  Widget _confirmation(String text) => Row(
         children: [
-          const Icon(
-            Icons.check_circle_outline_rounded,
-            size: 50,
-            color: Colors.green,
-          ),
-          const SizedBox(height: 20),
+          const Icon(Icons.check_circle_outline_rounded,
+              size: 40, color: Colors.green),
           Text(
             text,
             style: const TextStyle(
                 fontWeight: FontWeight.w300,
                 fontSize: 24.0,
                 color: Colors.green),
-          ),
-          const SizedBox(
-            height: 20.0,
-          ),
+          )
         ],
       );
 }
