@@ -4,6 +4,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:mafqud_project/services/auth.dart';
 import 'package:mafqud_project/shared/NavMenu.dart';
 import 'package:mafqud_project/shared/loading.dart';
+import 'package:mafqud_project/shared/size_config.dart';
 
 class Rating extends StatefulWidget {
   const Rating({super.key});
@@ -48,30 +49,37 @@ class _RatingState extends State<Rating> {
                     const SizedBox(
                       height: 40.0,
                     ),
-                    _heading('Rating Bar'),
+                    _heading('Rating'),
                     _ratingBar(),
                     const SizedBox(height: 20.0),
-                    ElevatedButton(
-                      child: const Text("send"),
-                      onPressed: () async {
-                        if (!(_rating.isNaN)) {
-                          setState(() {
-                            isLoading = true;
-                          });
-                          await ratingCollection.doc(user!.uid).set({
-                            "rating": _rating,
-                            "uid": user!.uid,
-                          });
-                          setState(() {
-                            isLoading = false;
-                            confirm = "  Thank you for rating !";
-                          });
-                        } else {
-                          setState(() {
-                            confirm = "Please Select at least 1 star";
-                          });
-                        }
-                      },
+                    SizedBox(
+                      height: 50,
+                      width: 120,
+                      child: ElevatedButton(
+                        child: const Text(
+                          "send",
+                          style: TextStyle(fontSize: 22, color: Colors.white),
+                        ),
+                        onPressed: () async {
+                          if (!(_rating.isNaN)) {
+                            setState(() {
+                              isLoading = true;
+                            });
+                            await ratingCollection.doc(user!.uid).set({
+                              "rating": _rating,
+                              "uid": user!.uid,
+                            });
+                            setState(() {
+                              isLoading = false;
+                              confirm = "  Thank you for rating !";
+                            });
+                          } else {
+                            setState(() {
+                              confirm = "Please Select at least 1 star";
+                            });
+                          }
+                        },
+                      ),
                     ),
                     const SizedBox(height: 20.0),
                     if (confirm.isNotEmpty) _confirmation(confirm),
@@ -120,6 +128,8 @@ class _RatingState extends State<Rating> {
       );
 
   Widget _confirmation(String text) => Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const Icon(Icons.check_circle_outline_rounded,
               size: 40, color: Colors.green),
