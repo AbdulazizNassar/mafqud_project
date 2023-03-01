@@ -37,6 +37,74 @@ class _AddPostsState extends State<AddPosts> {
     }
   }
 
+  showButtomSheet() {
+    return showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Container(
+            padding: EdgeInsets.all(20),
+            height: 190,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Please Choose Image",
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                ),
+                InkWell(
+                  onTap: () async {
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.all(10),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.photo_outlined,
+                          size: 30,
+                        ),
+                        SizedBox(width: 20,),
+                        Text(
+                          "From Gallery",
+                          style: TextStyle(fontSize: 20),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                InkWell(
+                  onTap: () async {
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.all(10),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.camera,
+                          size: 30,
+                        ),
+                        SizedBox(width: 20,),
+                        Text(
+                          "From Camera",
+                          style: TextStyle(fontSize: 20),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+
+              ],
+            ),
+          );
+        }
+    );
+  }
+
+
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -178,13 +246,24 @@ class _AddPostsState extends State<AddPosts> {
                   //Do something when changing the item if you want.
                 },
               ),
-              const SizedBox(height: 30),
-              TextButton(
+              const SizedBox(height: 40),
+
+              ElevatedButton(
+                onPressed: (){
+                  showButtomSheet();
+                },
+                child: Text("Add Image"),
+              ),
+              ElevatedButton(
                 onPressed: () async {
                   await createPost();
                 },
                 child: const Text('Create post'),
-              ),
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.fromLTRB(60, 5, 60, 5),
+                ),
+              )
+
             ],
           ),
         ),
