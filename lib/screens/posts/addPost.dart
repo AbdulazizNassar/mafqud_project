@@ -1,11 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mafqud_project/services/auth.dart';
 import 'package:mafqud_project/shared/NavMenu.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../shared/constants.dart';
 import '../../shared/size_config.dart';
+
 
 class AddPosts extends StatefulWidget {
   const AddPosts({Key? key}) : super(key: key);
@@ -22,6 +25,7 @@ class _AddPostsState extends State<AddPosts> {
   final _formKey = GlobalKey<FormState>();
   CollectionReference posts = FirebaseFirestore.instance.collection("Posts");
 
+
   createPost() async {
     var user = AuthService().currentUser;
     var data = _formKey.currentState;
@@ -33,7 +37,7 @@ class _AddPostsState extends State<AddPosts> {
         "category": category,
         "userID": user?.uid
       });
-      Navigator.of(context).pushNamed("Posts");
+      Navigator.of(context).pushReplacementNamed('Posts');
     }
   }
 
@@ -53,6 +57,7 @@ class _AddPostsState extends State<AddPosts> {
                 ),
                 InkWell(
                   onTap: () async {
+
                   },
                   child: Container(
                     width: double.infinity,

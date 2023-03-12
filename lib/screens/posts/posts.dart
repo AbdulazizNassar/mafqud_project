@@ -16,10 +16,22 @@ class _PostsState extends State<Posts> {
 
   CollectionReference postsRef = FirebaseFirestore.instance.collection('Posts');
 
-  getPosts() async {
-    var posts = postsRef.doc();
-  }
+  var posts = [];
 
+  Future<void> getData() async {
+    // Get docs from collection reference
+    QuerySnapshot querySnapshot = await postsRef.get();
+
+    // Get data from docs and convert map to List
+    final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
+    posts = allData;
+  }
+  void initState()
+  {
+    super.initState();
+    getData();
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,42 +39,31 @@ class _PostsState extends State<Posts> {
         title: Text("Posts"),
         backgroundColor: Colors.blue[900],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Container(
-              child: FutureBuilder(
+      body:
+            FutureBuilder(
                 future: postsRef.get(),
                 builder: (context, snapshot){
-                  if (snapshot.hasData){
-                    return Text("has data");}
-                  else 
-                    return Text("No data");
-                },
+                  if (snapshot.hasData) {
+                    return ListView.builder(
+                        itemCount: snapshot.data?.docs.length,
+                        itemBuilder: (context, i){
+                          return ListPosts(posts:snapshot.data?.docs[i]);
 
-              ),
-            ),
-            ElevatedButton(
-              onPressed: ()  {
-              Navigator.of(context).pushNamed("AddPost");
-              },
-              child: const Text(
-                'Add Post',
-                style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.white),
-              ),
-            ),
-          ],
-
+                    });
+                  }
+                  else if (snapshot.hasError){
+                    return Text("Error");
+                  }
+                  else if (snapshot.connectionState == ConnectionState.waiting){
+                    Text("loading");
+                  }
+                  return Text(".");
+                }),
+        floatingActionButton: FloatingActionButton(
+          onPressed: (){Navigator.of(context).pushNamed("AddPost");},
+          tooltip: 'Increment',
+          child: const Icon(Icons.add),
         ),
-      ),
-
-
-
-
-
 
     );
   }
@@ -77,15 +78,17 @@ class ListPosts extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
+              flex: 2,
+              child:Image.asset("assets/flower.jpg",     // For test
+               height:100,fit: BoxFit.fitWidth,
+              )),
+          Expanded(
               flex: 3,
               child: ListTile(
-                title: Text("${posts['postTitle']}"),
+                title: Text("${posts['title']}"),
                 subtitle: Text("${posts['category']}"),
-                trailing: IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.edit),
-                )
-              ))
+              )),
+          SizedBox(height: 90,)
         ],
       ),
     );
