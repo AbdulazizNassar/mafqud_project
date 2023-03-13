@@ -1,3 +1,7 @@
+
+
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,10 +24,12 @@ class AddPosts extends StatefulWidget {
 class _AddPostsState extends State<AddPosts> {
   String dropdownValue = 'Electronics';
   final List<String> items = ['Electronics', 'Personal items', 'Animals'];
-  var title, description, category;
+  var title, description, category, imageurl;
   var selectedValue;
   final _formKey = GlobalKey<FormState>();
   CollectionReference posts = FirebaseFirestore.instance.collection("Posts");
+
+  late File file;
 
 
   createPost() async {
@@ -57,6 +63,9 @@ class _AddPostsState extends State<AddPosts> {
                 ),
                 InkWell(
                   onTap: () async {
+                    var picker = await ImagePicker().pickImage(source: ImageSource.gallery);
+                    print(picker?.path);
+
 
                   },
                   child: Container(
@@ -79,6 +88,8 @@ class _AddPostsState extends State<AddPosts> {
                 ),
                 InkWell(
                   onTap: () async {
+                    var picker = await ImagePicker().pickImage(source: ImageSource.camera);
+                    print(picker?.path);
                   },
                   child: Container(
                     width: double.infinity,
