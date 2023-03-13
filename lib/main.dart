@@ -1,10 +1,10 @@
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
-import 'package:mafqud_project/Screens/homepage/Home.dart';
-import 'package:mafqud_project/screens/Authentication/register.dart';
-import 'package:mafqud_project/screens/Authentication/sign_in.dart';
-import 'package:mafqud_project/screens/posts/addPost.dart';
-import 'package:mafqud_project/screens/posts/posts.dart';
+import 'firebase_core/firebase_core.dart';
+import 'flutter/material.dart';
+import 'Screens/homepage/Home.dart';
+import 'screens/Authentication/register.dart';
+import 'screens/Authentication/sign_in.dart';
+import 'screens/posts/addPost.dart';
+import 'screens/posts/posts.dart';
 import 'Screens/Authentication/auth.dart';
 import 'MainScreen.dart';
 import 'firebase_options.dart';
