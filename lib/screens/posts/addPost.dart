@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mafqud_project/services/auth.dart';
+import 'package:mafqud_project/shared/Lists.dart';
 import 'package:mafqud_project/shared/NavMenu.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -18,7 +19,6 @@ class AddPosts extends StatefulWidget {
 
 class _AddPostsState extends State<AddPosts> {
   String dropdownValue = 'Electronics';
-  final List<String> items = ['Electronics', 'Personal items', 'Animals'];
   var title, description, category;
   String? status;
   String msg = '';
@@ -231,17 +231,15 @@ class _AddPostsState extends State<AddPosts> {
                   color: Colors.black45,
                 ),
                 iconSize: 30,
-                items: items
-                    .map((item) => DropdownMenuItem<String>(
-                          value: item,
-                          child: Text(
-                            item,
-                            style: const TextStyle(
-                              fontSize: 14,
-                            ),
-                          ),
-                        ))
-                    .toList(),
+                items: Categories.map((item) => DropdownMenuItem<String>(
+                      value: item,
+                      child: Text(
+                        item,
+                        style: const TextStyle(
+                          fontSize: 14,
+                        ),
+                      ),
+                    )).toList(),
                 validator: (value) {
                   if (value == null) {
                     return 'Please select category.';

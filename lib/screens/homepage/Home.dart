@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mafqud_project/screens/posts/posts.dart';
+import 'package:mafqud_project/shared/Lists.dart';
 import 'package:mafqud_project/shared/NavMenu.dart';
 
 class Home extends StatefulWidget {
@@ -49,8 +50,7 @@ class _HomeState extends State<Home> {
               DropdownButton<String>(
                 isExpanded: true,
                 value: dropdownValue,
-                items: <String>['Electronics', 'Personal items', 'Animals']
-                    .map<DropdownMenuItem<String>>((String value) {
+                items: Categories.map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Text(
