@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:mafqud_project/shared/constants.dart';
 import 'package:mafqud_project/shared/loading.dart';
 
+import '../../shared/DateTime.dart';
+
 class postDetails extends StatefulWidget {
   final posts;
   const postDetails({super.key, this.posts});
@@ -28,6 +30,10 @@ class _postDetailsState extends State<postDetails> {
                 title: Text("${widget.posts['title']}"),
               ),
               body: Column(children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [],
+                ),
                 const SizedBox(
                   height: 300,
                 ),
@@ -47,7 +53,20 @@ class _postDetailsState extends State<postDetails> {
                       "status: ${widget.posts["status"]}",
                       style: textStyle,
                     )),
-                const SizedBox(height: 10),
+                const SizedBox(height: 15),
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.timer_outlined,
+                      size: 30,
+                    ),
+                    Text(
+                      readTimestamp(widget.posts["Date"]),
+                      style: textStyle,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 1),
                 Container(
                   padding:
                       const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
