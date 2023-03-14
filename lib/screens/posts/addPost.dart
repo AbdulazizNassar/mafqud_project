@@ -41,7 +41,7 @@ class _AddPostsState extends State<AddPosts> {
       Navigator.of(context).pushReplacementNamed('Posts');
     } else {
       setState(() {
-        msg = "please choose status";
+        msg = "Please choose type of the post";
       });
     }
   }
@@ -126,7 +126,7 @@ class _AddPostsState extends State<AddPosts> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(
-                height: 50,
+                height: 20,
               ),
               Row(
                 children: const [
@@ -252,13 +252,22 @@ class _AddPostsState extends State<AddPosts> {
                 },
               ),
               const SizedBox(height: 25),
-              //status radio button
+              Row(
+                children: [
+                  Text(
+                    "Post type",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+                  ),
+                ],
+              ),
 
+
+              //status radio button
               Column(
                 children: [
                   RadioListTile(
-                      title: const Text("lost"),
-                      value: "lost",
+                      title: const Text("Lost"),
+                      value: "Lost",
                       groupValue: status,
                       onChanged: (value) {
                         setState(() {
@@ -266,8 +275,8 @@ class _AddPostsState extends State<AddPosts> {
                         });
                       }),
                   RadioListTile(
-                      title: const Text("found"),
-                      value: "found",
+                      title: const Text("Found"),
+                      value: "Found",
                       groupValue: status,
                       onChanged: (value) {
                         setState(() {
