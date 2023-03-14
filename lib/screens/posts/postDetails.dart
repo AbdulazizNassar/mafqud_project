@@ -36,6 +36,7 @@ class _postDetailsState extends State<postDetails> {
                     Icons.pin_drop_outlined,
                     size: 40,
                   ),
+                  //Todo edit to make location written by user
                   Text("Ksu", style: textStyle),
                 ]),
                 const SizedBox(height: 15),

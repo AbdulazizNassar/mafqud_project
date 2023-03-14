@@ -64,7 +64,7 @@ class _AddPostsState extends State<AddPosts> {
                   onTap: () async {},
                   child: Container(
                     width: double.infinity,
-                    padding: EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
                     child: Row(
                       children: const [
                         Icon(
@@ -86,7 +86,7 @@ class _AddPostsState extends State<AddPosts> {
                   onTap: () async {},
                   child: Container(
                     width: double.infinity,
-                    padding: EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
                     child: Row(
                       children: const [
                         Icon(
@@ -253,14 +253,13 @@ class _AddPostsState extends State<AddPosts> {
               ),
               const SizedBox(height: 25),
               Row(
-                children: [
+                children: const [
                   Text(
                     "Post type",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+                    style: textStyle,
                   ),
                 ],
               ),
-
 
               //status radio button
               Column(
