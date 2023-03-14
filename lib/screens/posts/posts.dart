@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mafqud_project/screens/posts/addPost.dart';
+import 'package:mafqud_project/screens/posts/postDetails.dart';
 
 class Posts extends StatefulWidget {
   const Posts({Key? key}) : super(key: key);
@@ -68,25 +69,32 @@ class ListPosts extends StatelessWidget {
   ListPosts({this.posts});
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Row(
-        children: [
-          Expanded(
-              flex: 2,
-              child: Image.asset(
-                "assets/flower.jpg", // For test
-                height: 100, fit: BoxFit.fitWidth,
-              )),
-          Expanded(
-              flex: 3,
-              child: ListTile(
-                title: Text("${posts['title']}"),
-                subtitle: Text("${posts['category']}"),
-              )),
-          const SizedBox(
-            height: 90,
-          )
-        ],
+    return InkWell(
+      onTap: () {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => postDetails(posts: posts)));
+      },
+      child: Card(
+        child: Row(
+          children: [
+            Expanded(
+                flex: 2,
+                child: Image.asset(
+                  "assets/flower.jpg", // For test
+                  height: 100, fit: BoxFit.fitWidth,
+                )),
+            Expanded(
+                flex: 3,
+                child: ListTile(
+                  title: Text("${posts['title']}"),
+                  subtitle: Text("${posts['category']}"),
+                )),
+            const Icon(Icons.keyboard_double_arrow_right_outlined),
+            const SizedBox(
+              height: 90,
+            )
+          ],
+        ),
       ),
     );
   }

@@ -9,7 +9,6 @@ import 'package:image_picker/image_picker.dart';
 import '../../shared/constants.dart';
 import '../../shared/size_config.dart';
 
-
 class AddPosts extends StatefulWidget {
   const AddPosts({Key? key}) : super(key: key);
 
@@ -21,23 +20,29 @@ class _AddPostsState extends State<AddPosts> {
   String dropdownValue = 'Electronics';
   final List<String> items = ['Electronics', 'Personal items', 'Animals'];
   var title, description, category;
+  String? status;
+  String msg = '';
   var selectedValue;
   final _formKey = GlobalKey<FormState>();
   CollectionReference posts = FirebaseFirestore.instance.collection("Posts");
 
-
   createPost() async {
-    var user = AuthService().currentUser;
+    var userID = AuthService().currentUser!.uid;
     var data = _formKey.currentState;
-    if (data!.validate()) {
+    if (data!.validate() && status != null) {
       data.save();
       await posts.add({
         "title": title,
         "description": description,
         "category": category,
-        "userID": user?.uid
+        "userID": userID,
+        "status": status
       });
       Navigator.of(context).pushReplacementNamed('Posts');
+    } else {
+      setState(() {
+        msg = "please choose status";
+      });
     }
   }
 
@@ -51,24 +56,24 @@ class _AddPostsState extends State<AddPosts> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   "Please Choose Image",
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                 ),
                 InkWell(
-                  onTap: () async {
-
-                  },
+                  onTap: () async {},
                   child: Container(
                     width: double.infinity,
                     padding: EdgeInsets.all(10),
                     child: Row(
-                      children: [
+                      children: const [
                         Icon(
                           Icons.photo_outlined,
                           size: 30,
                         ),
-                        SizedBox(width: 20,),
+                        SizedBox(
+                          width: 20,
+                        ),
                         Text(
                           "From Gallery",
                           style: TextStyle(fontSize: 20),
@@ -78,18 +83,19 @@ class _AddPostsState extends State<AddPosts> {
                   ),
                 ),
                 InkWell(
-                  onTap: () async {
-                  },
+                  onTap: () async {},
                   child: Container(
                     width: double.infinity,
                     padding: EdgeInsets.all(10),
                     child: Row(
-                      children: [
+                      children: const [
                         Icon(
                           Icons.camera,
                           size: 30,
                         ),
-                        SizedBox(width: 20,),
+                        SizedBox(
+                          width: 20,
+                        ),
                         Text(
                           "From Camera",
                           style: TextStyle(fontSize: 20),
@@ -98,23 +104,17 @@ class _AddPostsState extends State<AddPosts> {
                     ),
                   ),
                 ),
-
               ],
             ),
           );
-        }
-    );
+        });
   }
-
-
-
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Add Post"),
+        title: const Text("Add Post"),
         backgroundColor: Colors.blue[900],
       ),
       body: Form(
@@ -125,7 +125,7 @@ class _AddPostsState extends State<AddPosts> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 50,
               ),
               Row(
@@ -136,7 +136,7 @@ class _AddPostsState extends State<AddPosts> {
                   )
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 7,
               ),
               TextFormField(
@@ -223,7 +223,7 @@ class _AddPostsState extends State<AddPosts> {
                 ),
                 isExpanded: true,
                 hint: const Text(
-                  'Choose a category',
+                  '  Choose a category',
                   style: TextStyle(fontSize: 14),
                 ),
                 icon: const Icon(
@@ -251,13 +251,41 @@ class _AddPostsState extends State<AddPosts> {
                   //Do something when changing the item if you want.
                 },
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 25),
+              //status radio button
 
+              Column(
+                children: [
+                  RadioListTile(
+                      title: const Text("lost"),
+                      value: "lost",
+                      groupValue: status,
+                      onChanged: (value) {
+                        setState(() {
+                          status = value;
+                        });
+                      }),
+                  RadioListTile(
+                      title: const Text("found"),
+                      value: "found",
+                      groupValue: status,
+                      onChanged: (value) {
+                        setState(() {
+                          status = value;
+                        });
+                      })
+                ],
+              ),
+              Text(
+                msg,
+                style: const TextStyle(color: Colors.red),
+              ),
+              SizedBox(height: 2),
               ElevatedButton(
-                onPressed: (){
+                onPressed: () {
                   showButtomSheet();
                 },
-                child: Text("Add Image"),
+                child: const Text("Add Image"),
               ),
               ElevatedButton(
                 onPressed: () async {
@@ -268,7 +296,6 @@ class _AddPostsState extends State<AddPosts> {
                   padding: const EdgeInsets.fromLTRB(60, 5, 60, 5),
                 ),
               )
-
             ],
           ),
         ),
