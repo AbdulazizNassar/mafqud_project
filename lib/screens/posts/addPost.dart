@@ -36,7 +36,8 @@ class _AddPostsState extends State<AddPosts> {
         "description": description,
         "category": category,
         "userID": userID,
-        "status": status
+        "status": status,
+        "Date": DateTime.now(),
       });
       Navigator.of(context).pushReplacementNamed('Posts');
     } else {
@@ -286,7 +287,7 @@ class _AddPostsState extends State<AddPosts> {
                 msg,
                 style: const TextStyle(color: Colors.red),
               ),
-              SizedBox(height: 2),
+              const SizedBox(height: 2),
               ElevatedButton(
                 onPressed: () {
                   showButtomSheet();
@@ -297,10 +298,10 @@ class _AddPostsState extends State<AddPosts> {
                 onPressed: () async {
                   await createPost();
                 },
-                child: const Text('Create post'),
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.fromLTRB(60, 5, 60, 5),
                 ),
+                child: const Text('Create post'),
               )
             ],
           ),

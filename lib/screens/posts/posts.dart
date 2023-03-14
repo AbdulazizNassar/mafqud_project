@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mafqud_project/screens/posts/addPost.dart';
 import 'package:mafqud_project/screens/posts/postDetails.dart';
+import 'package:mafqud_project/shared/DateTime.dart';
 
 class Posts extends StatefulWidget {
   const Posts({Key? key}) : super(key: key);
@@ -87,8 +88,32 @@ class ListPosts extends StatelessWidget {
                 flex: 3,
                 child: ListTile(
                   title: Text("${posts['title']}"),
-                  subtitle: Text("${posts['category']}"),
+                  subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                            padding: const EdgeInsets.only(top: 5),
+                            child: Text("${posts['category']}")),
+                        Container(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: Text(
+                            "${posts['status']}",
+                            style: const TextStyle(
+                              backgroundColor: Colors.amber,
+                              fontSize: 15,
+                            ),
+                          ),
+                        )
+                      ]),
                 )),
+            const Icon(
+              Icons.timer_outlined,
+              size: 30,
+            ),
+            Text(
+              readTimestamp(posts["Date"]),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            ),
             const Icon(Icons.keyboard_double_arrow_right_outlined),
             const SizedBox(
               height: 90,
