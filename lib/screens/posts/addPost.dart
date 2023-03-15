@@ -7,6 +7,7 @@ import 'package:mafqud_project/shared/Lists.dart';
 import 'package:mafqud_project/shared/NavMenu.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../services/notifications.dart';
 import '../../shared/constants.dart';
 import '../../shared/size_config.dart';
 
