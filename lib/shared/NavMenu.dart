@@ -1,4 +1,4 @@
-// ignore: file_names
+
 import 'package:flutter/material.dart';
 import 'package:mafqud_project/MainScreen.dart';
 import 'package:mafqud_project/screens/RateUs.dart';
@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mafqud_project/shared/loading.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:mafqud_project/screens/posts/history.dart';
 
 // current logged in user
 User? userAuth = AuthService().currentUser;
@@ -106,12 +107,8 @@ Widget buildMenuItems(BuildContext context) => Container(
           ListTile(
             leading: const Icon(Icons.history_outlined),
             title: const Text("History"),
-            onTap: () {
-              // TODO Navigator.pop(context);
-              // Navigator.of(context).pushNamed(MaterialPageRoute(
-              //   builder: (context) => const //Page
-              // ));
-            },
+            onTap: () => Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => history())),
           ),
           ListTile(
             leading: const Icon(Icons.message_outlined),
