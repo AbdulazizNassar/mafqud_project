@@ -1,5 +1,7 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:mafqud_project/screens/posts/posts.dart';
+import 'package:mafqud_project/services/notifications.dart';
 import 'package:mafqud_project/shared/Lists.dart';
 import 'package:mafqud_project/shared/NavMenu.dart';
 
@@ -11,12 +13,18 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   String dropdownValue = 'Electronics';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Home'),
+          title: const Text('Home'),
           backgroundColor: Colors.blue[900],
           centerTitle: true,
         ),
@@ -50,7 +58,8 @@ class _HomeState extends State<Home> {
               DropdownButton<String>(
                 isExpanded: true,
                 value: dropdownValue,
-                items: Categories.map<DropdownMenuItem<String>>((String value) {
+                items: postCategories
+                    .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Text(

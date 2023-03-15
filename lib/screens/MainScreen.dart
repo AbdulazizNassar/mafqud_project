@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:mafqud_project/screens/Authentication/sign_in.dart';
-import 'services/auth.dart';
+import '../services/auth.dart';
 
 class MainScreen extends StatelessWidget {
   final Duration duration = const Duration(milliseconds: 800);
@@ -15,7 +15,7 @@ class MainScreen extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Welcome'),
+        title: const Text('Welcome'),
         backgroundColor: Colors.blue[900],
       ),
       backgroundColor: const Color.fromARGB(255, 239, 239, 239),

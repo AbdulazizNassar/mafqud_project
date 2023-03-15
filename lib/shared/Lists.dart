@@ -1,4 +1,8 @@
-final List<String> Categories = ['Electronics', 'Personal items', 'Animals'];
+final List<String> postCategories = [
+  'Electronics',
+  'Personal items',
+  'Animals'
+];
 final List<String> Cities = [
   "Riyadh",
   "Jeddah",
