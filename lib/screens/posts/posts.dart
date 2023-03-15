@@ -26,6 +26,7 @@ class _PostsState extends State<Posts> {
     posts = allData;
   }
 
+
   void initState() {
     super.initState();
     getData();
@@ -55,11 +56,13 @@ class _PostsState extends State<Posts> {
             return const Text(".");
           }),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.blue[900],
         onPressed: () {
           Navigator.of(context).pushNamed("AddPost");
         },
         tooltip: 'Increment',
         child: const Icon(Icons.add),
+
       ),
     );
   }
@@ -68,6 +71,9 @@ class _PostsState extends State<Posts> {
 class ListPosts extends StatelessWidget {
   final posts;
   ListPosts({this.posts});
+
+
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -99,7 +105,7 @@ class ListPosts extends StatelessWidget {
                           child: Text(
                             "${posts['status']}",
                             style: const TextStyle(
-                              backgroundColor: Colors.amber,
+                              backgroundColor:  Colors.amber,
                               fontSize: 15,
                             ),
                           ),
@@ -112,9 +118,9 @@ class ListPosts extends StatelessWidget {
             ),
             Text(
               readTimestamp(posts["Date"]),
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              style: const TextStyle(fontWeight: FontWeight.w100, fontSize: 15),
             ),
-            const Icon(Icons.keyboard_double_arrow_right_outlined),
+            const Icon(Icons.keyboard_double_arrow_right_outlined, size: 30,),
             const SizedBox(
               height: 90,
             )
