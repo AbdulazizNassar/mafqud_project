@@ -1,46 +1,36 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mafqud_project/screens/posts/addPost.dart';
+import 'package:mafqud_project/models/currentUser.dart';
 import 'package:mafqud_project/screens/posts/postDetails.dart';
-import 'package:mafqud_project/shared/DateTime.dart';
 
-class Posts extends StatefulWidget {
-  const Posts({Key? key}) : super(key: key);
+import '../../services/auth.dart';
+import '../../shared/DateTime.dart';
+
+
+class history extends StatefulWidget {
+  const history({Key? key}) : super(key: key);
 
   @override
-  State<Posts> createState() => _PostsState();
+  State<history> createState() => _historyState();
 }
 
-class _PostsState extends State<Posts> {
+class _historyState extends State<history> {
+
+  User? userAuth = AuthService().currentUser;
   CollectionReference postsRef = FirebaseFirestore.instance.collection('Posts');
-
-  var posts = [];
-
-  Future<void> getData() async {
-    // Get docs from collection reference
-    QuerySnapshot querySnapshot = await postsRef.get();
-
-    // Get data from docs and convert map to List
-    final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
-    posts = allData;
-  }
-
-
-  void initState() {
-    super.initState();
-    getData();
-  }
+     
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Posts"),
+        title: const Text("History"),
         backgroundColor: Colors.blue[900],
       ),
       body: FutureBuilder(
-          future: postsRef.get(),
+          future: postsRef.where("userID", isEqualTo: FirebaseAuth.instance.currentUser?.uid).get(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return ListView.builder(
@@ -55,23 +45,16 @@ class _PostsState extends State<Posts> {
             }
             return const Text(".");
           }),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.blue[900],
-        onPressed: () {
-          Navigator.of(context).pushNamed("AddPost");
-        },
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
 
-      ),
     );
   }
 }
 
+
 class ListPosts extends StatelessWidget {
   final posts;
-  ListPosts({this.posts});
 
+  ListPosts({this.posts});
 
 
   @override
@@ -105,7 +88,7 @@ class ListPosts extends StatelessWidget {
                           child: Text(
                             "${posts['status']}",
                             style: const TextStyle(
-                              backgroundColor:  Colors.amber,
+                              backgroundColor: Colors.amber,
                               fontSize: 15,
                             ),
                           ),
@@ -120,7 +103,7 @@ class ListPosts extends StatelessWidget {
               readTimestamp(posts["Date"]),
               style: const TextStyle(fontWeight: FontWeight.w100, fontSize: 15),
             ),
-            const Icon(Icons.keyboard_double_arrow_right_outlined, size: 30,),
+            const Icon(Icons.edit, size: 30,),
             const SizedBox(
               height: 90,
             )

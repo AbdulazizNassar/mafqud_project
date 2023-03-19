@@ -28,6 +28,7 @@ class _postDetailsState extends State<postDetails> {
             return Scaffold(
               appBar: AppBar(
                 title: Text("${widget.posts['title']}"),
+                backgroundColor: Colors.blue[900],
               ),
               body: Column(children: [
                 Row(
@@ -83,7 +84,7 @@ class _postDetailsState extends State<postDetails> {
                   children: [
                     Text(
                       "ad posted by : ${data["name"]}",
-                      style: textStyle,
+                      style: TextStyle(fontSize: 20),
                     ),
                   ],
                 ),
