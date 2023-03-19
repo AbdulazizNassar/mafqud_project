@@ -5,11 +5,10 @@ import 'package:mafqud_project/services/auth.dart';
 import 'package:mafqud_project/shared/Lists.dart';
 import '../../shared/constants.dart';
 
-
 class EditPost extends StatefulWidget {
   final posts;
   final docID;
-  const EditPost({super.key, this.posts,this.docID });
+  const EditPost({super.key, this.posts, this.docID});
 
   @override
   State<EditPost> createState() => _EditPostState();
@@ -234,15 +233,17 @@ class _EditPostState extends State<EditPost> {
                   color: Colors.black45,
                 ),
                 iconSize: 30,
-                items: Categories.map((item) => DropdownMenuItem<String>(
-                  value: item,
-                  child: Text(
-                    item,
-                    style: const TextStyle(
-                      fontSize: 14,
-                    ),
-                  ),
-                )).toList(),
+                items: postCategories
+                    .map((item) => DropdownMenuItem<String>(
+                          value: item,
+                          child: Text(
+                            item,
+                            style: const TextStyle(
+                              fontSize: 14,
+                            ),
+                          ),
+                        ))
+                    .toList(),
                 validator: (value) {
                   if (value == null) {
                     return 'Please select category.';
@@ -269,7 +270,6 @@ class _EditPostState extends State<EditPost> {
                       title: const Text("Lost"),
                       value: "Lost",
                       groupValue: status,
-
                       onChanged: (value) {
                         setState(() {
                           status = value;
@@ -305,7 +305,8 @@ class _EditPostState extends State<EditPost> {
                   await updatePost();
                 },
                 style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.fromLTRB(60, 5, 60, 5), backgroundColor: Colors.blue[900],
+                  padding: const EdgeInsets.fromLTRB(60, 5, 60, 5),
+                  backgroundColor: Colors.blue[900],
                 ),
                 child: const Text('Update post'),
               )
