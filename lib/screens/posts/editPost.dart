@@ -110,6 +110,14 @@ class _EditPostState extends State<EditPost> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    setState(() {
+      status = widget.posts['status'];
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
