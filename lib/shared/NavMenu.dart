@@ -9,6 +9,7 @@ import 'package:mafqud_project/shared/loading.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mafqud_project/screens/RateUs.dart';
+import 'package:mafqud_project/screens/posts/history.dart';
 
 // current logged in user
 User? userAuth = AuthService().currentUser;
