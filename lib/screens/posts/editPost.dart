@@ -1,37 +1,36 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:mafqud_project/services/auth.dart';
 import 'package:mafqud_project/shared/Lists.dart';
-import 'package:mafqud_project/shared/NavMenu.dart';
-import 'package:image_picker/image_picker.dart';
-
 import '../../shared/constants.dart';
-import '../../shared/size_config.dart';
 
-class AddPosts extends StatefulWidget {
-  const AddPosts({Key? key}) : super(key: key);
+
+class EditPost extends StatefulWidget {
+  final posts;
+  final docID;
+  const EditPost({super.key, this.posts,this.docID });
 
   @override
-  State<AddPosts> createState() => _AddPostsState();
+  State<EditPost> createState() => _EditPostState();
 }
 
-class _AddPostsState extends State<AddPosts> {
+class _EditPostState extends State<EditPost> {
   String dropdownValue = 'Electronics';
   var title, description, category;
   String? status;
   String msg = '';
   var selectedValue;
-  final _formKey = GlobalKey<FormState>();
-  CollectionReference posts = FirebaseFirestore.instance.collection("Posts");
 
-  createPost() async {
+  final _formKey = GlobalKey<FormState>();
+  CollectionReference post = FirebaseFirestore.instance.collection("Posts");
+
+  updatePost() async {
     var userID = AuthService().currentUser!.uid;
     var data = _formKey.currentState;
     if (data!.validate() && status != null) {
       data.save();
-      await posts.add({
+      await post.doc(widget.docID).update({
         "title": title,
         "description": description,
         "category": category,
@@ -39,7 +38,7 @@ class _AddPostsState extends State<AddPosts> {
         "status": status,
         "Date": DateTime.now(),
       });
-      Navigator.of(context).pushReplacementNamed('Posts');
+      Navigator.of(context).popAndPushNamed('History');
     } else {
       setState(() {
         msg = "Please choose type of the post";
@@ -115,7 +114,7 @@ class _AddPostsState extends State<AddPosts> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Add Post"),
+        title: const Text("Update Post"),
         backgroundColor: Colors.blue[900],
       ),
       body: Form(
@@ -146,6 +145,7 @@ class _AddPostsState extends State<AddPosts> {
                     return "Title is required";
                   }
                 },
+                initialValue: widget.posts['title'],
                 maxLines: 1,
                 maxLength: 30,
                 onSaved: (val) {
@@ -180,6 +180,7 @@ class _AddPostsState extends State<AddPosts> {
                     return "Description is required";
                   }
                 },
+                initialValue: widget.posts['description'],
                 maxLines: 4,
                 maxLength: 250,
                 onSaved: (val) {
@@ -212,6 +213,7 @@ class _AddPostsState extends State<AddPosts> {
                 onSaved: (val) {
                   category = val;
                 },
+                value: widget.posts['category'],
                 decoration: InputDecoration(
                   //Add isDense true and zero Padding.
                   //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
@@ -233,14 +235,14 @@ class _AddPostsState extends State<AddPosts> {
                 ),
                 iconSize: 30,
                 items: Categories.map((item) => DropdownMenuItem<String>(
-                      value: item,
-                      child: Text(
-                        item,
-                        style: const TextStyle(
-                          fontSize: 14,
-                        ),
-                      ),
-                    )).toList(),
+                  value: item,
+                  child: Text(
+                    item,
+                    style: const TextStyle(
+                      fontSize: 14,
+                    ),
+                  ),
+                )).toList(),
                 validator: (value) {
                   if (value == null) {
                     return 'Please select category.';
@@ -267,6 +269,7 @@ class _AddPostsState extends State<AddPosts> {
                       title: const Text("Lost"),
                       value: "Lost",
                       groupValue: status,
+
                       onChanged: (value) {
                         setState(() {
                           status = value;
@@ -293,18 +296,18 @@ class _AddPostsState extends State<AddPosts> {
                   showButtomSheet();
                 },
                 style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue[900],
+                  backgroundColor: Colors.blue[900],
                 ),
-                child: const Text("Add Image"),
+                child: const Text("Change Image"),
               ),
               ElevatedButton(
                 onPressed: () async {
-                  await createPost();
+                  await updatePost();
                 },
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.fromLTRB(60, 5, 60, 5), backgroundColor: Colors.blue[900],
                 ),
-                child: const Text('Create post'),
+                child: const Text('Update post'),
               )
             ],
           ),

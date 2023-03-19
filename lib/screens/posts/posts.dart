@@ -70,6 +70,7 @@ class _PostsState extends State<Posts> {
 
 class ListPosts extends StatelessWidget {
   final posts;
+
   ListPosts({this.posts});
 
 
