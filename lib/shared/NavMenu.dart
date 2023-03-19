@@ -1,13 +1,14 @@
 
 import 'package:flutter/material.dart';
-import 'package:mafqud_project/MainScreen.dart';
-import 'package:mafqud_project/screens/RateUs.dart';
+import 'package:mafqud_project/screens/MainScreen.dart';
 import 'package:mafqud_project/screens/homepage/Home.dart';
+import 'package:mafqud_project/screens/support.dart';
 import 'package:mafqud_project/services/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mafqud_project/shared/loading.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:mafqud_project/screens/RateUs.dart';
 import 'package:mafqud_project/screens/posts/history.dart';
 
 // current logged in user
@@ -118,7 +119,10 @@ Widget buildMenuItems(BuildContext context) => Container(
           ListTile(
             leading: const Icon(Icons.support_agent_outlined),
             title: const Text("Support"),
-            onTap: () {},
+            onTap: () {
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => support()));
+            },
           ),
           ListTile(
             leading: const Icon(Icons.star_border_outlined),

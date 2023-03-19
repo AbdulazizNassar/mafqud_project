@@ -52,7 +52,7 @@ class _AddPostsState extends State<AddPosts> {
         context: context,
         builder: (context) {
           return Container(
-            padding: EdgeInsets.all(20),
+            padding: const EdgeInsets.all(20),
             height: 190,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -142,7 +142,7 @@ class _AddPostsState extends State<AddPosts> {
               ),
               TextFormField(
                 validator: (val) {
-                  if (val!.length == 0) {
+                  if (val!.isEmpty) {
                     return "Title is required";
                   }
                 },
@@ -176,7 +176,7 @@ class _AddPostsState extends State<AddPosts> {
               ),
               TextFormField(
                 validator: (val) {
-                  if (val!.length == 0) {
+                  if (val!.isEmpty) {
                     return "Description is required";
                   }
                 },
@@ -232,15 +232,17 @@ class _AddPostsState extends State<AddPosts> {
                   color: Colors.black45,
                 ),
                 iconSize: 30,
-                items: Categories.map((item) => DropdownMenuItem<String>(
-                      value: item,
-                      child: Text(
-                        item,
-                        style: const TextStyle(
-                          fontSize: 14,
-                        ),
-                      ),
-                    )).toList(),
+                items: postCategories
+                    .map((item) => DropdownMenuItem<String>(
+                          value: item,
+                          child: Text(
+                            item,
+                            style: const TextStyle(
+                              fontSize: 14,
+                            ),
+                          ),
+                        ))
+                    .toList(),
                 validator: (value) {
                   if (value == null) {
                     return 'Please select category.';

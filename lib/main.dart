@@ -6,7 +6,7 @@ import 'screens/Authentication/sign_in.dart';
 import 'screens/posts/addPost.dart';
 import 'screens/posts/posts.dart';
 import 'Screens/Authentication/auth.dart';
-import 'MainScreen.dart';
+import 'screens/MainScreen.dart';
 import 'firebase_options.dart';
 
 void main() async {
