@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mafqud_project/models/currentUser.dart';
+import 'package:mafqud_project/services/notifications.dart';
 import 'firebase_exceptions.dart';
 
 class AuthService {
@@ -14,7 +15,11 @@ class AuthService {
   //document IDs
 
   Future createUserModel(
-      String name, String email, String ID, String phoneNum) async {
+    String name,
+    String email,
+    String ID,
+    String phoneNum,
+  ) async {
     await _firestore.collection("users").doc(currentUser!.uid).set({
       'name': name,
       'email': email,
