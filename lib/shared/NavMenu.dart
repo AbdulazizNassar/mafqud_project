@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mafqud_project/MainScreen.dart';
 import 'package:mafqud_project/screens/RateUs.dart';
 import 'package:mafqud_project/screens/homepage/Home.dart';
+import 'package:mafqud_project/screens/notifications.dart';
 import 'package:mafqud_project/services/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mafqud_project/shared/loading.dart';
@@ -102,6 +103,12 @@ Widget buildMenuItems(BuildContext context) => Container(
             title: const Text("Home"),
             onTap: () => Navigator.of(context).pushReplacement(
                 MaterialPageRoute(builder: (context) => const Home())),
+          ),
+          ListTile(
+            leading: const Icon(Icons.notifications_active_outlined),
+            title: const Text("Notifications"),
+            onTap: () => Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => const notifications())),
           ),
           ListTile(
             leading: const Icon(Icons.history_outlined),
