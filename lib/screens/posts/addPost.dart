@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,7 @@ class _AddPostsState extends State<AddPosts> {
   String? status;
   String msg = '';
   var selectedValue;
+  late File file;
   final _formKey = GlobalKey<FormState>();
   CollectionReference posts = FirebaseFirestore.instance.collection("Posts");
 
@@ -47,7 +49,7 @@ class _AddPostsState extends State<AddPosts> {
     }
   }
 
-  showButtomSheet() {
+  showBottomSheet() {
     return showModalBottomSheet(
         context: context,
         builder: (context) {
@@ -62,7 +64,19 @@ class _AddPostsState extends State<AddPosts> {
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                 ),
                 InkWell(
-                  onTap: () async {},
+                  onTap: () async {
+
+                    PickedFile? pickedFile = await ImagePicker().getImage(
+                        source: ImageSource.gallery);
+
+                    if (pickedFile != null){
+                      setState(() {
+                        file = File(pickedFile.path);
+                        print(file);
+                      });
+                    }
+
+                  },
                   child: Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(10),
@@ -84,7 +98,18 @@ class _AddPostsState extends State<AddPosts> {
                   ),
                 ),
                 InkWell(
-                  onTap: () async {},
+                  onTap: () async {
+
+                    PickedFile? pickedFile = await ImagePicker().getImage(
+                        source: ImageSource.camera);
+
+                    if (pickedFile != null){
+                      setState(() {
+                        file = File(pickedFile.path);
+                        print(file);
+                      });
+                    }
+                  },
                   child: Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(10),
@@ -292,7 +317,7 @@ class _AddPostsState extends State<AddPosts> {
               const SizedBox(height: 2),
               ElevatedButton(
                 onPressed: () {
-                  showButtomSheet();
+                  showBottomSheet();
                 },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue[900],
