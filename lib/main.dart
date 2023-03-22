@@ -8,7 +8,7 @@ import 'screens/posts/addPost.dart';
 import 'screens/posts/posts.dart';
 import 'Screens/Authentication/auth.dart';
 import 'screens/MainScreen.dart';
-import 'firebase_options.dart';
+import 'services/firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
