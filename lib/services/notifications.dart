@@ -62,7 +62,8 @@ void sendPushMessage(String body, String title, String token) async {
             'click_action': 'FLUTTER_NOTIFICATION_CLICK',
             'id': '1',
             'status': 'done',
-            "body": body
+            "body": body,
+            "title": title
           },
           'notification': <String, dynamic>{
             'body': body,

@@ -1,9 +1,9 @@
 // ignore: file_names
 import 'package:flutter/material.dart';
 import 'package:mafqud_project/MainScreen.dart';
-import 'package:mafqud_project/screens/RateUs.dart';
+import 'package:mafqud_project/screens/NavMenuServices/RateUs.dart';
 import 'package:mafqud_project/screens/homepage/Home.dart';
-import 'package:mafqud_project/screens/notifications.dart';
+import 'package:mafqud_project/screens/NavMenuServices/notifications.dart';
 import 'package:mafqud_project/services/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mafqud_project/shared/loading.dart';

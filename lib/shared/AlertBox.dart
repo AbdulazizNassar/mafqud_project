@@ -52,6 +52,7 @@ showNotification(context) {
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
           ),
           const SizedBox(height: 5),
+          Text(message.data['title']),
           Text(message.data['body'])
         ]),
         leading: const Icon(Icons.notifications),

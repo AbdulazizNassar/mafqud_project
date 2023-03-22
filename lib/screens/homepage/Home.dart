@@ -45,14 +45,14 @@ class _HomeState extends State<Home> {
               const SizedBox(
                 height: 70,
               ),
-              GestureDetector(
-                onTap: () async {
+              ElevatedButton(
+                onPressed: () async {
                   DocumentSnapshot snap = await FirebaseFirestore.instance
                       .collection("userToken")
                       .doc(AuthService().currentUser!.uid)
                       .get();
                   String token = snap['token'];
-                  sendPushMessage("helheh", "title", token);
+                  sendPushMessage("my name is", "title", token);
                 },
                 child: Container(
                   color: Colors.amber,
