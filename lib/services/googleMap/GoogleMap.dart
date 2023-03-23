@@ -10,19 +10,11 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
-  late LocationData currentLocation;
   GoogleMapController? mapController;
-
-  void getCurrentLocation() {
-    Location location = Location();
-    location.getLocation().then((location) {
-      currentLocation = location;
-    });
-  }
+  Set<Marker> _markers = Set();
 
   @override
   void initState() {
-    getCurrentLocation();
     super.initState();
   }
 
@@ -45,31 +37,38 @@ class _MapScreenState extends State<MapScreen> {
           floatingActionButton: FloatingActionButton(
             child: const Icon(Icons.center_focus_strong_outlined),
             onPressed: () {
-              mapController!.animateCamera(CameraUpdate.newCameraPosition(
-                  CameraPosition(
-                      target: LatLng(currentLocation.latitude!,
-                          currentLocation.longitude!),
-                      zoom: 14)));
+              Location location = Location();
+              location.getLocation().then((location) {
+                mapController!.animateCamera(CameraUpdate.newCameraPosition(
+                    CameraPosition(
+                        target: LatLng(location.latitude!, location.longitude!),
+                        zoom: 14)));
+              });
             },
           ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.startDocked,
           body: GoogleMap(
-            initialCameraPosition: CameraPosition(
-                target: LatLng(
-                    currentLocation.latitude!, currentLocation.longitude!),
-                zoom: 14),
+            initialCameraPosition:
+                //TODO: get current user location
+                CameraPosition(target: LatLng(35, 25), zoom: 14),
+            onTap: (LatLng newpos) {
+              setState(() {
+                _markers.add(
+                  Marker(
+                    // This marker id can be anything that uniquely identifies each marker.
+                    markerId: MarkerId('title'),
+                    position: LatLng(newpos.latitude, newpos.longitude),
+                  ),
+                );
+              });
+            },
             onMapCreated: (controller) {
               setState(() {
                 mapController = controller;
               });
             },
-            markers: {
-              Marker(
-                  markerId: const MarkerId("source"),
-                  position: LatLng(
-                      currentLocation.latitude!, currentLocation.longitude!))
-            },
+            markers: _markers,
           ),
         );
 }
