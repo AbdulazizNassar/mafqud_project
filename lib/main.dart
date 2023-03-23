@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:mafqud_project/screens/posts/history.dart';
+import 'package:mafqud_project/services/googleMap/GoogleMap.dart';
 import 'Screens/homepage/Home.dart';
 import 'screens/Authentication/register.dart';
 import 'screens/Authentication/sign_in.dart';
@@ -29,7 +30,7 @@ class MyApp extends StatelessWidget {
         appBarTheme: const AppBarTheme(color: Colors.blue, elevation: 2),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      initialRoute: "MainScreen",
+      initialRoute: "GoogleMap",
       routes: {
         "MainScreen": (context) => const MainScreen(),
         "Auth": (context) => Auth(),
@@ -39,6 +40,7 @@ class MyApp extends StatelessWidget {
         "Posts": (context) => const Posts(),
         "AddPost": (context) => const AddPosts(),
         "History": (context) => const History(),
+        "GoogleMap": (context) => MapScreen(),
       },
     );
   }
