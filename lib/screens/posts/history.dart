@@ -72,13 +72,10 @@ class ListPosts extends StatelessWidget {
         child: Row(
           children: [
             Expanded(
-                flex: 2,
-                child: Image.asset(
-                  "assets/flower.jpg", // For test
-                  height: 100, fit: BoxFit.fitWidth,
-                )),
-            Expanded(
                 flex: 3,
+                child: Image.network(posts['image'], fit: BoxFit.cover,)),
+            Expanded(
+                flex: 9,
                 child: ListTile(
                   title: Text("${posts['title']}"),
                   subtitle: Column(
