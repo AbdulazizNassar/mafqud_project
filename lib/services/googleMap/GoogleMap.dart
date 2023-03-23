@@ -5,13 +5,13 @@ import 'package:mafqud_project/shared/loading.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
-
   @override
   State<MapScreen> createState() => _MapScreenState();
 }
 
 class _MapScreenState extends State<MapScreen> {
-  LocationData? currentLocation;
+  late LocationData currentLocation;
+  GoogleMapController? mapController;
 
   void getCurrentLocation() {
     Location location = Location();
@@ -22,9 +22,8 @@ class _MapScreenState extends State<MapScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
-    super.initState();
     getCurrentLocation();
+    super.initState();
   }
 
   bool isLoading = false;
@@ -33,23 +32,44 @@ class _MapScreenState extends State<MapScreen> {
       ? Loading()
       : Scaffold(
           appBar: AppBar(
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back_ios_new_outlined),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
             title: const Text(
               "Select location",
             ),
           ),
-          body: currentLocation == null
-              ? Text("Loading")
-              : GoogleMap(
-                  initialCameraPosition: CameraPosition(
-                      target: LatLng(currentLocation!.latitude!,
-                          currentLocation!.longitude!),
-                      zoom: 14),
-                  markers: {
-                    Marker(
-                        markerId: MarkerId("source"),
-                        position: LatLng(currentLocation!.latitude!,
-                            currentLocation!.longitude!))
-                  },
-                ),
+          floatingActionButton: FloatingActionButton(
+            child: const Icon(Icons.center_focus_strong_outlined),
+            onPressed: () {
+              mapController!.animateCamera(CameraUpdate.newCameraPosition(
+                  CameraPosition(
+                      target: LatLng(currentLocation.latitude!,
+                          currentLocation.longitude!),
+                      zoom: 14)));
+            },
+          ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.startDocked,
+          body: GoogleMap(
+            initialCameraPosition: CameraPosition(
+                target: LatLng(
+                    currentLocation.latitude!, currentLocation.longitude!),
+                zoom: 14),
+            onMapCreated: (controller) {
+              setState(() {
+                mapController = controller;
+              });
+            },
+            markers: {
+              Marker(
+                  markerId: const MarkerId("source"),
+                  position: LatLng(
+                      currentLocation.latitude!, currentLocation.longitude!))
+            },
+          ),
         );
 }
