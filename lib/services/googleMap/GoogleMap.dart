@@ -16,6 +16,7 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   late CameraPosition _cameraPosition;
+
   @override
   void initState() {
     super.initState();
@@ -112,10 +113,15 @@ class _MapScreenState extends State<MapScreen> {
                     child: const Icon(Icons.center_focus_strong_outlined),
                     onPressed: () async {
                       await getUserCurrentLocation().then((value) {
+                        setState(() {
+                          _markers.add(Marker(
+                            markerId: MarkerId("currentLocation"),
+                            position: LatLng(value.latitude, value.longitude),
+                          ));
+                        });
                         _mapController.animateCamera(
                             CameraUpdate.newCameraPosition(CameraPosition(
-                                target:
-                                    LatLng(value.latitude!, value.longitude!),
+                                target: LatLng(value.latitude, value.longitude),
                                 zoom: 14)));
                       });
                     },
