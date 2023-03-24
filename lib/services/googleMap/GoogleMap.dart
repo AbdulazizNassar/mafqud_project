@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart';
 import 'package:mafqud_project/services/googleMap/location_controller.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -22,28 +23,14 @@ class _MapScreenState extends State<MapScreen> {
         const CameraPosition(target: LatLng(45.521563, -122.677433), zoom: 17);
   }
 
-  Future<LocationData?> _currentLocation() async {
-    bool serviceEnabled;
-    PermissionStatus permissionGranted;
-
-    Location location = new Location();
-
-    serviceEnabled = await location.serviceEnabled();
-    if (!serviceEnabled) {
-      serviceEnabled = await location.requestService();
-      if (!serviceEnabled) {
-        return null;
-      }
-    }
-
-    permissionGranted = await location.hasPermission();
-    if (permissionGranted == PermissionStatus.denied) {
-      permissionGranted = await location.requestPermission();
-      if (permissionGranted != PermissionStatus.granted) {
-        return null;
-      }
-    }
-    return await location.getLocation();
+  Future<Position> getUserCurrentLocation() async {
+    await Geolocator.requestPermission()
+        .then((value) {})
+        .onError((error, stackTrace) async {
+      await Geolocator.requestPermission();
+      print("ERROR" + error.toString());
+    });
+    return await Geolocator.getCurrentPosition();
   }
 
   late GoogleMapController _mapController;
@@ -122,10 +109,16 @@ class _MapScreenState extends State<MapScreen> {
                   alignment: Alignment.bottomLeft,
                   padding: const EdgeInsets.all(25),
                   child: FloatingActionButton(
-                    onPressed: () {
-                      _currentLocation();
+                    child: const Icon(Icons.center_focus_strong_outlined),
+                    onPressed: () async {
+                      await getUserCurrentLocation().then((value) {
+                        _mapController.animateCamera(
+                            CameraUpdate.newCameraPosition(CameraPosition(
+                                target:
+                                    LatLng(value.latitude!, value.longitude!),
+                                zoom: 14)));
+                      });
                     },
-                    child: const Icon(Icons.center_focus_strong),
                   ),
                 ),
               ],
