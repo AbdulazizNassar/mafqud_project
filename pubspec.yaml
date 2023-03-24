@@ -53,6 +53,12 @@ dependencies:
   dio: ^5.0.3
   flutter_polyline_points: ^1.0.0
   location: ^4.4.0
+  get: ^4.6.5
+  http: ^0.13.5
+  geocoding: ^2.1.0
+  flutter_typeahead: ^4.3.7
+  flutter_google_places: ^0.3.0
+  geolocator: ^9.0.2
 
 dev_dependencies:
   flutter_test:
