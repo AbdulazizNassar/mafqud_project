@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:path/path.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +8,9 @@ import 'package:mafqud_project/services/auth.dart';
 import 'package:mafqud_project/shared/Lists.dart';
 import 'package:mafqud_project/shared/NavMenu.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+
+
 
 import '../../shared/constants.dart';
 import '../../shared/size_config.dart';
@@ -19,27 +24,35 @@ class AddPosts extends StatefulWidget {
 
 class _AddPostsState extends State<AddPosts> {
   String dropdownValue = 'Electronics';
-  var title, description, category;
+  var title, description, category, imageName, imageUrl;
   String? status;
   String msg = '';
   var selectedValue;
+  late File file;
   final _formKey = GlobalKey<FormState>();
   CollectionReference posts = FirebaseFirestore.instance.collection("Posts");
 
-  createPost() async {
+  createPost(BuildContext context) async {
     var userID = AuthService().currentUser!.uid;
     var data = _formKey.currentState;
     if (data!.validate() && status != null) {
-      data.save();
+      if (imageUrl != null) {
+        data.save();
       await posts.add({
         "title": title,
         "description": description,
         "category": category,
         "userID": userID,
         "status": status,
+        "image": imageUrl,
         "Date": DateTime.now(),
       });
-      Navigator.of(context).pushReplacementNamed('Posts');
+      Navigator.of(context as BuildContext).pushReplacementNamed('Posts');
+    } else {
+        setState(() {
+          msg = "Please choose image";
+        });
+      }
     } else {
       setState(() {
         msg = "Please choose type of the post";
@@ -47,7 +60,42 @@ class _AddPostsState extends State<AddPosts> {
     }
   }
 
-  showButtomSheet() {
+  imgUpload(file) async {
+
+    print('${file?.path}');
+
+    if (file == null) return 'Please choose image';
+    //Import dart:core
+    String uniqueFileName =
+    DateTime.now().millisecondsSinceEpoch.toString();
+
+    /*Step 2: Upload to Firebase storage*/
+    //Install firebase_storage
+    //Import the library
+
+    //Get a reference to storage root
+    Reference referenceRoot = FirebaseStorage.instance.ref();
+    Reference referenceDirImages =
+    referenceRoot.child('images');
+
+    //Create a reference for the image to be stored
+    Reference referenceImageToUpload =
+    referenceDirImages.child(file.name);
+
+    //Handle errors/success
+    try {
+      //Store the file
+      await referenceImageToUpload.putFile(File(file!.path));
+      //Success: get the download URL
+      imageUrl = await referenceImageToUpload.getDownloadURL();
+    } catch (error) {
+      //Some error occurred
+    }
+
+  }
+
+
+  showBottomSheet(BuildContext context) {
     return showModalBottomSheet(
         context: context,
         builder: (context) {
@@ -62,7 +110,13 @@ class _AddPostsState extends State<AddPosts> {
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                 ),
                 InkWell(
-                  onTap: () async {},
+                  onTap: () async {
+
+                    ImagePicker picker = ImagePicker();
+                    XFile? file = await picker.pickImage(source: ImageSource.gallery);
+                     imgUpload(file);
+
+                  },
                   child: Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(10),
@@ -84,7 +138,13 @@ class _AddPostsState extends State<AddPosts> {
                   ),
                 ),
                 InkWell(
-                  onTap: () async {},
+                  onTap: () async {
+
+                    ImagePicker picker = ImagePicker();
+                    XFile? file = await picker.pickImage(source: ImageSource.camera);
+                    imgUpload(file);
+
+                  },
                   child: Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(10),
@@ -292,7 +352,7 @@ class _AddPostsState extends State<AddPosts> {
               const SizedBox(height: 2),
               ElevatedButton(
                 onPressed: () {
-                  showButtomSheet();
+                  showBottomSheet(context);
                 },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue[900],
@@ -301,7 +361,7 @@ class _AddPostsState extends State<AddPosts> {
               ),
               ElevatedButton(
                 onPressed: () async {
-                  await createPost();
+                  await createPost(context);
                 },
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.fromLTRB(60, 5, 60, 5), backgroundColor: Colors.blue[900],
