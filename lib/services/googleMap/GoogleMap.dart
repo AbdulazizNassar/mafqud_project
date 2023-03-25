@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:location/location.dart';
-import 'package:mafqud_project/services/googleMap/location_controller.dart';
+import 'package:google_maps_webservice/places.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:get/get.dart';
-import 'location_controller.dart';
-import 'location_search_dialogue.dart';
+import 'package:google_api_headers/google_api_headers.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({Key? key}) : super(key: key);
@@ -15,12 +13,19 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
-  late CameraPosition _cameraPosition;
+  Set<Marker> _markers = Set();
+  final String googleApikey = "AIzaSyCj2A3BXC5GYHBlbyjIJlJPr8AWLHKCRv8";
+  GoogleMapController? mapController; //contrller for Google map
+  CameraPosition? cameraPosition;
+  LatLng startLocation = const LatLng(1, 1);
+  String location = "Search Location";
+
   @override
   void initState() {
     super.initState();
-    _cameraPosition =
-        const CameraPosition(target: LatLng(45.521563, -122.677433), zoom: 17);
+    getUserCurrentLocation().then((value) {
+      startLocation = LatLng(value.altitude, value.longitude);
+    });
   }
 
   Future<Position> getUserCurrentLocation() async {
@@ -28,102 +33,124 @@ class _MapScreenState extends State<MapScreen> {
         .then((value) {})
         .onError((error, stackTrace) async {
       await Geolocator.requestPermission();
-      print("ERROR" + error.toString());
     });
     return await Geolocator.getCurrentPosition();
   }
 
-  late GoogleMapController _mapController;
-  Set<Marker> _markers = Set();
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<LocationController>(
-      builder: (locationController) {
-        return Scaffold(
-            appBar: AppBar(
-              title: const Text('Select Location'),
-              centerTitle: true,
-              leading: IconButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                icon: const Icon(Icons.arrow_back_ios_new_outlined),
-              ),
-              backgroundColor: Colors.blue[700],
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text("Select Location"),
+          centerTitle: true,
+          backgroundColor: Colors.blue.shade900,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios_new_outlined),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.done))],
+        ),
+        body: Stack(children: [
+          GoogleMap(
+            myLocationEnabled: true,
+            onTap: (LatLng newpos) {
+              setState(() {
+                _markers.add(Marker(
+                  markerId: const MarkerId('selectedLocation'),
+                  position: LatLng(newpos.latitude, newpos.longitude),
+                ));
+              });
+            },
+            //Map widget from google_maps_flutter package
+            zoomGesturesEnabled: true, //enable Zoom in, out on map
+            initialCameraPosition: CameraPosition(
+              //innital position in map
+              target: startLocation, //initial position
+              zoom: 14.0, //initial zoom level
             ),
-            body: Stack(
-              children: <Widget>[
-                GoogleMap(
-                  myLocationButtonEnabled: true,
-                  onTap: (LatLng selectedPos) {
-                    setState(() {
-                      _markers.add(Marker(
-                          markerId: const MarkerId("selectedLocation"),
-                          position: selectedPos));
-                    });
-                  },
-                  onMapCreated: (GoogleMapController mapController) {
-                    _mapController = mapController;
-                    locationController = mapController as LocationController;
-                  },
-                  initialCameraPosition: _cameraPosition,
-                  markers: _markers,
-                ),
-                Positioned(
-                  top: 5,
-                  left: 10,
-                  right: 20,
-                  child: GestureDetector(
-                    onTap: () => Get.dialog(
-                        LocationSearchDialog(mapController: _mapController)),
-                    child: Container(
-                      height: 50,
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      decoration: BoxDecoration(
-                          color: Theme.of(context).cardColor,
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Row(children: [
-                        Icon(Icons.location_on,
-                            size: 25, color: Theme.of(context).primaryColor),
-                        const SizedBox(width: 5),
-                        //here we show the address on the top
-                        Expanded(
-                          child: Text(
-                            '${locationController.pickPlaceMark.name ?? ''} ${locationController.pickPlaceMark.locality ?? ''} '
-                            '${locationController.pickPlaceMark.postalCode ?? ''} ${locationController.pickPlaceMark.country ?? ''}',
-                            style: const TextStyle(fontSize: 20),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        Icon(Icons.search,
-                            size: 25,
-                            color:
-                                Theme.of(context).textTheme.bodyText1!.color),
-                      ]),
-                    ),
-                  ),
-                ),
-                Container(
-                  alignment: Alignment.bottomLeft,
-                  padding: const EdgeInsets.all(25),
-                  child: FloatingActionButton(
-                    child: const Icon(Icons.center_focus_strong_outlined),
-                    onPressed: () async {
-                      await getUserCurrentLocation().then((value) {
-                        _mapController.animateCamera(
-                            CameraUpdate.newCameraPosition(CameraPosition(
-                                target:
-                                    LatLng(value.latitude!, value.longitude!),
-                                zoom: 14)));
+            mapType: MapType.normal, //map type
+            onMapCreated: (controller) {
+              //method called when map is created
+              setState(() {
+                mapController = controller;
+              });
+            },
+            markers: _markers,
+          ),
+
+          //search autoconplete input
+          Positioned(
+              //search input bar
+              top: 10,
+              child: InkWell(
+                  onTap: () async {
+                    var place = await PlacesAutocomplete.show(
+                        context: context,
+                        apiKey: googleApikey,
+                        mode: Mode.overlay,
+                        types: [],
+                        strictbounds: false,
+                        //google_map_webservice package
+                        onError: (err) {
+                          print(err);
+                        });
+
+                    if (place != null) {
+                      setState(() {
+                        location = place.description.toString();
                       });
-                    },
-                  ),
-                ),
-              ],
-            ));
-      },
-    );
+
+                      //form google_maps_webservice package
+                      final plist = GoogleMapsPlaces(
+                        apiKey: googleApikey,
+                        apiHeaders: await const GoogleApiHeaders().getHeaders(),
+                        //from google_api_headers package
+                      );
+                      String placeid = place.placeId ?? "0";
+                      final detail = await plist.getDetailsByPlaceId(placeid);
+                      final geometry = detail.result.geometry!;
+                      final lat = geometry.location.lat;
+                      final lang = geometry.location.lng;
+                      var newlatlang = LatLng(lat, lang);
+
+                      //move map camera to selected place with animation
+                      mapController?.animateCamera(
+                          CameraUpdate.newCameraPosition(
+                              CameraPosition(target: newlatlang, zoom: 17)));
+                    }
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: Card(
+                      child: Container(
+                          padding: const EdgeInsets.all(0),
+                          width: MediaQuery.of(context).size.width - 40,
+                          child: ListTile(
+                            title: Text(
+                              location,
+                              style: const TextStyle(fontSize: 18),
+                            ),
+                            trailing: const Icon(Icons.search),
+                            dense: true,
+                          )),
+                    ),
+                  ))),
+          Container(
+            alignment: Alignment.bottomLeft,
+            margin: const EdgeInsets.all(20),
+            child: FloatingActionButton(
+                onPressed: () async {
+                  await getUserCurrentLocation().then((pos) {
+                    mapController?.animateCamera(CameraUpdate.newCameraPosition(
+                        CameraPosition(
+                            target: LatLng(pos.latitude, pos.longitude),
+                            zoom: 14)));
+                  });
+                },
+                child: const Icon(Icons.location_on_sharp)),
+          )
+        ]));
   }
 }
