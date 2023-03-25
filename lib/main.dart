@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mafqud_project/screens/posts/history.dart';
 import 'package:mafqud_project/services/googleMap/GoogleMap.dart';
-import 'package:mafqud_project/services/googleMap/location_controller.dart';
 import 'Screens/homepage/Home.dart';
 import 'screens/Authentication/register.dart';
 import 'screens/Authentication/sign_in.dart';
@@ -24,8 +23,7 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    Get.put(LocationController());
-    return GetMaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Mafqud',
       theme: ThemeData(
