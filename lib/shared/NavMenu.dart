@@ -10,8 +10,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mafqud_project/screens/RateUs.dart';
 import 'package:mafqud_project/screens/posts/history.dart';
 
-import '../services/googleMap/GoogleMap.dart';
-
 // current logged in user
 User? userAuth = AuthService().currentUser;
 
