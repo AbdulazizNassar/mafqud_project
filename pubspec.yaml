@@ -59,6 +59,7 @@ dependencies:
   flutter_typeahead: ^4.3.7
   flutter_google_places: ^0.3.0
   geolocator: ^9.0.2
+  firebase_storage: ^11.0.16
 
 
 dev_dependencies:
