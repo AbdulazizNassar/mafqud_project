@@ -13,7 +13,8 @@ class Posts extends StatefulWidget {
 }
 
 class _PostsState extends State<Posts> {
-  Query<Map<String, dynamic>> postsRef = FirebaseFirestore.instance.collection('Posts').orderBy('Date');
+  Query<Map<String, dynamic>> postsRef =
+      FirebaseFirestore.instance.collection('Posts').orderBy('Date');
 
   var posts = [];
 
@@ -45,11 +46,11 @@ class _PostsState extends State<Posts> {
                 indicator: BoxDecoration(
                     borderRadius: BorderRadius.circular(25),
                     color: Colors.blue.shade300),
-                tabs: [
-                  const Tab(
+                tabs: const [
+                  Tab(
                     child: Text("Found"),
                   ),
-                  const Tab(
+                  Tab(
                     child: Text("Lost"),
                   )
                 ]),
@@ -85,6 +86,7 @@ class _PostsState extends State<Posts> {
                 });
           } else if (snapshot.hasError) {
             return const Text("Error");
+            print(snapshot.error);
           } else if (snapshot.connectionState == ConnectionState.waiting) {
             const Text("loading");
           }
@@ -110,7 +112,10 @@ class ListPosts extends StatelessWidget {
           children: [
             Expanded(
                 flex: 3,
-                child: Image.network(posts['image'], fit: BoxFit.cover,)),
+                child: Image.network(
+                  posts['image'],
+                  fit: BoxFit.cover,
+                )),
             Expanded(
                 flex: 9,
                 child: ListTile(
