@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:mafqud_project/shared/constants.dart';
 import 'package:mafqud_project/shared/loading.dart';
-
+import 'package:geocoding/geocoding.dart';
 import '../../shared/DateTime.dart';
 
 class postDetails extends StatefulWidget {
@@ -10,6 +10,16 @@ class postDetails extends StatefulWidget {
   const postDetails({super.key, this.posts});
   @override
   State<postDetails> createState() => _postDetailsState();
+}
+
+//get address based on long and lat
+late String locality;
+late String subLocality;
+getPlacmark(posts) async {
+  List<Placemark> placemarks =
+      await placemarkFromCoordinates(posts["Lat"], posts['Lng']);
+  locality = placemarks.first.locality!;
+  subLocality = placemarks.first.subLocality!;
 }
 
 class _postDetailsState extends State<postDetails> {
@@ -23,6 +33,7 @@ class _postDetailsState extends State<postDetails> {
         builder:
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
+            getPlacmark(widget.posts);
             Map<String, dynamic> data =
                 snapshot.data!.data() as Map<String, dynamic>;
             return Scaffold(
@@ -33,11 +44,15 @@ class _postDetailsState extends State<postDetails> {
               ),
               body: Column(children: [
                 Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [],
-                ),
-                const SizedBox(
-                  height: 300,
+                  children: [
+                    Expanded(
+                        flex: 3,
+                        child: Image.network(
+                          widget.posts['image'],
+                          fit: BoxFit.fill,
+                          height: 350,
+                        )),
+                  ],
                 ),
                 Container(
                   margin: const EdgeInsets.only(top: 20),
@@ -62,17 +77,9 @@ class _postDetailsState extends State<postDetails> {
                               size: 40,
                             ),
                             //Todo edit to make location written by user
-                            const Text("Ksu", style: textStyle),
+                            Text("$locality, $subLocality", style: textStyle),
                             const SizedBox(
                               width: 100,
-                            ),
-                            const Icon(
-                              Icons.timer_outlined,
-                              size: 30,
-                            ),
-                            Text(
-                              readTimestamp(widget.posts["Date"]),
-                              style: textStyle,
                             ),
                           ],
                         ),
@@ -87,6 +94,17 @@ class _postDetailsState extends State<postDetails> {
                             children: [
                               Text(
                                 "Status: ${widget.posts["status"]}",
+                                style: textStyle,
+                              ),
+                              const SizedBox(
+                                width: 60,
+                              ),
+                              const Icon(
+                                Icons.timer_outlined,
+                                size: 30,
+                              ),
+                              Text(
+                                readTimestamp(widget.posts["Date"]),
                                 style: textStyle,
                               ),
                             ],
