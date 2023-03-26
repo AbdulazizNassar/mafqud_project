@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
         "Posts": (context) => const Posts(),
         "AddPost": (context) => const AddPosts(),
         "History": (context) => const History(),
-        "GoogleMap": (context) =>   MapScreen(),
+        "GoogleMap": (context) => const MapScreen(),
       },
     );
   }

@@ -28,8 +28,6 @@ class _AddPostsState extends State<AddPosts> {
   var title, description, category, imageName, imageUrl;
   String? status;
   String msg = '';
-  var selectedValue;
-  var startlocation;
   double lat = 0.0;
   double long = 0.0;
 
@@ -44,9 +42,18 @@ class _AddPostsState extends State<AddPosts> {
     if (data!.validate() && status != null) {
       if (imageUrl != null) {
         data.save();
-        savePostToFirebase(title, description, category, imageName, imageUrl,
-            long, lat, status);
-        Navigator.of(context as BuildContext).pushReplacementNamed('Posts');
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => MapScreen(
+                      lat: lat,
+                      long: long,
+                      title: title,
+                      description: description,
+                      category: category,
+                      imageUrl: imageUrl,
+                      status: status,
+                    )));
       } else {
         setState(() {
           msg = "Please choose image";
@@ -60,8 +67,6 @@ class _AddPostsState extends State<AddPosts> {
   }
 
   imgUpload(file) async {
-    print('${file?.path}');
-
     if (file == null) return 'Please choose image';
     //Import dart:core
     String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
@@ -185,7 +190,7 @@ class _AddPostsState extends State<AddPosts> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Add Post"),
+        title: const Text("Add Post 1/2"),
         backgroundColor: Colors.blue[900],
       ),
       body: Form(
@@ -370,19 +375,6 @@ class _AddPostsState extends State<AddPosts> {
                 child: const Text("Add Image"),
               ),
               ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              MapScreen(lat: lat, long: long)));
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue[900],
-                ),
-                child: const Text("Choose Location"),
-              ),
-              ElevatedButton(
                 onPressed: () async {
                   await createPost(context);
                 },
@@ -390,7 +382,7 @@ class _AddPostsState extends State<AddPosts> {
                   padding: const EdgeInsets.fromLTRB(60, 5, 60, 5),
                   backgroundColor: Colors.blue[900],
                 ),
-                child: const Text('Create post'),
+                child: const Text('Select Location'),
               )
             ],
           ),

@@ -241,8 +241,9 @@ class _RegisterState extends State<Register> {
                                     try {
                                       await signup();
                                     } catch (e) {
-                                      setState(() => errorAlert(context,
-                                          "The account already exists for that email."));
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(snackBarError("Error",
+                                              "Account already registered"));
                                     }
                                   }),
                             ),

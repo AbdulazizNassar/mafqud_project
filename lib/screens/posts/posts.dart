@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:mafqud_project/screens/posts/addPost.dart';
 import 'package:mafqud_project/screens/posts/postDetails.dart';
 import 'package:mafqud_project/shared/DateTime.dart';
@@ -40,6 +41,12 @@ class _PostsState extends State<Posts> {
         length: 2,
         child: Scaffold(
           appBar: AppBar(
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back_ios_new_outlined),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
             title: const Text("Posts"),
             backgroundColor: Colors.blue[900],
             bottom: TabBar(
@@ -97,15 +104,32 @@ class _PostsState extends State<Posts> {
 
 class ListPosts extends StatelessWidget {
   final posts;
+//get address based on long and lat
+  late String locality;
+  late String subLocality;
+  getPlacmark(posts) async {
+    List<Placemark> placemarks =
+        await placemarkFromCoordinates(posts["Lat"], posts['Lng']);
+    locality = placemarks.first.locality!;
+    subLocality = placemarks.first.subLocality!;
+    print("$locality, $subLocality");
+  }
 
   ListPosts({this.posts});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => postDetails(posts: posts)));
+      onTap: () async {
+        await getPlacmark(posts);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => postDetails(
+                      posts: posts,
+                      locality: locality,
+                      subLocality: subLocality,
+                    )));
       },
       child: Card(
         child: Row(

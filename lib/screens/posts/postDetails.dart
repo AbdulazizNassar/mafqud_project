@@ -7,33 +7,29 @@ import '../../shared/DateTime.dart';
 
 class postDetails extends StatefulWidget {
   final posts;
-  const postDetails({super.key, this.posts});
+  final locality;
+  final subLocality;
+  const postDetails({super.key, this.posts, this.locality, this.subLocality});
   @override
   State<postDetails> createState() => _postDetailsState();
 }
 
-//get address based on long and lat
-late String locality;
-late String subLocality;
-getPlacmark(posts) async {
-  List<Placemark> placemarks =
-      await placemarkFromCoordinates(posts["Lat"], posts['Lng']);
-  locality = placemarks.first.locality!;
-  subLocality = placemarks.first.subLocality!;
-}
-
 class _postDetailsState extends State<postDetails> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setState(() {});
+  }
+
   Widget build(BuildContext context) {
     //get user that created post
     CollectionReference user = FirebaseFirestore.instance.collection("users");
-
     return FutureBuilder<DocumentSnapshot>(
         future: user.doc("${widget.posts["userID"]}").get(),
         builder:
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            getPlacmark(widget.posts);
             Map<String, dynamic> data =
                 snapshot.data!.data() as Map<String, dynamic>;
             return Scaffold(
@@ -77,7 +73,8 @@ class _postDetailsState extends State<postDetails> {
                               size: 40,
                             ),
                             //Todo edit to make location written by user
-                            Text("$locality, $subLocality", style: textStyle),
+                            Text("${widget.locality}, ${widget.subLocality}",
+                                style: textStyle),
                             const SizedBox(
                               width: 100,
                             ),
@@ -97,7 +94,7 @@ class _postDetailsState extends State<postDetails> {
                                 style: textStyle,
                               ),
                               const SizedBox(
-                                width: 60,
+                                width: 40,
                               ),
                               const Icon(
                                 Icons.timer_outlined,

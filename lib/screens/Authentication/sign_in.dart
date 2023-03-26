@@ -157,8 +157,9 @@ class _SignInState extends State<SignIn> {
                                     try {
                                       await signInWithEmailAndPassword();
                                     } catch (e) {
-                                      setState(() => errorAlert(context,
-                                          "Account is not registered"));
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(snackBarError("Error",
+                                              "Account not registered"));
                                     }
                                   }),
                             ),
