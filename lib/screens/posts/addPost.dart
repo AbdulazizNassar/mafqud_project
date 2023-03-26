@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:path/path.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,17 +11,18 @@ import 'package:mafqud_project/shared/Lists.dart';
 import 'package:mafqud_project/shared/NavMenu.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-
-
-
+import 'package:mafqud_project/services/GoogleMap.dart';
 import '../../shared/constants.dart';
 import '../../shared/size_config.dart';
+import 'package:mafqud_project/services/GoogleMap.dart';
+
 
 class AddPosts extends StatefulWidget {
   const AddPosts({Key? key}) : super(key: key);
 
   @override
   State<AddPosts> createState() => _AddPostsState();
+
 }
 
 class _AddPostsState extends State<AddPosts> {
@@ -28,27 +31,25 @@ class _AddPostsState extends State<AddPosts> {
   String? status;
   String msg = '';
   var selectedValue;
+  var startlocation;
+   double lat = 0.0;
+   double long = 0.0;
+
+  late MapScreen postition;
+
   late File file;
   final _formKey = GlobalKey<FormState>();
   CollectionReference posts = FirebaseFirestore.instance.collection("Posts");
 
   createPost(BuildContext context) async {
-    var userID = AuthService().currentUser!.uid;
     var data = _formKey.currentState;
     if (data!.validate() && status != null) {
       if (imageUrl != null) {
         data.save();
-      await posts.add({
-        "title": title,
-        "description": description,
-        "category": category,
-        "userID": userID,
-        "status": status,
-        "image": imageUrl,
-        "Date": DateTime.now(),
-      });
-      Navigator.of(context as BuildContext).pushReplacementNamed('Posts');
-    } else {
+        savePostToFirebase(
+            title, description, category, imageName, imageUrl, long, lat, status);
+        Navigator.of(context as BuildContext).pushReplacementNamed('Posts');
+      } else {
         setState(() {
           msg = "Please choose image";
         });
@@ -61,13 +62,11 @@ class _AddPostsState extends State<AddPosts> {
   }
 
   imgUpload(file) async {
-
     print('${file?.path}');
 
     if (file == null) return 'Please choose image';
     //Import dart:core
-    String uniqueFileName =
-    DateTime.now().millisecondsSinceEpoch.toString();
+    String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
 
     /*Step 2: Upload to Firebase storage*/
     //Install firebase_storage
@@ -75,12 +74,10 @@ class _AddPostsState extends State<AddPosts> {
 
     //Get a reference to storage root
     Reference referenceRoot = FirebaseStorage.instance.ref();
-    Reference referenceDirImages =
-    referenceRoot.child('images');
+    Reference referenceDirImages = referenceRoot.child('images');
 
     //Create a reference for the image to be stored
-    Reference referenceImageToUpload =
-    referenceDirImages.child(file.name);
+    Reference referenceImageToUpload = referenceDirImages.child(file.name);
 
     //Handle errors/success
     try {
@@ -91,7 +88,15 @@ class _AddPostsState extends State<AddPosts> {
     } catch (error) {
       //Some error occurred
     }
+  }
 
+  Future<Position> getUserCurrentLocation() async {
+    await Geolocator.requestPermission()
+        .then((value) {})
+        .onError((error, stackTrace) async {
+      await Geolocator.requestPermission();
+    });
+    return await Geolocator.getCurrentPosition();
   }
 
 
@@ -111,11 +116,10 @@ class _AddPostsState extends State<AddPosts> {
                 ),
                 InkWell(
                   onTap: () async {
-
                     ImagePicker picker = ImagePicker();
-                    XFile? file = await picker.pickImage(source: ImageSource.gallery);
-                     imgUpload(file);
-
+                    XFile? file =
+                        await picker.pickImage(source: ImageSource.gallery);
+                    imgUpload(file);
                   },
                   child: Container(
                     width: double.infinity,
@@ -139,11 +143,10 @@ class _AddPostsState extends State<AddPosts> {
                 ),
                 InkWell(
                   onTap: () async {
-
                     ImagePicker picker = ImagePicker();
-                    XFile? file = await picker.pickImage(source: ImageSource.camera);
+                    XFile? file =
+                        await picker.pickImage(source: ImageSource.camera);
                     imgUpload(file);
-
                   },
                   child: Container(
                     width: double.infinity,
@@ -171,6 +174,17 @@ class _AddPostsState extends State<AddPosts> {
         });
   }
 
+  @override
+  void initState() {
+setState(() {
+  getUserCurrentLocation().then((value) {
+    lat = value.latitude;
+    long = value.longitude;
+  });
+});
+
+
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -355,16 +369,27 @@ class _AddPostsState extends State<AddPosts> {
                   showBottomSheet(context);
                 },
                 style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue[900],
+                  backgroundColor: Colors.blue[900],
                 ),
                 child: const Text("Add Image"),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => MapScreen(lat: lat,long: long)));
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue[900],
+                ),
+                child: const Text("Choose Location"),
               ),
               ElevatedButton(
                 onPressed: () async {
                   await createPost(context);
                 },
                 style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.fromLTRB(60, 5, 60, 5), backgroundColor: Colors.blue[900],
+                  padding: const EdgeInsets.fromLTRB(60, 5, 60, 5),
+                  backgroundColor: Colors.blue[900],
                 ),
                 child: const Text('Create post'),
               )

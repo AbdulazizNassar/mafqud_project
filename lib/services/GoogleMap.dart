@@ -1,15 +1,37 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_api_headers/google_api_headers.dart';
+import 'package:mafqud_project/services/auth.dart';
 
 class MapScreen extends StatefulWidget {
-  const MapScreen({Key? key}) : super(key: key);
+     final lat;
+     final long;
+
+   const MapScreen({super.key, this.long, this.lat});
 
   @override
   State<MapScreen> createState() => _MapScreenState();
+}
+
+LatLng? selectedLocation;
+void savePostToFirebase(var title, description, category, imageName, imageUrl,double lat,double lng,
+    String? status) async {
+  var userID = AuthService().currentUser!.uid;
+  await FirebaseFirestore.instance.collection("Posts").add({
+    "title": title,
+    "description": description,
+    "category": category,
+    "userID": userID,
+    "status": status,
+    "image": imageUrl,
+    "Date": DateTime.now(),
+    "Lat": lat,
+    "Lng": lng,
+  });
 }
 
 class _MapScreenState extends State<MapScreen> {
@@ -17,16 +39,10 @@ class _MapScreenState extends State<MapScreen> {
   final String googleApikey = "AIzaSyCj2A3BXC5GYHBlbyjIJlJPr8AWLHKCRv8";
   GoogleMapController? mapController; //contrller for Google map
   CameraPosition? cameraPosition;
-  LatLng startLocation = const LatLng(1, 1);
   String location = "Search Location";
 
   @override
-  void initState() {
-    super.initState();
-    getUserCurrentLocation().then((value) {
-      startLocation = LatLng(value.altitude, value.longitude);
-    });
-  }
+
 
   Future<Position> getUserCurrentLocation() async {
     await Geolocator.requestPermission()
@@ -50,6 +66,7 @@ class _MapScreenState extends State<MapScreen> {
               Navigator.of(context).pop();
             },
           ),
+          //TODO: create post
           actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.done))],
         ),
         body: Stack(children: [
@@ -61,13 +78,14 @@ class _MapScreenState extends State<MapScreen> {
                   markerId: const MarkerId('selectedLocation'),
                   position: LatLng(newpos.latitude, newpos.longitude),
                 ));
+                selectedLocation = LatLng(newpos.latitude, newpos.longitude);
               });
             },
             //Map widget from google_maps_flutter package
             zoomGesturesEnabled: true, //enable Zoom in, out on map
             initialCameraPosition: CameraPosition(
               //innital position in map
-              target: startLocation, //initial position
+              target: LatLng(widget.lat, widget.long), //initial position
               zoom: 14.0, //initial zoom level
             ),
             mapType: MapType.normal, //map type
@@ -91,6 +109,7 @@ class _MapScreenState extends State<MapScreen> {
                         apiKey: googleApikey,
                         mode: Mode.overlay,
                         types: [],
+                        components: [Component(Component.country, 'SA')],
                         strictbounds: false,
                         //google_map_webservice package
                         onError: (err) {
