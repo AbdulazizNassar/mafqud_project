@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
         appBarTheme: const AppBarTheme(color: Colors.blue, elevation: 2),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      initialRoute: "GoogleMap",
+      initialRoute: "MainScreen",
       routes: {
         "MainScreen": (context) => const MainScreen(),
         "Auth": (context) => Auth(),
@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
         "Posts": (context) => const Posts(),
         "AddPost": (context) => const AddPosts(),
         "History": (context) => const History(),
-        "GoogleMap": (context) => const MapScreen(),
+        "GoogleMap": (context) =>   MapScreen(),
       },
     );
   }

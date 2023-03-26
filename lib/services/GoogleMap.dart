@@ -8,14 +8,17 @@ import 'package:google_api_headers/google_api_headers.dart';
 import 'package:mafqud_project/services/auth.dart';
 
 class MapScreen extends StatefulWidget {
-  const MapScreen({Key? key}) : super(key: key);
+     final lat;
+     final long;
+
+   const MapScreen({super.key, this.long, this.lat});
 
   @override
   State<MapScreen> createState() => _MapScreenState();
 }
 
 LatLng? selectedLocation;
-void savePostToFirebase(var title, description, category, imageName, imageUrl,
+void savePostToFirebase(var title, description, category, imageName, imageUrl,double lat,double lng,
     String? status) async {
   var userID = AuthService().currentUser!.uid;
   await FirebaseFirestore.instance.collection("Posts").add({
@@ -26,7 +29,8 @@ void savePostToFirebase(var title, description, category, imageName, imageUrl,
     "status": status,
     "image": imageUrl,
     "Date": DateTime.now(),
-    "LatLng": selectedLocation,
+    "Lat": lat,
+    "Lng": lng,
   });
 }
 
@@ -35,16 +39,10 @@ class _MapScreenState extends State<MapScreen> {
   final String googleApikey = "AIzaSyCj2A3BXC5GYHBlbyjIJlJPr8AWLHKCRv8";
   GoogleMapController? mapController; //contrller for Google map
   CameraPosition? cameraPosition;
-  LatLng startLocation = const LatLng(1, 1);
   String location = "Search Location";
 
   @override
-  void initState() {
-    super.initState();
-    getUserCurrentLocation().then((value) {
-      startLocation = LatLng(value.altitude, value.longitude);
-    });
-  }
+
 
   Future<Position> getUserCurrentLocation() async {
     await Geolocator.requestPermission()
@@ -87,7 +85,7 @@ class _MapScreenState extends State<MapScreen> {
             zoomGesturesEnabled: true, //enable Zoom in, out on map
             initialCameraPosition: CameraPosition(
               //innital position in map
-              target: startLocation, //initial position
+              target: LatLng(widget.lat, widget.long), //initial position
               zoom: 14.0, //initial zoom level
             ),
             mapType: MapType.normal, //map type
