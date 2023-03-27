@@ -382,6 +382,7 @@ class _AddPostsState extends State<AddPosts> {
                 ),
                 child: const Text("Add Image"),
               ),
+
               ElevatedButton(
                 onPressed: () {
                   Navigator.push(
@@ -389,15 +390,6 @@ class _AddPostsState extends State<AddPosts> {
                       MaterialPageRoute(
                           builder: (context) =>
                               MapScreen(lat: lat, long: long)));
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue[900],
-                ),
-                child: const Text("Choose Location"),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  await createPost(context);
                 },
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.fromLTRB(60, 5, 60, 5),

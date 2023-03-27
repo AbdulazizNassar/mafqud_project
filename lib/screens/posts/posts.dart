@@ -56,6 +56,17 @@ class _PostsState extends State<Posts> {
                     child: Text("Lost"),
                   )
                 ]),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.map_outlined),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const MapPosts()));
+                },
+              ),
+            ],
           ),
           body: TabBarView(
             children: [

@@ -100,7 +100,8 @@ class _MapScreenState extends State<MapScreen> {
                       setState(() {
                         isLoading = false;
                       });
-                      Navigator.of(context).pushReplacementNamed("Posts");
+                      //TODO: app crashes because of navigator
+                      Navigator.of(context).pushReplacementNamed("Home");
                     }
                   },
                   icon: const Icon(Icons.done))
