@@ -110,7 +110,7 @@ class ListPosts extends StatelessWidget {
     print("$locality, $subLocality");
   }
 
-  const ListPosts({super.key, this.posts});
+  ListPosts({super.key, this.posts});
 
   @override
   Widget build(BuildContext context) {
