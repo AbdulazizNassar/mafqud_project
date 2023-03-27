@@ -1,20 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_google_places/flutter_google_places.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mafqud_project/screens/posts/postDetails.dart';
 import 'package:mafqud_project/shared/DateTime.dart';
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_google_places/flutter_google_places.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_webservice/places.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:google_api_headers/google_api_headers.dart';
 import 'package:mafqud_project/screens/posts/posts.dart';
 import 'package:mafqud_project/services/auth.dart';
-
+import 'package:mafqud_project/services/googleMap/googleMapsShowPosts.dart';
 import '../../shared/loading.dart';
+
+bool isListView = true;
 
 class Posts extends StatefulWidget {
   const Posts({Key? key}) : super(key: key);
@@ -23,47 +17,40 @@ class Posts extends StatefulWidget {
   State<Posts> createState() => _PostsState();
 }
 
-//get address based on long and lat
-late String locality;
-late String subLocality;
-getPlacmark(posts) async {
-  List<Placemark> placemarks =
-      await placemarkFromCoordinates(posts["Lat"], posts['Lng']);
-  locality = placemarks.first.locality!;
-  subLocality = placemarks.first.subLocality!;
-  print("$locality, $subLocality");
-}
-
 class _PostsState extends State<Posts> {
   Query<Map<String, dynamic>> postsRef =
       FirebaseFirestore.instance.collection('Posts').orderBy('Date');
 
-  var posts = [];
-
-  Future<void> getData() async {
-    // Get docs from collection reference
-    Query query = postsRef.where("status", isEqualTo: "Lost");
-    QuerySnapshot querySnapshot = await query.get();
-
-    // Get data from docs and convert map to List
-    final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
-    posts = allData;
-  }
-
   void initState() {
     super.initState();
-    getData();
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => PostsMaterialApp(context);
+
+  MaterialApp PostsMaterialApp(BuildContext context) {
     return MaterialApp(
       home: DefaultTabController(
         length: 2,
         child: Scaffold(
           appBar: AppBar(
+            leading: IconButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                icon: const Icon(Icons.arrow_back_ios)),
             actions: [
-              IconButton(onPressed: () {}, icon: const Icon(Icons.list))
+              IconButton(
+                  onPressed: () async {
+                    setState(() {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  const MapPosts(lat: 28, long: 46)));
+                    });
+                  },
+                  icon: const Icon(Icons.map_outlined))
             ],
             title: const Text("Posts"),
             backgroundColor: Colors.blue[900],
@@ -82,8 +69,8 @@ class _PostsState extends State<Posts> {
           ),
           body: TabBarView(
             children: [
-              post("Found"),
-              post("Lost"),
+              postListBuilder("Found"),
+              postListBuilder("Lost"),
             ],
           ),
           floatingActionButton: FloatingActionButton(
@@ -99,7 +86,7 @@ class _PostsState extends State<Posts> {
     );
   }
 
-  FutureBuilder<QuerySnapshot<Object?>> post(String status) {
+  FutureBuilder<QuerySnapshot<Object?>> postListBuilder(String status) {
     return FutureBuilder(
         future: postsRef.where("status", isEqualTo: status).get(),
         builder: (context, snapshot) {
@@ -113,154 +100,11 @@ class _PostsState extends State<Posts> {
             return const Text("Error");
             print(snapshot.error);
           } else if (snapshot.connectionState == ConnectionState.waiting) {
-            const Text("loading");
+            return Loading();
           }
           return const Text(".");
         });
   }
-}
-
-class MapPosts extends StatefulWidget {
-  final posts;
-  const MapPosts({super.key, this.posts});
-
-  @override
-  State<MapPosts> createState() => _MapPostsState();
-}
-
-class _MapPostsState extends State<MapPosts> {
-  @override
-  final String googleApikey = "AIzaSyCj2A3BXC5GYHBlbyjIJlJPr8AWLHKCRv8";
-  GoogleMapController? mapController; //contrller for Google map
-  CameraPosition? cameraPosition;
-  String location = "Search Location";
-
-  @override
-  Future<Position> getUserCurrentLocation() async {
-    await Geolocator.requestPermission()
-        .then((value) {})
-        .onError((error, stackTrace) async {
-      await Geolocator.requestPermission();
-    });
-    return await Geolocator.getCurrentPosition();
-  }
-
-  bool isLoading = false;
-  @override
-  Widget build(BuildContext context) => isLoading
-      ? Loading()
-      : Scaffold(
-          appBar: AppBar(
-            title: const Text("Results"),
-            centerTitle: true,
-            backgroundColor: Colors.blue.shade900,
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back_ios_new_outlined),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            //TODO: create post
-            actions: [
-              IconButton(onPressed: () async {}, icon: const Icon(Icons.done))
-            ],
-          ),
-          body: Stack(children: [
-            GoogleMap(
-              myLocationEnabled: true,
-
-              //Map widget from google_maps_flutter package
-              zoomGesturesEnabled: true, //enable Zoom in, out on map
-              initialCameraPosition: CameraPosition(
-                //innital position in map
-                target: LatLng(widget.posts['lat'],
-                    widget.posts['lng']), //initial position
-                zoom: 14.0, //initial zoom level
-              ),
-              mapType: MapType.normal, //map type
-              onMapCreated: (controller) {
-                //method called when map is created
-                setState(() {
-                  mapController = controller;
-                });
-              },
-              markers: _markers,
-            ),
-
-            //search autoconplete input
-            Positioned(
-                //search input bar
-                top: 10,
-                child: InkWell(
-                    onTap: () async {
-                      var place = await PlacesAutocomplete.show(
-                          context: context,
-                          apiKey: googleApikey,
-                          mode: Mode.overlay,
-                          types: [],
-                          components: [Component(Component.country, 'SA')],
-                          strictbounds: false,
-                          //google_map_webservice package
-                          onError: (err) {
-                            print(err);
-                          });
-
-                      if (place != null) {
-                        setState(() {
-                          location = place.description.toString();
-                        });
-
-                        //form google_maps_webservice package
-                        final plist = GoogleMapsPlaces(
-                          apiKey: googleApikey,
-                          apiHeaders:
-                              await const GoogleApiHeaders().getHeaders(),
-                          //from google_api_headers package
-                        );
-                        String placeid = place.placeId ?? "0";
-                        final detail = await plist.getDetailsByPlaceId(placeid);
-                        final geometry = detail.result.geometry!;
-                        final lat = geometry.location.lat;
-                        final lang = geometry.location.lng;
-                        var newlatlang = LatLng(lat, lang);
-
-                        //move map camera to selected place with animation
-                        mapController?.animateCamera(
-                            CameraUpdate.newCameraPosition(
-                                CameraPosition(target: newlatlang, zoom: 17)));
-                      }
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(15),
-                      child: Card(
-                        child: Container(
-                            padding: const EdgeInsets.all(0),
-                            width: MediaQuery.of(context).size.width - 40,
-                            child: ListTile(
-                              title: Text(
-                                location,
-                                style: const TextStyle(fontSize: 18),
-                              ),
-                              trailing: const Icon(Icons.search),
-                              dense: true,
-                            )),
-                      ),
-                    ))),
-            Container(
-              alignment: Alignment.bottomLeft,
-              margin: const EdgeInsets.all(20),
-              child: FloatingActionButton(
-                  onPressed: () async {
-                    await getUserCurrentLocation().then((pos) {
-                      mapController?.animateCamera(
-                          CameraUpdate.newCameraPosition(CameraPosition(
-                              target: LatLng(pos.latitude, pos.longitude),
-                              zoom: 14)));
-                    });
-                  },
-                  child: const Icon(Icons.location_on_sharp)),
-            )
-          ]));
 }
 
 class ListPosts extends StatelessWidget {
