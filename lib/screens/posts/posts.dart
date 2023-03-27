@@ -1,10 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:mafqud_project/screens/posts/addPost.dart';
 import 'package:mafqud_project/screens/posts/postDetails.dart';
 import 'package:mafqud_project/shared/DateTime.dart';
+import 'package:flutter/material.dart';
+import 'package:mafqud_project/screens/posts/posts.dart';
+import 'package:mafqud_project/services/auth.dart';
+import 'package:mafqud_project/services/googleMap/googleMapsShowPosts.dart';
+import '../../shared/loading.dart';
+
+bool isListView = true;
 
 class Posts extends StatefulWidget {
   const Posts({Key? key}) : super(key: key);
@@ -17,25 +23,14 @@ class _PostsState extends State<Posts> {
   Query<Map<String, dynamic>> postsRef =
       FirebaseFirestore.instance.collection('Posts').orderBy('Date');
 
-  var posts = [];
-
-  Future<void> getData() async {
-    // Get docs from collection reference
-    Query query = postsRef.where("status", isEqualTo: "Lost");
-    QuerySnapshot querySnapshot = await query.get();
-
-    // Get data from docs and convert map to List
-    final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
-    posts = allData;
-  }
-
   void initState() {
     super.initState();
-    getData();
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => PostsMaterialApp(context);
+
+  MaterialApp PostsMaterialApp(BuildContext context) {
     return MaterialApp(
       home: DefaultTabController(
         length: 2,
@@ -64,8 +59,8 @@ class _PostsState extends State<Posts> {
           ),
           body: TabBarView(
             children: [
-              post("Found"),
-              post("Lost"),
+              postListBuilder("Found"),
+              postListBuilder("Lost"),
             ],
           ),
           floatingActionButton: FloatingActionButton(
@@ -81,7 +76,7 @@ class _PostsState extends State<Posts> {
     );
   }
 
-  FutureBuilder<QuerySnapshot<Object?>> post(String status) {
+  FutureBuilder<QuerySnapshot<Object?>> postListBuilder(String status) {
     return FutureBuilder(
         future: postsRef.where("status", isEqualTo: status).get(),
         builder: (context, snapshot) {
@@ -95,7 +90,7 @@ class _PostsState extends State<Posts> {
             return const Text("Error");
             print(snapshot.error);
           } else if (snapshot.connectionState == ConnectionState.waiting) {
-            const Text("loading");
+            return Loading();
           }
           return const Text(".");
         });
@@ -115,7 +110,7 @@ class ListPosts extends StatelessWidget {
     print("$locality, $subLocality");
   }
 
-  ListPosts({this.posts});
+  const ListPosts({super.key, this.posts});
 
   @override
   Widget build(BuildContext context) {
