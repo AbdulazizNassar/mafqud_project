@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:mafqud_project/screens/posts/posts.dart';
 import 'package:mafqud_project/services/notifications.dart';
+import 'package:mafqud_project/shared/AlertBox.dart';
 import 'package:mafqud_project/shared/Lists.dart';
 import 'package:mafqud_project/shared/NavMenu.dart';
 
@@ -13,13 +15,19 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
+  String dropdownValue = 'Electronics';
+  final _formKey = GlobalKey<FormState>();
+  String searchString = '';
+  //TODO: finish func
+  searchPosts() {
+    CollectionReference postRef =
+        FirebaseFirestore.instance.collection("Posts");
+    var data = _formKey.currentState;
+    if (data!.validate()) {
+      data.save();
+    }
   }
 
-  String dropdownValue = 'Electronics';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,67 +39,80 @@ class _HomeState extends State<Home> {
         drawer: const NavMenu(),
         body: Padding(
           padding: const EdgeInsets.all(10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(
-                height: 70,
-              ),
-              const Text('Search an item:',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-              const SizedBox(
-                height: 10,
-              ),
-              TextField(
-                onChanged: (value) => null,
-                decoration: const InputDecoration(
-                    labelText: 'Search', suffixIcon: Icon(Icons.search)),
-              ),
-              const SizedBox(
-                height: 70,
-              ),
-              const Text(' Or by Categories: ',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-              const SizedBox(
-                height: 30,
-              ),
-              DropdownButton<String>(
-                isExpanded: true,
-                value: dropdownValue,
-                items: postCategories
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(
-                      value,
-                      style: TextStyle(fontSize: 17),
-                    ),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    dropdownValue = newValue!;
-                  });
-                },
-              ),
-              const SizedBox(
-                height: 100,
-              ),
-              Center(
-                child: TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pushNamed("Posts");
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(
+                  height: 70,
+                ),
+                const Text('Search for an item:',
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                const SizedBox(
+                  height: 10,
+                ),
+                TextFormField(
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(snackBarError(
+                          "Error", "Cannot search for empty fields"));
+                    }
                   },
-                  child: const Text(
-                    "Search",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
+                  onSaved: (newValue) {
+                    searchString = newValue!;
+                  },
+                  decoration: const InputDecoration(
+                      labelText: 'Search', suffixIcon: Icon(Icons.search)),
+                ),
+                const SizedBox(
+                  height: 70,
+                ),
+                const Text(' Or by Categories: ',
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                const SizedBox(
+                  height: 30,
+                ),
+                DropdownButton<String>(
+                  isExpanded: true,
+                  value: dropdownValue,
+                  items: postCategories
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(
+                        value,
+                        style: const TextStyle(fontSize: 17),
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      dropdownValue = newValue!;
+                    });
+                  },
+                ),
+                const SizedBox(
+                  height: 100,
+                ),
+                Center(
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pushNamed("Posts");
+                    },
+                    child: const Text(
+                      "Search",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
                     ),
                   ),
-                ),
-              )
-            ],
+                )
+              ],
+            ),
           ),
         ));
   }

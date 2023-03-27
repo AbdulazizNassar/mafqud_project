@@ -72,7 +72,6 @@ class _postDetailsState extends State<postDetails> {
                               Icons.pin_drop_outlined,
                               size: 40,
                             ),
-                            //Todo edit to make location written by user
                             Text("${widget.locality}, ${widget.subLocality}",
                                 style: textStyle),
                             const SizedBox(
@@ -110,14 +109,15 @@ class _postDetailsState extends State<postDetails> {
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 20),
+                            vertical: 10, horizontal: 0),
                         child: Container(
                           padding: const EdgeInsets.fromLTRB(15, 15, 0, 0),
                           width: double.infinity,
                           decoration: const BoxDecoration(
+                              border: Border.symmetric(),
                               color: Colors.blueGrey,
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(40))),
+                                  BorderRadius.all(Radius.elliptical(15, 15))),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [

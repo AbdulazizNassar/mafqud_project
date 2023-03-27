@@ -122,6 +122,7 @@ class ListPosts extends StatelessWidget {
     return InkWell(
       onTap: () async {
         await getPlacmark(posts);
+        // ignore: use_build_context_synchronously
         Navigator.push(
             context,
             MaterialPageRoute(
