@@ -304,7 +304,7 @@ class _AddPostsState extends State<AddPosts> {
                 ),
                 icon: const Icon(
                   Icons.arrow_drop_down,
-                  color: Colors.black45,
+                  color: Colors.black38,
                 ),
                 iconSize: 30,
                 items: postCategories
