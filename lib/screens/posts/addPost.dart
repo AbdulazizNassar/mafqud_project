@@ -11,18 +11,16 @@ import 'package:mafqud_project/shared/Lists.dart';
 import 'package:mafqud_project/shared/NavMenu.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:mafqud_project/services/GoogleMap.dart';
+import 'package:mafqud_project/services/googleMap/googleMapsAddPosts.dart';
 import '../../shared/constants.dart';
 import '../../shared/size_config.dart';
-import 'package:mafqud_project/services/GoogleMap.dart';
-
+import 'package:mafqud_project/services/googleMap/googleMapsAddPosts.dart';
 
 class AddPosts extends StatefulWidget {
   const AddPosts({Key? key}) : super(key: key);
 
   @override
   State<AddPosts> createState() => _AddPostsState();
-
 }
 
 class _AddPostsState extends State<AddPosts> {
@@ -32,8 +30,8 @@ class _AddPostsState extends State<AddPosts> {
   String msg = '';
   var selectedValue;
   var startlocation;
-   double lat = 0.0;
-   double long = 0.0;
+  double lat = 0.0;
+  double long = 0.0;
 
   late MapScreen postition;
 
@@ -46,8 +44,8 @@ class _AddPostsState extends State<AddPosts> {
     if (data!.validate() && status != null) {
       if (imageUrl != null) {
         data.save();
-        savePostToFirebase(
-            title, description, category, imageName, imageUrl, long, lat, status);
+        savePostToFirebase(title, description, category, imageName, imageUrl,
+            long, lat, status);
         Navigator.of(context as BuildContext).pushReplacementNamed('Posts');
       } else {
         setState(() {
@@ -98,7 +96,6 @@ class _AddPostsState extends State<AddPosts> {
     });
     return await Geolocator.getCurrentPosition();
   }
-
 
   showBottomSheet(BuildContext context) {
     return showModalBottomSheet(
@@ -176,15 +173,14 @@ class _AddPostsState extends State<AddPosts> {
 
   @override
   void initState() {
-setState(() {
-  getUserCurrentLocation().then((value) {
-    lat = value.latitude;
-    long = value.longitude;
-  });
-});
-
-
+    setState(() {
+      getUserCurrentLocation().then((value) {
+        lat = value.latitude;
+        long = value.longitude;
+      });
+    });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -375,8 +371,11 @@ setState(() {
               ),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => MapScreen(lat: lat,long: long)));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              MapScreen(lat: lat, long: long)));
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue[900],

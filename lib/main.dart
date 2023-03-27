@@ -9,7 +9,8 @@ import 'screens/posts/posts.dart';
 import 'Screens/Authentication/auth.dart';
 import 'screens/MainScreen.dart';
 import 'services/firebase_options.dart';
-import 'package:mafqud_project/services/GoogleMap.dart';
+import 'package:mafqud_project/services/googleMap/googleMapsAddPosts.dart';
+import 'package:mafqud_project/services/googleMap/googleMapsShowPosts.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,7 +41,8 @@ class MyApp extends StatelessWidget {
         "Posts": (context) => const Posts(),
         "AddPost": (context) => const AddPosts(),
         "History": (context) => const History(),
-        "GoogleMap": (context) =>   MapScreen(),
+        "GoogleMap": (context) => const MapScreen(),
+        "MapPosts": (context) => MapPosts(),
       },
     );
   }
