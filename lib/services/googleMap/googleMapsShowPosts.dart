@@ -6,6 +6,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:google_api_headers/google_api_headers.dart';
 import 'package:mafqud_project/services/showPostDetails.dart';
+import 'package:mafqud_project/shared/AlertBox.dart';
+import '../../shared/DateTime.dart';
 import '../../shared/loading.dart';
 
 class MapPosts extends StatefulWidget {
@@ -33,15 +35,12 @@ class _MapPostsState extends State<MapPosts> {
         .then((value) => value.docs.forEach((post) {
               setState(() {
                 _markers.add(Marker(
-                    markerId: MarkerId(post.id),
-                    position: LatLng(post["Lat"], post["Lng"]),
-                    infoWindow: InfoWindow(
-                        onTap: () async {
-                          await showPostDetails(post, context);
-                        },
-                        title: post['title'],
-                        snippet: post['description'],
-                        anchor: const Offset(0.5, 0))));
+                  markerId: MarkerId(post.id),
+                  position: LatLng(post["Lat"], post["Lng"]),
+                  onTap: () {
+                    snackBarPostDetails(post, context);
+                  },
+                ));
               });
             }));
   }

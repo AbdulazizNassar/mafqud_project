@@ -3,7 +3,7 @@ import 'package:geocoding/geocoding.dart';
 
 import '../screens/posts/postDetails.dart';
 
-showPostDetails(posts, context) async {
+showPostDetailsPage({required posts, required context}) async {
   List<Placemark> placemarks =
       await placemarkFromCoordinates(posts["Lat"], posts['Lng']);
 
