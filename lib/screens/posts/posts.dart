@@ -3,14 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:mafqud_project/screens/posts/addPost.dart';
 import 'package:mafqud_project/screens/posts/postDetails.dart';
+import 'package:mafqud_project/services/showPostDetails.dart';
 import 'package:mafqud_project/shared/DateTime.dart';
 import 'package:flutter/material.dart';
 import 'package:mafqud_project/screens/posts/posts.dart';
 import 'package:mafqud_project/services/auth.dart';
 import 'package:mafqud_project/services/googleMap/googleMapsShowPosts.dart';
 import '../../shared/loading.dart';
-
-bool isListView = true;
 
 class Posts extends StatefulWidget {
   const Posts({Key? key}) : super(key: key);
@@ -22,10 +21,6 @@ class Posts extends StatefulWidget {
 class _PostsState extends State<Posts> {
   Query<Map<String, dynamic>> postsRef =
       FirebaseFirestore.instance.collection('Posts').orderBy('Date');
-
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) => PostsMaterialApp(context);
@@ -111,15 +106,6 @@ class _PostsState extends State<Posts> {
 class ListPosts extends StatelessWidget {
   final posts;
 //get address based on long and lat
-  late String locality;
-  late String subLocality;
-  getPlacmark(posts) async {
-    List<Placemark> placemarks =
-        await placemarkFromCoordinates(posts["Lat"], posts['Lng']);
-    locality = placemarks.first.locality!;
-    subLocality = placemarks.first.subLocality!;
-    print("$locality, $subLocality");
-  }
 
   ListPosts({super.key, this.posts});
 
@@ -127,16 +113,8 @@ class ListPosts extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () async {
-        await getPlacmark(posts);
+        await showPostDetails(posts, context);
         // ignore: use_build_context_synchronously
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => postDetails(
-                      posts: posts,
-                      locality: locality,
-                      subLocality: subLocality,
-                    )));
       },
       child: Card(
         child: Row(

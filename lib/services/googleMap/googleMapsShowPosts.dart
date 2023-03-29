@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:custom_info_window/custom_info_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:google_api_headers/google_api_headers.dart';
+import 'package:mafqud_project/services/showPostDetails.dart';
 import '../../shared/loading.dart';
 
 class MapPosts extends StatefulWidget {
@@ -16,8 +18,11 @@ class MapPosts extends StatefulWidget {
   State<MapPosts> createState() => _MapPostsState();
 }
 
-Set<QueryDocumentSnapshot<Object?>?> posts = Set();
+//a set to store and display markers on the map
 Set<Marker> _markers = Set();
+//Contoller to display custom info about posts
+CustomInfoWindowController _customInfoWindowController =
+    CustomInfoWindowController();
 
 class _MapPostsState extends State<MapPosts> {
   @override
@@ -29,13 +34,18 @@ class _MapPostsState extends State<MapPosts> {
     FirebaseFirestore.instance
         .collection("Posts")
         .get()
-        .then((value) => value.docs.forEach((element) {
-              posts.add(element);
+        .then((value) => value.docs.forEach((post) {
               setState(() {
                 _markers.add(Marker(
-                    markerId: MarkerId(element.id),
-                    position: LatLng(element["Lat"], element["Lng"]),
-                    infoWindow: InfoWindow(title: element["title"])));
+                    markerId: MarkerId(post.id),
+                    position: LatLng(post["Lat"], post["Lng"]),
+                    infoWindow: InfoWindow(
+                        onTap: () async {
+                          await showPostDetails(post, context);
+                        },
+                        title: post['title'],
+                        snippet: post['description'],
+                        anchor: const Offset(0.5, 0))));
               });
             }));
   }
@@ -53,9 +63,14 @@ class _MapPostsState extends State<MapPosts> {
   Position? userLocation;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     PostMapBuilder();
+  }
+
+  @override
+  void dispose() {
+    _customInfoWindowController.dispose();
+    super.dispose();
   }
 
   bool isLoading = false;
@@ -84,6 +99,9 @@ class _MapPostsState extends State<MapPosts> {
           ),
           body: Stack(children: [
             GoogleMap(
+              onTap: (position) {
+                _customInfoWindowController.hideInfoWindow;
+              },
               myLocationEnabled: true,
               //Map widget from google_maps_flutter package
               zoomGesturesEnabled: true, //enable Zoom in, out on map
@@ -101,7 +119,12 @@ class _MapPostsState extends State<MapPosts> {
               },
               markers: _markers,
             ),
-
+            CustomInfoWindow(
+              controller: _customInfoWindowController,
+              height: 75,
+              width: 150,
+              offset: 50,
+            ),
             //search autoconplete input
             Positioned(
                 //search input bar
