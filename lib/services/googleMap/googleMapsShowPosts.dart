@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:custom_info_window/custom_info_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:geolocator/geolocator.dart';
@@ -20,9 +19,6 @@ class MapPosts extends StatefulWidget {
 
 //a set to store and display markers on the map
 Set<Marker> _markers = Set();
-//Contoller to display custom info about posts
-CustomInfoWindowController _customInfoWindowController =
-    CustomInfoWindowController();
 
 class _MapPostsState extends State<MapPosts> {
   @override
@@ -67,12 +63,6 @@ class _MapPostsState extends State<MapPosts> {
     PostMapBuilder();
   }
 
-  @override
-  void dispose() {
-    _customInfoWindowController.dispose();
-    super.dispose();
-  }
-
   bool isLoading = false;
   @override
   Widget build(BuildContext context) => isLoading
@@ -99,9 +89,6 @@ class _MapPostsState extends State<MapPosts> {
           ),
           body: Stack(children: [
             GoogleMap(
-              onTap: (position) {
-                _customInfoWindowController.hideInfoWindow;
-              },
               myLocationEnabled: true,
               //Map widget from google_maps_flutter package
               zoomGesturesEnabled: true, //enable Zoom in, out on map
@@ -118,12 +105,6 @@ class _MapPostsState extends State<MapPosts> {
                 });
               },
               markers: _markers,
-            ),
-            CustomInfoWindow(
-              controller: _customInfoWindowController,
-              height: 75,
-              width: 150,
-              offset: 50,
             ),
             //search autoconplete input
             Positioned(
