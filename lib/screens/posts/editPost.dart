@@ -10,10 +10,9 @@ import 'package:mafqud_project/shared/NavMenu.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
-
-
 import '../../shared/constants.dart';
 import '../../shared/size_config.dart';
+
 class EditPost extends StatefulWidget {
   final posts;
   final docID;
@@ -39,17 +38,17 @@ class _EditPostState extends State<EditPost> {
     var data = _formKey.currentState;
     if (data!.validate() && status != null) {
       if (imageUrl != null) {
-      data.save();
-      await post.doc(widget.docID).update({
-        "title": title,
-        "description": description,
-        "category": category,
-        "userID": userID,
-        "status": status,
-        "image" : imageUrl,
-        "Date": DateTime.now(),
-      });
-      Navigator.of(context as BuildContext).popAndPushNamed('History');
+        data.save();
+        await post.doc(widget.docID).update({
+          "title": title,
+          "description": description,
+          "category": category,
+          "userID": userID,
+          "status": status,
+          "image": imageUrl.toString(),
+          "Date": DateTime.now(),
+        });
+        Navigator.of(context as BuildContext).popAndPushNamed('History');
       } else {
         setState(() {
           msg = "Please choose image";
@@ -62,15 +61,12 @@ class _EditPostState extends State<EditPost> {
     }
   }
 
-
   imgUpload(file) async {
-
     print('${file?.path}');
 
     if (file == null) return 'Please choose image';
     //Import dart:core
-    String uniqueFileName =
-    DateTime.now().millisecondsSinceEpoch.toString();
+    String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
 
     /*Step 2: Upload to Firebase storage*/
     //Install firebase_storage
@@ -78,12 +74,10 @@ class _EditPostState extends State<EditPost> {
 
     //Get a reference to storage root
     Reference referenceRoot = FirebaseStorage.instance.ref();
-    Reference referenceDirImages =
-    referenceRoot.child('images');
+    Reference referenceDirImages = referenceRoot.child('images');
 
     //Create a reference for the image to be stored
-    Reference referenceImageToUpload =
-    referenceDirImages.child(file.name);
+    Reference referenceImageToUpload = referenceDirImages.child(file.name);
 
     //Handle errors/success
     try {
@@ -94,10 +88,7 @@ class _EditPostState extends State<EditPost> {
     } catch (error) {
       //Some error occurred
     }
-
   }
-
-
 
   showButtomSheet(BuildContext context) {
     return showModalBottomSheet(
@@ -116,7 +107,8 @@ class _EditPostState extends State<EditPost> {
                 InkWell(
                   onTap: () async {
                     ImagePicker picker = ImagePicker();
-                    XFile? file = await picker.pickImage(source: ImageSource.gallery);
+                    XFile? file =
+                        await picker.pickImage(source: ImageSource.gallery);
                     imgUpload(file);
                   },
                   child: Container(
@@ -141,11 +133,10 @@ class _EditPostState extends State<EditPost> {
                 ),
                 InkWell(
                   onTap: () async {
-
                     ImagePicker picker = ImagePicker();
-                    XFile? file = await picker.pickImage(source: ImageSource.camera);
+                    XFile? file =
+                        await picker.pickImage(source: ImageSource.camera);
                     imgUpload(file);
-
                   },
                   child: Container(
                     width: double.infinity,
