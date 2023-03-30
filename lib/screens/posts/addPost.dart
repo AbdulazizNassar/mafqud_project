@@ -42,25 +42,23 @@ class _AddPostsState extends State<AddPosts> {
   createPost(BuildContext context) async {
     var data = _formKey.currentState;
     if (data!.validate() && status != null) {
-      if (imageUrl != null) {
-        data.save();
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => MapScreen(
-                      lat: lat,
-                      long: long,
-                      title: title,
-                      description: description,
-                      category: category,
-                      imageUrl: imageUrl,
-                      status: status,
-                    )));
-      } else {
-        setState(() {
-          msg = "Please choose image";
-        });
-      }
+      data.save();
+      print(title);
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => MapScreen(
+                    lat: lat,
+                    long: long,
+                    title: title,
+                    description: description,
+                    category: category,
+                    imageUrl: imageUrl,
+                    status: status,
+                  )));
+      setState(() {
+        msg = "Please choose image";
+      });
     } else {
       setState(() {
         msg = "Please choose type of the post";
@@ -90,8 +88,10 @@ class _AddPostsState extends State<AddPosts> {
       await referenceImageToUpload.putFile(File(file!.path));
       //Success: get the download URL
       imageUrl = await referenceImageToUpload.getDownloadURL();
+      print(imageUrl);
     } catch (error) {
-      //Some error occurred
+      print(error);
+      print('====================');
     }
   }
 
@@ -105,6 +105,8 @@ class _AddPostsState extends State<AddPosts> {
   }
 
   showBottomSheet(BuildContext context) {
+    ImagePicker picker = ImagePicker();
+    XFile? file;
     return showModalBottomSheet(
         context: context,
         builder: (context) {
@@ -120,10 +122,8 @@ class _AddPostsState extends State<AddPosts> {
                 ),
                 InkWell(
                   onTap: () async {
-                    ImagePicker picker = ImagePicker();
-                    XFile? file =
-                        await picker.pickImage(source: ImageSource.gallery);
-                    imgUpload(file);
+                    file = await picker.pickImage(source: ImageSource.gallery);
+                    await imgUpload(file);
                   },
                   child: Container(
                     width: double.infinity,
@@ -147,10 +147,8 @@ class _AddPostsState extends State<AddPosts> {
                 ),
                 InkWell(
                   onTap: () async {
-                    ImagePicker picker = ImagePicker();
-                    XFile? file =
-                        await picker.pickImage(source: ImageSource.camera);
-                    imgUpload(file);
+                    file = await picker.pickImage(source: ImageSource.camera);
+                    await imgUpload(file);
                   },
                   child: Container(
                     width: double.infinity,
@@ -385,11 +383,7 @@ class _AddPostsState extends State<AddPosts> {
 
               ElevatedButton(
                 onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              MapScreen(lat: lat, long: long)));
+                  createPost(context);
                 },
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.fromLTRB(60, 5, 60, 5),

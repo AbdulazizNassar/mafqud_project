@@ -35,6 +35,7 @@ class MapScreen extends StatefulWidget {
 LatLng? selectedLocation;
 savePostToFirebase(
     var title, description, category, imageUrl, String? status) async {
+  print(title);
   var userID = AuthService().currentUser!.uid;
   await FirebaseFirestore.instance.collection("Posts").add({
     "title": title,
