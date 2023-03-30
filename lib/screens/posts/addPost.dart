@@ -88,11 +88,7 @@ class _AddPostsState extends State<AddPosts> {
       await referenceImageToUpload.putFile(File(file!.path));
       //Success: get the download URL
       imageUrl = await referenceImageToUpload.getDownloadURL();
-      print(imageUrl);
-    } catch (error) {
-      print(error);
-      print('====================');
-    }
+    } catch (error) {}
   }
 
   Future<Position> getUserCurrentLocation() async {
