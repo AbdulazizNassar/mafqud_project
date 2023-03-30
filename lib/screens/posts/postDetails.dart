@@ -15,13 +15,6 @@ class postDetails extends StatefulWidget {
 }
 
 class _postDetailsState extends State<postDetails> {
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    setState(() {});
-  }
-
   Widget build(BuildContext context) {
     //get user that created post
     CollectionReference user = FirebaseFirestore.instance.collection("users");
@@ -72,11 +65,8 @@ class _postDetailsState extends State<postDetails> {
                               Icons.pin_drop_outlined,
                               size: 40,
                             ),
-                            Text("${widget.locality}, ${widget.subLocality}",
+                            Text("${widget.locality}, \n${widget.subLocality}",
                                 style: textStyle),
-                            const SizedBox(
-                              width: 100,
-                            ),
                           ],
                         ),
                       ),
@@ -93,7 +83,7 @@ class _postDetailsState extends State<postDetails> {
                                 style: textStyle,
                               ),
                               const SizedBox(
-                                width: 40,
+                                width: 25,
                               ),
                               const Icon(
                                 Icons.timer_outlined,

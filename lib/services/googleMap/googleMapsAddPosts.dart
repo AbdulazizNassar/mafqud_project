@@ -81,7 +81,6 @@ class _MapScreenState extends State<MapScreen> {
                 Navigator.of(context).pop();
               },
             ),
-            //TODO: create post
             actions: [
               IconButton(
                   onPressed: () async {
