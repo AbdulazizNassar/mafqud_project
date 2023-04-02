@@ -5,6 +5,8 @@ import 'package:mafqud_project/shared/DateTime.dart';
 import 'package:mafqud_project/shared/PostCards.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
+import '../screens/MainScreen.dart';
+import '../services/auth.dart';
 import '../services/showPostDetails.dart';
 
 snackBarError(String title, String message) {
@@ -67,5 +69,35 @@ confirmationAlert(context, desc) {
         fontWeight: FontWeight.bold,
       ),
     ),
+  ).show();
+}
+
+signOutConfirm(context) {
+  Alert(
+    context: context,
+    title: "Do you want to sign out ? ",
+    image: Image.asset("assets/logout.png"),
+    style: const AlertStyle(
+      titleStyle: TextStyle(
+        color: Colors.red,
+        fontWeight: FontWeight.bold,
+      ),
+      descStyle: TextStyle(
+        color: Colors.red,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+    buttons: [
+      DialogButton(
+          child: const Text("Cancel"), onPressed: () => Navigator.pop(context)),
+      DialogButton(
+          child: const Text("Sign out"),
+          onPressed: () async {
+            Navigator.pop(context);
+            await AuthService().signOut();
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: ((context) => const MainScreen())));
+          }),
+    ],
   ).show();
 }

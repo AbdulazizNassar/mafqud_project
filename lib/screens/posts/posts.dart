@@ -103,15 +103,3 @@ class _PostsState extends State<Posts> {
         });
   }
 }
-
-class ListPosts extends StatelessWidget {
-  final posts;
-//get address based on long and lat
-
-  ListPosts({super.key, this.posts});
-
-  @override
-  Widget build(BuildContext context) {
-    return PostCards(posts: posts);
-  }
-}
