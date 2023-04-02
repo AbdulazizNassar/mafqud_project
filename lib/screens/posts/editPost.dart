@@ -10,6 +10,7 @@ import 'package:mafqud_project/shared/NavMenu.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
+import '../../services/imagePicker.dart';
 import '../../shared/constants.dart';
 import '../../shared/size_config.dart';
 
@@ -58,35 +59,6 @@ class _EditPostState extends State<EditPost> {
       setState(() {
         msg = "Please choose type of the post";
       });
-    }
-  }
-
-  imgUpload(file) async {
-    print('${file?.path}');
-
-    if (file == null) return 'Please choose image';
-    //Import dart:core
-    String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
-
-    /*Step 2: Upload to Firebase storage*/
-    //Install firebase_storage
-    //Import the library
-
-    //Get a reference to storage root
-    Reference referenceRoot = FirebaseStorage.instance.ref();
-    Reference referenceDirImages = referenceRoot.child('images');
-
-    //Create a reference for the image to be stored
-    Reference referenceImageToUpload = referenceDirImages.child(file.name);
-
-    //Handle errors/success
-    try {
-      //Store the file
-      await referenceImageToUpload.putFile(File(file!.path));
-      //Success: get the download URL
-      imageUrl = await referenceImageToUpload.getDownloadURL();
-    } catch (error) {
-      //Some error occurred
     }
   }
 
