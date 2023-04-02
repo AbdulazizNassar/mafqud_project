@@ -63,20 +63,21 @@ class postModal {
     }
     return psts;
   }
-  
-   PostBuilder() {
+
+   PostBuilder() async {
      Set<postModal> objs = Set();
-     FirebaseFirestore.instance
+     await FirebaseFirestore.instance
          .collection("Posts")
          .get().then((value) => value.docs.forEach((element) {
-          postModal pst = new postModal(title: element['title'], category: element['category'],
+          postModal pst = postModal(title: element['title'], category: element['category'],
                                         description: element['description'], uid: element['userID'],
                                         status: element['status'], lat: element['Lat'], long: element['Lng'],
                                         image: element['image'], Date: element['Date']);
            objs.add(pst);
+
        }
      ));
-     print(objs);
+    return objs;
    }
 
   Future<List> getPos() async {
