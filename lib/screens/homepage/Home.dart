@@ -1,11 +1,15 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:mafqud_project/models/postModel.dart';
 import 'package:mafqud_project/screens/posts/posts.dart';
 import 'package:mafqud_project/services/notifications.dart';
 import 'package:mafqud_project/shared/AlertBox.dart';
 import 'package:mafqud_project/shared/Lists.dart';
 import 'package:mafqud_project/shared/NavMenu.dart';
+import 'package:mafqud_project/screens/homepage/Home.dart';
+import 'package:mafqud_project/models/postModel.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -18,14 +22,24 @@ class _HomeState extends State<Home> {
   String dropdownValue = 'Electronics';
   final _formKey = GlobalKey<FormState>();
   String searchString = '';
-  //TODO: finish func
-  searchPosts() {
-    CollectionReference postRef =
-        FirebaseFirestore.instance.collection("Posts");
-    var data = _formKey.currentState;
-    if (data!.validate()) {
-      data.save();
-    }
+  List result = [];
+
+  postModal obj = new postModal();
+  List<postModal> psts= <postModal>[];
+
+
+   void getObjects() async{
+      obj.PostBuilder();
+
+   }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    setState(() {
+      getObjects();
+    });
+    super.initState();
   }
 
   @override
@@ -99,8 +113,9 @@ class _HomeState extends State<Home> {
                 ),
                 Center(
                   child: TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pushNamed("Posts");
+                    onPressed: () async {
+
+                     // Navigator.of(context).pushNamed("Posts");
                     },
                     child: const Text(
                       "Search",
