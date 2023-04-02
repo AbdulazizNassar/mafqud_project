@@ -95,7 +95,6 @@ class _PostsState extends State<Posts> {
                 });
           } else if (snapshot.hasError) {
             return const Text("Error");
-            print(snapshot.error);
           } else if (snapshot.connectionState == ConnectionState.waiting) {
             return Loading();
           }

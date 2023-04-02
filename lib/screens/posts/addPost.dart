@@ -43,7 +43,6 @@ class _AddPostsState extends State<AddPosts> {
     var data = _formKey.currentState;
     if (data!.validate() && status != null) {
       data.save();
-      print(title);
       Navigator.push(
           context,
           MaterialPageRoute(
