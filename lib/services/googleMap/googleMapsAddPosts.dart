@@ -42,7 +42,7 @@ savePostToFirebase(
     "category": category,
     "userID": userID,
     "status": status,
-    "image": imageUrl,
+    "image": imageUrl.toString(),
     "Date": DateTime.now(),
     "Lat": selectedLocation!.latitude,
     "Lng": selectedLocation!.longitude,
@@ -99,7 +99,6 @@ class _MapScreenState extends State<MapScreen> {
                       setState(() {
                         isLoading = false;
                       });
-                      //TODO: app crashes because of navigator
                       Navigator.of(context).pushReplacementNamed("Home");
                     }
                   },

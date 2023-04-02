@@ -91,27 +91,14 @@ class _PostsState extends State<Posts> {
             return ListView.builder(
                 itemCount: snapshot.data?.docs.length,
                 itemBuilder: (context, i) {
-                  return ListPosts(posts: snapshot.data?.docs[i]);
+                  return PostCards(posts: snapshot.data?.docs[i]);
                 });
           } else if (snapshot.hasError) {
             return const Text("Error");
-            print(snapshot.error);
           } else if (snapshot.connectionState == ConnectionState.waiting) {
             return Loading();
           }
           return const Text(".");
         });
-  }
-}
-
-class ListPosts extends StatelessWidget {
-  final posts;
-//get address based on long and lat
-
-  ListPosts({super.key, this.posts});
-
-  @override
-  Widget build(BuildContext context) {
-    return PostCards(posts: posts);
   }
 }

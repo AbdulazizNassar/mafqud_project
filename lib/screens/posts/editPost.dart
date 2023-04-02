@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:mafqud_project/shared/AlertBox.dart';
 import 'package:path/path.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,10 +11,10 @@ import 'package:mafqud_project/shared/NavMenu.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
-
-
+import '../../services/imagePicker.dart';
 import '../../shared/constants.dart';
 import '../../shared/size_config.dart';
+
 class EditPost extends StatefulWidget {
   final posts;
   final docID;
@@ -33,23 +34,27 @@ class _EditPostState extends State<EditPost> {
 
   final _formKey = GlobalKey<FormState>();
   CollectionReference post = FirebaseFirestore.instance.collection("Posts");
+  deletePost(BuildContext context) async {
+    await post.doc(widget.docID).delete();
+    Navigator.of(context).pushReplacementNamed("History");
+  }
 
   updatePost(BuildContext context) async {
     var userID = AuthService().currentUser!.uid;
     var data = _formKey.currentState;
     if (data!.validate() && status != null) {
       if (imageUrl != null) {
-      data.save();
-      await post.doc(widget.docID).update({
-        "title": title,
-        "description": description,
-        "category": category,
-        "userID": userID,
-        "status": status,
-        "image" : imageUrl,
-        "Date": DateTime.now(),
-      });
-      Navigator.of(context as BuildContext).popAndPushNamed('History');
+        data.save();
+        await post.doc(widget.docID).update({
+          "title": title,
+          "description": description,
+          "category": category,
+          "userID": userID,
+          "status": status,
+          "image": imageUrl.toString(),
+          "Date": DateTime.now(),
+        });
+        Navigator.of(context as BuildContext).popAndPushNamed('History');
       } else {
         setState(() {
           msg = "Please choose image";
@@ -62,49 +67,12 @@ class _EditPostState extends State<EditPost> {
     }
   }
 
-
-  imgUpload(file) async {
-
-    print('${file?.path}');
-
-    if (file == null) return 'Please choose image';
-    //Import dart:core
-    String uniqueFileName =
-    DateTime.now().millisecondsSinceEpoch.toString();
-
-    /*Step 2: Upload to Firebase storage*/
-    //Install firebase_storage
-    //Import the library
-
-    //Get a reference to storage root
-    Reference referenceRoot = FirebaseStorage.instance.ref();
-    Reference referenceDirImages =
-    referenceRoot.child('images');
-
-    //Create a reference for the image to be stored
-    Reference referenceImageToUpload =
-    referenceDirImages.child(file.name);
-
-    //Handle errors/success
-    try {
-      //Store the file
-      await referenceImageToUpload.putFile(File(file!.path));
-      //Success: get the download URL
-      imageUrl = await referenceImageToUpload.getDownloadURL();
-    } catch (error) {
-      //Some error occurred
-    }
-
-  }
-
-
-
   showButtomSheet(BuildContext context) {
     return showModalBottomSheet(
         context: context,
         builder: (context) {
           return Container(
-            padding: EdgeInsets.all(20),
+            padding: const EdgeInsets.all(20),
             height: 190,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -116,7 +84,8 @@ class _EditPostState extends State<EditPost> {
                 InkWell(
                   onTap: () async {
                     ImagePicker picker = ImagePicker();
-                    XFile? file = await picker.pickImage(source: ImageSource.gallery);
+                    XFile? file =
+                        await picker.pickImage(source: ImageSource.gallery);
                     imgUpload(file);
                   },
                   child: Container(
@@ -141,11 +110,10 @@ class _EditPostState extends State<EditPost> {
                 ),
                 InkWell(
                   onTap: () async {
-
                     ImagePicker picker = ImagePicker();
-                    XFile? file = await picker.pickImage(source: ImageSource.camera);
+                    XFile? file =
+                        await picker.pickImage(source: ImageSource.camera);
                     imgUpload(file);
-
                   },
                   child: Container(
                     width: double.infinity,
@@ -187,6 +155,16 @@ class _EditPostState extends State<EditPost> {
       appBar: AppBar(
         title: const Text("Update Post"),
         backgroundColor: Colors.blue[900],
+        actions: [
+          IconButton(
+              onPressed: () async {
+                deletePost(context);
+              },
+              icon: const Icon(
+                Icons.delete_forever_outlined,
+                color: Colors.red,
+              ))
+        ],
       ),
       body: Form(
         key: _formKey,
@@ -363,15 +341,33 @@ class _EditPostState extends State<EditPost> {
                 style: const TextStyle(color: Colors.red),
               ),
               const SizedBox(height: 2),
-              ElevatedButton(
-                onPressed: () {
-                  showButtomSheet(context);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue[900],
+              Center(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        showButtomSheet(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue[900],
+                      ),
+                      child: const Text("Change Image"),
+                    ),
+                    const SizedBox(width: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        showButtomSheet(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue[900],
+                      ),
+                      child: const Text("Change Location"),
+                    ),
+                  ],
                 ),
-                child: const Text("Change Image"),
               ),
+
               ElevatedButton(
                 onPressed: () async {
                   await updatePost(context);
