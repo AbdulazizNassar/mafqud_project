@@ -65,7 +65,7 @@ class postModal {
   }
 
    PostBuilder() async {
-     Set<postModal> objs = Set();
+     List<postModal> objs = <postModal>[];
      await FirebaseFirestore.instance
          .collection("Posts")
          .get().then((value) => value.docs.forEach((element) {

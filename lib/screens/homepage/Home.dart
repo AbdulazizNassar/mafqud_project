@@ -26,12 +26,28 @@ class _HomeState extends State<Home> {
 
   postModal obj = new postModal();
   List<postModal> psts= <postModal>[];
+  List<postModal> temp = <postModal>[];
 
 
-   void getObjects() async{
-      obj.PostBuilder();
 
+  void getObjects() async{
+      psts = await obj.PostBuilder();
+      psts.forEach((element) {
+
+      });
    }
+
+   void filteredPosts() {
+      temp.clear();
+       psts.forEach((element) {
+         if (element.category == dropdownValue){
+          temp.add(element);
+         }
+       }); //  To check
+       temp.forEach((element) {
+         print(element.title);
+       });
+     }
 
   @override
   void initState() {
@@ -114,7 +130,7 @@ class _HomeState extends State<Home> {
                 Center(
                   child: TextButton(
                     onPressed: () async {
-
+                      filteredPosts();
                      // Navigator.of(context).pushNamed("Posts");
                     },
                     child: const Text(
