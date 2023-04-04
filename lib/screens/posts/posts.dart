@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:mafqud_project/screens/posts/addPost.dart';
 import 'package:mafqud_project/screens/posts/postDetails.dart';
 import 'package:mafqud_project/services/showPostDetails.dart';
@@ -101,17 +100,5 @@ class _PostsState extends State<Posts> {
           }
           return const Text(".");
         });
-  }
-}
-
-class ListPosts extends StatelessWidget {
-  final posts;
-//get address based on long and lat
-
-  ListPosts({super.key, this.posts});
-
-  @override
-  Widget build(BuildContext context) {
-    return PostCards(posts: posts);
   }
 }
