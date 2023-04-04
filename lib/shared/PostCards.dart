@@ -8,7 +8,6 @@ class PostCards extends StatelessWidget {
     super.key,
     required this.posts,
   });
-
   final posts;
 
   @override

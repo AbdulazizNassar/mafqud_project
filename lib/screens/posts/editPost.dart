@@ -1,4 +1,8 @@
 import 'dart:io';
+
+import 'package:mafqud_project/shared/AlertBox.dart';
+import 'package:path/path.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -27,6 +31,10 @@ class _EditPostState extends State<EditPost> {
 
   final _formKey = GlobalKey<FormState>();
   CollectionReference post = FirebaseFirestore.instance.collection("Posts");
+  deletePost(context) async {
+    await post.doc(widget.docID).delete();
+    Navigator.of(context).pushReplacementNamed("History");
+  }
 
   updatePost(BuildContext context) async {
     var userID = AuthService().currentUser!.uid;
@@ -61,7 +69,7 @@ class _EditPostState extends State<EditPost> {
         context: context,
         builder: (context) {
           return Container(
-            padding: EdgeInsets.all(20),
+            padding: const EdgeInsets.all(20),
             height: 190,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -144,6 +152,16 @@ class _EditPostState extends State<EditPost> {
       appBar: AppBar(
         title: const Text("Update Post"),
         backgroundColor: Colors.blue[900],
+        actions: [
+          IconButton(
+              onPressed: () async {
+                deletePost(context);
+              },
+              icon: const Icon(
+                Icons.delete_forever_outlined,
+                color: Colors.red,
+              ))
+        ],
       ),
       body: Form(
         key: _formKey,
@@ -320,15 +338,33 @@ class _EditPostState extends State<EditPost> {
                 style: const TextStyle(color: Colors.red),
               ),
               const SizedBox(height: 2),
-              ElevatedButton(
-                onPressed: () {
-                  showButtomSheet(context);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue[900],
+              Center(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        showButtomSheet(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue[900],
+                      ),
+                      child: const Text("Change Image"),
+                    ),
+                    const SizedBox(width: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        showButtomSheet(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue[900],
+                      ),
+                      child: const Text("Change Location"),
+                    ),
+                  ],
                 ),
-                child: const Text("Change Image"),
               ),
+
               ElevatedButton(
                 onPressed: () async {
                   await updatePost(context);

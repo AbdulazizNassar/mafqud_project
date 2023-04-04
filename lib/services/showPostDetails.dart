@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:mafqud_project/shared/AlertBox.dart';
 
 import '../screens/posts/postDetails.dart';
 
@@ -16,5 +17,8 @@ showPostDetailsPage({required posts, required context}) async {
                   locality: placemarks.first.locality!,
                   subLocality: placemarks.first.subLocality!,
                 )));
-  } catch (e) {}
+  } catch (e) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(snackBarError("Error", 'Couldn\'t find post'));
+  }
 }

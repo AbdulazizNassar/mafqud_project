@@ -4,6 +4,7 @@ import 'package:mafqud_project/screens/homepage/Home.dart';
 import 'package:mafqud_project/screens/support.dart';
 import 'package:mafqud_project/services/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:mafqud_project/shared/AlertBox.dart';
 import 'package:mafqud_project/shared/loading.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -108,7 +109,7 @@ Widget buildMenuItems(BuildContext context) => Container(
             leading: const Icon(Icons.history_outlined),
             title: const Text("History"),
             onTap: () => Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => History())),
+                MaterialPageRoute(builder: (context) => const History())),
           ),
           ListTile(
             leading: const Icon(Icons.message_outlined),
@@ -120,7 +121,7 @@ Widget buildMenuItems(BuildContext context) => Container(
             title: const Text("Support"),
             onTap: () {
               Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (context) => support()));
+                  MaterialPageRoute(builder: (context) => const support()));
             },
           ),
           ListTile(
@@ -142,33 +143,3 @@ Widget buildMenuItems(BuildContext context) => Container(
         ],
       ),
     );
-
-signOutConfirm(context) {
-  Alert(
-    context: context,
-    title: "Do you want to sign out ? ",
-    image: Image.asset("assets/logout.png"),
-    style: const AlertStyle(
-      titleStyle: TextStyle(
-        color: Colors.red,
-        fontWeight: FontWeight.bold,
-      ),
-      descStyle: TextStyle(
-        color: Colors.red,
-        fontWeight: FontWeight.bold,
-      ),
-    ),
-    buttons: [
-      DialogButton(
-          child: const Text("Cancel"), onPressed: () => Navigator.pop(context)),
-      DialogButton(
-          child: const Text("Sign out"),
-          onPressed: () async {
-            Navigator.pop(context);
-            await AuthService().signOut();
-            Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: ((context) => const MainScreen())));
-          }),
-    ],
-  ).show();
-}
