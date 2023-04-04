@@ -10,16 +10,17 @@ class postDetails extends StatefulWidget {
   final locality;
   final subLocality;
   const postDetails({super.key, this.posts, this.locality, this.subLocality});
-  @override
+
   State<postDetails> createState() => _postDetailsState();
 }
 
 class _postDetailsState extends State<postDetails> {
+  @override
   Widget build(BuildContext context) {
     //get user that created post
     CollectionReference user = FirebaseFirestore.instance.collection("users");
     return FutureBuilder<DocumentSnapshot>(
-        future: user.doc("${widget.posts["userID"]}").get(),
+        future: user.doc("${widget.posts['userID']}").get(),
         builder:
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
