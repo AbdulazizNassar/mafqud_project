@@ -34,7 +34,7 @@ class _EditPostState extends State<EditPost> {
 
   final _formKey = GlobalKey<FormState>();
   CollectionReference post = FirebaseFirestore.instance.collection("Posts");
-  deletePost(BuildContext context) async {
+  deletePost(context) async {
     await post.doc(widget.docID).delete();
     Navigator.of(context).pushReplacementNamed("History");
   }
