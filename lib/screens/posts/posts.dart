@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:mafqud_project/screens/posts/addPost.dart';
-import 'package:mafqud_project/screens/posts/postDetails.dart';
 import 'package:mafqud_project/services/showPostDetails.dart';
 import 'package:mafqud_project/shared/DateTime.dart';
 import 'package:flutter/material.dart';

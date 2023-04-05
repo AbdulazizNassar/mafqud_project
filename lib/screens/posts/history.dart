@@ -4,12 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mafqud_project/models/currentUser.dart';
 import 'package:mafqud_project/screens/posts/editPost.dart';
-import 'package:mafqud_project/screens/posts/postDetails.dart';
 
 import '../../services/auth.dart';
 import '../../shared/DateTime.dart';
 import '../../shared/NavMenu.dart';
-
 
 class History extends StatefulWidget {
   const History({Key? key}) : super(key: key);
@@ -19,10 +17,8 @@ class History extends StatefulWidget {
 }
 
 class _HistoryState extends State<History> {
-
   User? userAuth = AuthService().currentUser;
   CollectionReference postsRef = FirebaseFirestore.instance.collection('Posts');
-     
 
   @override
   Widget build(BuildContext context) {
@@ -33,13 +29,19 @@ class _HistoryState extends State<History> {
       ),
       drawer: const NavMenu(),
       body: FutureBuilder(
-          future: postsRef.where("userID", isEqualTo: FirebaseAuth.instance.currentUser?.uid).get(),
+          future: postsRef
+              .where("userID",
+                  isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+              .get(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return ListView.builder(
                   itemCount: snapshot.data?.docs.length,
                   itemBuilder: (context, i) {
-                    return ListPosts(posts: snapshot.data?.docs[i], docID: snapshot.data?.docs[i].id,);
+                    return ListPosts(
+                      posts: snapshot.data?.docs[i],
+                      docID: snapshot.data?.docs[i].id,
+                    );
                   });
             } else if (snapshot.hasError) {
               return const Text("Error");
@@ -48,11 +50,9 @@ class _HistoryState extends State<History> {
             }
             return const Text(".");
           }),
-
     );
   }
 }
-
 
 class ListPosts extends StatelessWidget {
   final posts;
@@ -60,20 +60,27 @@ class ListPosts extends StatelessWidget {
 
   ListPosts({this.posts, this.docID});
 
-
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => EditPost(posts: posts, docID: docID,)));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => EditPost(
+                      posts: posts,
+                      docID: docID,
+                    )));
       },
       child: Card(
         child: Row(
           children: [
             Expanded(
                 flex: 3,
-                child: Image.network(posts['image'], fit: BoxFit.cover,)),
+                child: Image.network(
+                  posts['image'],
+                  fit: BoxFit.cover,
+                )),
             Expanded(
                 flex: 9,
                 child: ListTile(
@@ -104,7 +111,10 @@ class ListPosts extends StatelessWidget {
               readTimestamp(posts["Date"]),
               style: const TextStyle(fontWeight: FontWeight.w100, fontSize: 15),
             ),
-            const Icon(Icons.edit, size: 30,),
+            const Icon(
+              Icons.edit,
+              size: 30,
+            ),
             const SizedBox(
               height: 90,
             )

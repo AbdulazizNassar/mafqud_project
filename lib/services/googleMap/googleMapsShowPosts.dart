@@ -28,6 +28,8 @@ class _MapPostsState extends State<MapPosts> {
   GoogleMapController? mapController; //contrller for Google map
   CameraPosition? cameraPosition;
   String location = "Search Location";
+
+  // ignore: non_constant_identifier_names
   PostMapBuilder() {
     FirebaseFirestore.instance
         .collection("Posts")
@@ -77,7 +79,6 @@ class _MapPostsState extends State<MapPosts> {
                 Navigator.of(context).pop();
               },
             ),
-            //TODO: create post
             actions: [
               IconButton(
                   onPressed: () {
@@ -88,6 +89,9 @@ class _MapPostsState extends State<MapPosts> {
           ),
           body: Stack(children: [
             GoogleMap(
+              onTap: (_) {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              },
               myLocationEnabled: true,
               //Map widget from google_maps_flutter package
               zoomGesturesEnabled: true, //enable Zoom in, out on map

@@ -16,6 +16,7 @@ const primaryColor = Colors.blue;
 const textColor = Colors.black;
 
 const textStyle = TextStyle(
+  color: Colors.black,
   fontWeight: FontWeight.bold,
   fontSize: 25.0,
 );
