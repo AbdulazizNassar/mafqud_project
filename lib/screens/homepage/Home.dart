@@ -22,8 +22,9 @@ class _HomeState extends State<Home> {
   //TODO: finish func
   searchPosts() {
     var data = _formKey.currentState;
-    if (data!.validate()) {
+    if (data!.validate() && searchString != '') {
       data.save();
+      print(searchString);
       Navigator.push(
           context,
           MaterialPageRoute(
@@ -31,7 +32,7 @@ class _HomeState extends State<Home> {
                     searchValue: searchString,
                   )));
     } else {
-      print(searchString);
+      print("searchString");
     }
   }
 

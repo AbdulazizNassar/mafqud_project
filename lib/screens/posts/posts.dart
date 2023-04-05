@@ -69,8 +69,8 @@ class _PostsState extends State<Posts> {
           ),
           body: TabBarView(
             children: [
-              displayPosts("Found"),
-              displayPosts("Lost"),
+              displayPostsv2("Found"),
+              displayPostsv2("Lost"),
               // postListBuilder("Found")
               // postListBuilder("Lost"),
             ],
@@ -94,7 +94,7 @@ class _PostsState extends State<Posts> {
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
             return Text("");
-          } else {
+          } else if (snapshot.hasData) {
             return ListView(
               children: [
                 ...snapshot.data!.docs
@@ -112,6 +112,36 @@ class _PostsState extends State<Posts> {
                 })
               ],
             );
+          } else {
+            return Loading();
+          }
+        });
+  }
+
+  FutureBuilder<QuerySnapshot<Object?>> displayPostsv2(String status) {
+    return FutureBuilder<QuerySnapshot>(
+        future: postsRef.where("status", isEqualTo: status).get(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (!snapshot.hasData) {
+            return Text("");
+          } else if (snapshot.hasData) {
+            return ListView(
+              children: [
+                ...snapshot.data!.docs
+                    .where((QueryDocumentSnapshot<Object?> element) =>
+                        element['title']
+                            .toString()
+                            .toLowerCase()
+                            .contains(widget.searchValue!))
+                    .map((QueryDocumentSnapshot<Object?> post) {
+                  return PostCards(
+                    posts: post,
+                  );
+                })
+              ],
+            );
+          } else {
+            return Loading();
           }
         });
   }
