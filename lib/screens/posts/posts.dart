@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:mafqud_project/screens/posts/addPost.dart';
 import 'package:mafqud_project/services/showPostDetails.dart';
+import 'package:mafqud_project/shared/AlertBox.dart';
 import 'package:mafqud_project/shared/DateTime.dart';
 import 'package:flutter/material.dart';
 import 'package:mafqud_project/screens/posts/posts.dart';
@@ -69,8 +70,8 @@ class _PostsState extends State<Posts> {
           ),
           body: TabBarView(
             children: [
-              displayPostsv2("Found"),
-              displayPostsv2("Lost"),
+              displayPosts("Found"),
+              displayPosts("Lost"),
             ],
           ),
           floatingActionButton: FloatingActionButton(
@@ -86,12 +87,14 @@ class _PostsState extends State<Posts> {
     );
   }
 
-  FutureBuilder<QuerySnapshot<Object?>> displayPostsv2(String status) {
+  FutureBuilder<QuerySnapshot<Object?>> displayPosts(String status) {
     return FutureBuilder<QuerySnapshot>(
-        future: postsRef.where("status", isEqualTo: status).get(),
+        future: postsRef.get(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
-            return Text("");
+            return const Center(
+              child: Icon(Icons.abc_outlined),
+            );
           } else if (snapshot.hasData) {
             return ListView(
               children: [
@@ -101,6 +104,8 @@ class _PostsState extends State<Posts> {
                             .toString()
                             .toLowerCase()
                             .contains(widget.searchValue!))
+                    .where((element) =>
+                        element['status'].toString().contains(status))
                     .map((QueryDocumentSnapshot<Object?> post) {
                   return PostCards(
                     posts: post,
@@ -108,8 +113,10 @@ class _PostsState extends State<Posts> {
                 })
               ],
             );
-          } else {
+          } else if (snapshot.connectionState == ConnectionState.waiting) {
             return Loading();
+          } else {
+            return const Text('');
           }
         });
   }
