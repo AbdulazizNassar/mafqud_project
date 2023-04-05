@@ -12,8 +12,8 @@ import '../../shared/PostCards.dart';
 import '../../shared/loading.dart';
 
 class Posts extends StatefulWidget {
-  var searchValue;
-  Posts({Key? key, searchValue})
+  String? searchValue;
+  Posts({Key? key, this.searchValue})
       : super(
           key: key,
         );
@@ -69,8 +69,9 @@ class _PostsState extends State<Posts> {
           ),
           body: TabBarView(
             children: [
-              displayPosts()
-              // postListBuilder("Found"),
+              displayPosts("Found"),
+              displayPosts("Lost"),
+              // postListBuilder("Found")
               // postListBuilder("Lost"),
             ],
           ),
@@ -87,12 +88,12 @@ class _PostsState extends State<Posts> {
     );
   }
 
-  StreamBuilder<QuerySnapshot<Object?>> displayPosts() {
+  StreamBuilder<QuerySnapshot<Object?>> displayPosts(String status) {
     return StreamBuilder<QuerySnapshot>(
         stream: postsRef.snapshots().asBroadcastStream(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
-            return Loading();
+            return Text("");
           } else {
             return ListView(
               children: [
@@ -101,13 +102,12 @@ class _PostsState extends State<Posts> {
                         element['title']
                             .toString()
                             .toLowerCase()
-                            .contains('test'))
-                    .map((QueryDocumentSnapshot<Object?> data) {
-                  final String title = data.get('title');
-                  final String desc = data.get('category');
-
+                            .contains(widget.searchValue!))
+                    .where((element) =>
+                        element['status'].toString().contains(status))
+                    .map((QueryDocumentSnapshot<Object?> post) {
                   return PostCards(
-                    posts: data,
+                    posts: post,
                   );
                 })
               ],
