@@ -71,8 +71,6 @@ class _PostsState extends State<Posts> {
             children: [
               displayPostsv2("Found"),
               displayPostsv2("Lost"),
-              // postListBuilder("Found")
-              // postListBuilder("Lost"),
             ],
           ),
           floatingActionButton: FloatingActionButton(
@@ -86,36 +84,6 @@ class _PostsState extends State<Posts> {
         ),
       ),
     );
-  }
-
-  StreamBuilder<QuerySnapshot<Object?>> displayPosts(String status) {
-    return StreamBuilder<QuerySnapshot>(
-        stream: postsRef.snapshots().asBroadcastStream(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (!snapshot.hasData) {
-            return Text("");
-          } else if (snapshot.hasData) {
-            return ListView(
-              children: [
-                ...snapshot.data!.docs
-                    .where((QueryDocumentSnapshot<Object?> element) =>
-                        element['title']
-                            .toString()
-                            .toLowerCase()
-                            .contains(widget.searchValue!))
-                    .where((element) =>
-                        element['status'].toString().contains(status))
-                    .map((QueryDocumentSnapshot<Object?> post) {
-                  return PostCards(
-                    posts: post,
-                  );
-                })
-              ],
-            );
-          } else {
-            return Loading();
-          }
-        });
   }
 
   FutureBuilder<QuerySnapshot<Object?>> displayPostsv2(String status) {
@@ -143,25 +111,6 @@ class _PostsState extends State<Posts> {
           } else {
             return Loading();
           }
-        });
-  }
-
-  FutureBuilder<QuerySnapshot<Object?>> postListBuilder(String status) {
-    return FutureBuilder(
-        future: postsRef.where("status", isEqualTo: status).get(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return ListView.builder(
-                itemCount: snapshot.data?.docs.length,
-                itemBuilder: (context, i) {
-                  return PostCards(posts: snapshot.data?.docs[i]);
-                });
-          } else if (snapshot.hasError) {
-            return const Text("Error");
-          } else if (snapshot.connectionState == ConnectionState.waiting) {
-            return Loading();
-          }
-          return const Text(".");
         });
   }
 }

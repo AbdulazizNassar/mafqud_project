@@ -66,13 +66,11 @@ class _HomeState extends State<Home> {
                     if (value!.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(snackBarError(
                           "Error", "Cannot search for empty fields"));
+                    } else {
+                      setState(() {
+                        searchString = value;
+                      });
                     }
-                  },
-                  onSaved: (newValue) {
-                    setState(() {
-                      searchString = newValue!;
-                    });
-                    ;
                   },
                   decoration: const InputDecoration(
                       labelText: 'Search', suffixIcon: Icon(Icons.search)),
