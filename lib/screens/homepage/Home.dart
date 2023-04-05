@@ -35,6 +35,15 @@ class _HomeState extends State<Home> {
       print("searchString");
     }
   }
+  @override
+  void initState() {
+    // TODO: implement initState
+    setState(() {
+      if (searchString != ''){
+        searchString = '';
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,15 +72,15 @@ class _HomeState extends State<Home> {
                 ),
                 TextFormField(
                   validator: (value) {
-                    if (value!.isEmpty) {
+                    if (value == '') {
                       ScaffoldMessenger.of(context).showSnackBar(snackBarError(
                           "Error", "Cannot search for empty fields"));
-                    } else {
-                      setState(() {
-                        searchString = value;
-                      });
                     }
+                    setState(() {
+                      searchString = value!;
+                    });
                   },
+
                   decoration: const InputDecoration(
                       labelText: 'Search', suffixIcon: Icon(Icons.search)),
                 ),
