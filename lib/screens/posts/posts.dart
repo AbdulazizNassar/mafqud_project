@@ -12,7 +12,11 @@ import '../../shared/PostCards.dart';
 import '../../shared/loading.dart';
 
 class Posts extends StatefulWidget {
-  const Posts({Key? key}) : super(key: key);
+  var searchValue;
+  Posts({Key? key, searchValue})
+      : super(
+          key: key,
+        );
 
   @override
   State<Posts> createState() => _PostsState();
@@ -65,8 +69,9 @@ class _PostsState extends State<Posts> {
           ),
           body: TabBarView(
             children: [
-              postListBuilder("Found"),
-              postListBuilder("Lost"),
+              displayPosts()
+              // postListBuilder("Found"),
+              // postListBuilder("Lost"),
             ],
           ),
           floatingActionButton: FloatingActionButton(
@@ -80,6 +85,35 @@ class _PostsState extends State<Posts> {
         ),
       ),
     );
+  }
+
+  StreamBuilder<QuerySnapshot<Object?>> displayPosts() {
+    return StreamBuilder<QuerySnapshot>(
+        stream: postsRef.snapshots().asBroadcastStream(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (!snapshot.hasData) {
+            return Loading();
+          } else {
+            return ListView(
+              children: [
+                ...snapshot.data!.docs
+                    .where((QueryDocumentSnapshot<Object?> element) =>
+                        element['title']
+                            .toString()
+                            .toLowerCase()
+                            .contains('test'))
+                    .map((QueryDocumentSnapshot<Object?> data) {
+                  final String title = data.get('title');
+                  final String desc = data.get('category');
+
+                  return PostCards(
+                    posts: data,
+                  );
+                })
+              ],
+            );
+          }
+        });
   }
 
   FutureBuilder<QuerySnapshot<Object?>> postListBuilder(String status) {

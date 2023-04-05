@@ -6,6 +6,7 @@ import 'package:mafqud_project/services/notifications.dart';
 import 'package:mafqud_project/shared/AlertBox.dart';
 import 'package:mafqud_project/shared/Lists.dart';
 import 'package:mafqud_project/shared/NavMenu.dart';
+import 'package:mafqud_project/shared/loading.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -20,11 +21,17 @@ class _HomeState extends State<Home> {
   String searchString = '';
   //TODO: finish func
   searchPosts() {
-    CollectionReference postRef =
-        FirebaseFirestore.instance.collection("Posts");
     var data = _formKey.currentState;
     if (data!.validate()) {
       data.save();
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => Posts(
+                    searchValue: searchString,
+                  )));
+    } else {
+      print(searchString);
     }
   }
 
@@ -61,7 +68,10 @@ class _HomeState extends State<Home> {
                     }
                   },
                   onSaved: (newValue) {
-                    searchString = newValue!;
+                    setState(() {
+                      searchString = newValue!;
+                    });
+                    ;
                   },
                   decoration: const InputDecoration(
                       labelText: 'Search', suffixIcon: Icon(Icons.search)),
@@ -100,7 +110,8 @@ class _HomeState extends State<Home> {
                 Center(
                   child: TextButton(
                     onPressed: () {
-                      Navigator.of(context).pushNamed("Posts");
+                      searchPosts();
+                      // Navigator.of(context).pushNamed("Posts");
                     },
                     child: const Text(
                       "Search",
