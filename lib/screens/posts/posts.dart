@@ -75,7 +75,6 @@ class _PostsState extends State<Posts> {
             onPressed: () {
               Navigator.of(context).pushNamed("AddPost");
             },
-            tooltip: 'Increment',
             child: const Icon(Icons.add),
           ),
         ),
@@ -91,15 +90,13 @@ class _PostsState extends State<Posts> {
             return Loading();
           } else {
             if (snapshot.data!.docs.isEmpty) {
-              return NoPostFoundMsg;
+              return noPostFoundMsg;
             } else {
-              var titleQuery = snapshot.data!.docs.where(
-                  (QueryDocumentSnapshot<Object?> element) => element['title']
-                      .toString()
-                      .toLowerCase()
-                      .contains(widget.searchValue!));
+              //return all posts containing title
+              Iterable<QueryDocumentSnapshot<Object?>> titleQuery =
+                  searchByTitle(snapshot);
               if (titleQuery.isEmpty) {
-                return NoPostFoundMsg;
+                return noPostFoundMsg;
               } else {
                 return ListView(
                   children: [
@@ -116,7 +113,17 @@ class _PostsState extends State<Posts> {
         });
   }
 
-  var NoPostFoundMsg = Row(
+  Iterable<QueryDocumentSnapshot<Object?>> searchByTitle(
+      AsyncSnapshot<QuerySnapshot<Object?>> snapshot) {
+    var titleQuery = snapshot.data!.docs.where(
+        (QueryDocumentSnapshot<Object?> element) => element['title']
+            .toString()
+            .toLowerCase()
+            .contains(widget.searchValue!));
+    return titleQuery;
+  }
+
+  var noPostFoundMsg = Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
       Icon(
