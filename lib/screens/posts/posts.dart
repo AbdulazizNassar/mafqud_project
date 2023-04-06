@@ -87,36 +87,46 @@ class _PostsState extends State<Posts> {
     );
   }
 
-  FutureBuilder<QuerySnapshot<Object?>> displayPosts(String status) {
+  FutureBuilder<QuerySnapshot<Object?>> displayPosts(
+    String status,
+  ) {
     return FutureBuilder<QuerySnapshot>(
-        future: postsRef.get(),
+        future: postsRef.where("status", isEqualTo: status).get(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (!snapshot.hasData) {
-            return const Center(
-              child: Icon(Icons.abc_outlined),
-            );
-          } else if (snapshot.hasData) {
-            return ListView(
-              children: [
-                ...snapshot.data!.docs
-                    .where((QueryDocumentSnapshot<Object?> element) =>
-                        element['title']
-                            .toString()
-                            .toLowerCase()
-                            .contains(widget.searchValue!))
-                    .where((element) =>
-                        element['status'].toString().contains(status))
-                    .map((QueryDocumentSnapshot<Object?> post) {
-                  return PostCards(
-                    posts: post,
-                  );
-                })
-              ],
-            );
-          } else if (snapshot.connectionState == ConnectionState.waiting) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return Loading();
           } else {
-            return const Text('');
+            if (snapshot.data!.docs.isEmpty) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.warning,
+                    color: Colors.yellow.shade800,
+                  ),
+                  Text(
+                    "No Posts Found",
+                    style: TextStyle(color: Colors.red.shade500, fontSize: 25),
+                  ),
+                ],
+              );
+            } else {
+              return ListView(
+                children: [
+                  ...snapshot.data!.docs
+                      .where((QueryDocumentSnapshot<Object?> element) =>
+                          element['title']
+                              .toString()
+                              .toLowerCase()
+                              .contains(widget.searchValue!))
+                      .map((QueryDocumentSnapshot<Object?> post) {
+                    return PostCards(
+                      posts: post,
+                    );
+                  })
+                ],
+              );
+            }
           }
         });
   }

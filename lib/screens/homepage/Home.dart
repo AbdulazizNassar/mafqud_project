@@ -19,12 +19,10 @@ class _HomeState extends State<Home> {
   String dropdownValue = 'Electronics';
   final _formKey = GlobalKey<FormState>();
   String searchString = '';
-  //TODO: finish func
   searchPosts() {
     var data = _formKey.currentState;
     if (data!.validate() && searchString != '') {
       data.save();
-      print(searchString);
       Navigator.push(
           context,
           MaterialPageRoute(
@@ -35,11 +33,12 @@ class _HomeState extends State<Home> {
       print("searchString");
     }
   }
+
   @override
   void initState() {
     // TODO: implement initState
     setState(() {
-      if (searchString != ''){
+      if (searchString != '') {
         searchString = '';
       }
     });
@@ -80,7 +79,6 @@ class _HomeState extends State<Home> {
                       searchString = value!;
                     });
                   },
-
                   decoration: const InputDecoration(
                       labelText: 'Search', suffixIcon: Icon(Icons.search)),
                 ),
