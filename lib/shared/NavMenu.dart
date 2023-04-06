@@ -134,7 +134,10 @@ Widget buildMenuItems(BuildContext context) => Container(
           ),
           const Divider(color: Colors.black54),
           ListTile(
-            leading: const Icon(Icons.logout),
+            leading: const Icon(
+              Icons.logout,
+              color: Colors.red,
+            ),
             title: const Text("Log out"),
             onTap: () {
               signOutConfirm(context);

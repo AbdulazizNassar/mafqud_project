@@ -6,6 +6,7 @@ import 'package:mafqud_project/services/notifications.dart';
 import 'package:mafqud_project/shared/AlertBox.dart';
 import 'package:mafqud_project/shared/Lists.dart';
 import 'package:mafqud_project/shared/NavMenu.dart';
+import 'package:mafqud_project/shared/loading.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -18,14 +19,29 @@ class _HomeState extends State<Home> {
   String dropdownValue = 'Electronics';
   final _formKey = GlobalKey<FormState>();
   String searchString = '';
-  //TODO: finish func
   searchPosts() {
-    CollectionReference postRef =
-        FirebaseFirestore.instance.collection("Posts");
     var data = _formKey.currentState;
-    if (data!.validate()) {
+    if (data!.validate() && searchString != '') {
       data.save();
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => Posts(
+                    searchValue: searchString,
+                  )));
+    } else {
+      print("searchString");
     }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    setState(() {
+      if (searchString != '') {
+        searchString = '';
+      }
+    });
   }
 
   @override
@@ -55,13 +71,13 @@ class _HomeState extends State<Home> {
                 ),
                 TextFormField(
                   validator: (value) {
-                    if (value!.isEmpty) {
+                    if (value == '') {
                       ScaffoldMessenger.of(context).showSnackBar(snackBarError(
                           "Error", "Cannot search for empty fields"));
                     }
-                  },
-                  onSaved: (newValue) {
-                    searchString = newValue!;
+                    setState(() {
+                      searchString = value!;
+                    });
                   },
                   decoration: const InputDecoration(
                       labelText: 'Search', suffixIcon: Icon(Icons.search)),
@@ -100,7 +116,8 @@ class _HomeState extends State<Home> {
                 Center(
                   child: TextButton(
                     onPressed: () {
-                      Navigator.of(context).pushNamed("Posts");
+                      searchPosts();
+                      // Navigator.of(context).pushNamed("Posts");
                     },
                     child: const Text(
                       "Search",
