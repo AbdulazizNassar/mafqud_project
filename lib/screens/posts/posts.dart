@@ -99,37 +99,42 @@ class _PostsState extends State<Posts> {
             return Loading();
           } else {
             if (snapshot.data!.docs.isEmpty) {
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.warning,
-                    color: Colors.yellow.shade800,
-                  ),
-                  Text(
-                    "No Posts Found",
-                    style: TextStyle(color: Colors.red.shade500, fontSize: 25),
-                  ),
-                ],
-              );
+              return NoPostFoundMsg;
             } else {
-              return ListView(
-                children: [
-                  ...snapshot.data!.docs
-                      .where((QueryDocumentSnapshot<Object?> element) =>
-                          element['title']
-                              .toString()
-                              .toLowerCase()
-                              .contains(widget.searchValue!))
-                      .map((QueryDocumentSnapshot<Object?> post) {
-                    return PostCards(
-                      posts: post,
-                    );
-                  })
-                ],
-              );
+              var titleQuery = snapshot.data!.docs.where(
+                  (QueryDocumentSnapshot<Object?> element) => element['title']
+                      .toString()
+                      .toLowerCase()
+                      .contains(widget.searchValue!));
+              if (titleQuery.isEmpty) {
+                return NoPostFoundMsg;
+              } else {
+                return ListView(
+                  children: [
+                    ...titleQuery.map((QueryDocumentSnapshot<Object?> post) {
+                      return PostCards(
+                        posts: post,
+                      );
+                    })
+                  ],
+                );
+              }
             }
           }
         });
   }
+
+  var NoPostFoundMsg = Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Icon(
+        Icons.warning,
+        color: Colors.yellow.shade800,
+      ),
+      Text(
+        "No Posts Found",
+        style: TextStyle(color: Colors.red.shade500, fontSize: 25),
+      ),
+    ],
+  );
 }
