@@ -1,13 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:mafqud_project/screens/posts/addPost.dart';
-import 'package:mafqud_project/services/showPostDetails.dart';
-import 'package:mafqud_project/shared/AlertBox.dart';
-import 'package:mafqud_project/shared/DateTime.dart';
-import 'package:flutter/material.dart';
-import 'package:mafqud_project/screens/posts/posts.dart';
-import 'package:mafqud_project/services/auth.dart';
 import 'package:mafqud_project/services/googleMap/googleMapsShowPosts.dart';
 import '../../shared/PostCards.dart';
 import '../../shared/loading.dart';
@@ -26,10 +18,6 @@ class Posts extends StatefulWidget {
 class _PostsState extends State<Posts> {
   Query<Map<String, dynamic>> postsRef =
       FirebaseFirestore.instance.collection('Posts').orderBy('Date');
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) => PostsMaterialApp(context);
@@ -74,8 +62,8 @@ class _PostsState extends State<Posts> {
           ),
           body: TabBarView(
             children: [
-              displayPosts("Found"),
-              displayPosts("Lost"),
+              searchPosts("Found"),
+              searchPosts("Lost"),
             ],
           ),
           floatingActionButton: FloatingActionButton(
@@ -91,45 +79,54 @@ class _PostsState extends State<Posts> {
     );
   }
 
-  FutureBuilder<QuerySnapshot<Object?>> displayPosts(String status) {
+  FutureBuilder<QuerySnapshot<Object?>> searchPosts(String status) {
     return FutureBuilder<QuerySnapshot>(
+        //filter based on status first to display each one in tab
         future: postsRef.where("status", isEqualTo: status).get(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Loading();
           } else {
+            //No docs found
             if (snapshot.data!.docs.isEmpty) {
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.warning,
-                    color: Colors.yellow.shade800,
-                  ),
-                  Text(
-                    "No Posts Found",
-                    style: TextStyle(color: Colors.red.shade500, fontSize: 25),
-                  ),
-                ],
-              );
+              return noPostFoundMsg;
             } else {
-              return ListView(
-                children: [
-                  ...snapshot.data!.docs
-                      .where((QueryDocumentSnapshot<Object?> element) =>
-                          element['title']
-                              .toString()
-                              .toLowerCase()
-                              .contains(widget.searchValue!))
-                      .map((QueryDocumentSnapshot<Object?> post) {
-                    return PostCards(
-                      posts: post,
-                    );
-                  })
-                ],
-              );
+              //retreive all docs containing search Title
+              var titleQuery = snapshot.data!.docs.where(
+                  (QueryDocumentSnapshot<Object?> element) => element['title']
+                      .toString()
+                      .toLowerCase()
+                      .contains(widget.searchValue!));
+              //if none found
+              if (titleQuery.isEmpty) {
+                return noPostFoundMsg;
+              } else {
+                return ListView(
+                  children: [
+                    ...titleQuery.map((QueryDocumentSnapshot<Object?> post) {
+                      return PostCards(
+                        posts: post,
+                      );
+                    })
+                  ],
+                );
+              }
             }
           }
         });
   }
+
+  Widget noPostFoundMsg = Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Icon(
+        Icons.warning,
+        color: Colors.yellow.shade800,
+      ),
+      Text(
+        "No Posts Found",
+        style: TextStyle(color: Colors.red.shade500, fontSize: 25),
+      ),
+    ],
+  );
 }
