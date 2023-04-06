@@ -26,6 +26,10 @@ class Posts extends StatefulWidget {
 class _PostsState extends State<Posts> {
   Query<Map<String, dynamic>> postsRef =
       FirebaseFirestore.instance.collection('Posts').orderBy('Date');
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) => PostsMaterialApp(context);
@@ -87,9 +91,7 @@ class _PostsState extends State<Posts> {
     );
   }
 
-  FutureBuilder<QuerySnapshot<Object?>> displayPosts(
-    String status,
-  ) {
+  FutureBuilder<QuerySnapshot<Object?>> displayPosts(String status) {
     return FutureBuilder<QuerySnapshot>(
         future: postsRef.where("status", isEqualTo: status).get(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
