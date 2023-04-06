@@ -1,13 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:mafqud_project/screens/posts/addPost.dart';
-import 'package:mafqud_project/services/showPostDetails.dart';
-import 'package:mafqud_project/shared/AlertBox.dart';
-import 'package:mafqud_project/shared/DateTime.dart';
-import 'package:flutter/material.dart';
-import 'package:mafqud_project/screens/posts/posts.dart';
-import 'package:mafqud_project/services/auth.dart';
 import 'package:mafqud_project/services/googleMap/googleMapsShowPosts.dart';
 import '../../shared/PostCards.dart';
 import '../../shared/loading.dart';
