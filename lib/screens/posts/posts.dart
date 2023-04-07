@@ -115,15 +115,14 @@ class _PostsState extends State<Posts> {
 
   Iterable<QueryDocumentSnapshot<Object?>> searchByTitle(
       AsyncSnapshot<QuerySnapshot<Object?>> snapshot) {
-    var titleQuery = snapshot.data!.docs.where(
-        (QueryDocumentSnapshot<Object?> element) => element['title']
+    return snapshot.data!.docs.where((QueryDocumentSnapshot<Object?> element) =>
+        element['title']
             .toString()
             .toLowerCase()
             .contains(widget.searchValue!));
-    return titleQuery;
   }
 
-  var noPostFoundMsg = Row(
+  Widget noPostFoundMsg = Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
       Icon(
