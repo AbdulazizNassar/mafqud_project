@@ -74,6 +74,6 @@ void sendPushMessage(String body, String title, String token) async {
       ),
     );
   } catch (e) {
-    print("error push notification?");
+    print("error push notificatiot");
   }
 }
