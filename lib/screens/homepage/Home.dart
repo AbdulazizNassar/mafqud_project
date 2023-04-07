@@ -1,15 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:mafqud_project/screens/posts/posts.dart';
-import 'package:mafqud_project/services/notifications.dart';
+import 'package:mafqud_project/services/notification.dart';
 import 'package:mafqud_project/shared/AlertBox.dart';
 import 'package:mafqud_project/shared/Lists.dart';
 import 'package:mafqud_project/shared/NavMenu.dart';
-import 'package:mafqud_project/shared/loading.dart';
 
 import '../../services/auth.dart';
-import '../../services/notification.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
