@@ -8,6 +8,9 @@ import 'package:mafqud_project/shared/Lists.dart';
 import 'package:mafqud_project/shared/NavMenu.dart';
 import 'package:mafqud_project/shared/loading.dart';
 
+import '../../services/auth.dart';
+import '../../services/notification.dart';
+
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
 
@@ -60,6 +63,20 @@ class _HomeState extends State<Home> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                ElevatedButton(
+                  onPressed: () async {
+                    DocumentSnapshot snap = await FirebaseFirestore.instance
+                        .collection("userToken")
+                        .doc(AuthService().currentUser!.uid)
+                        .get();
+                    String token = snap['token'];
+                    sendPushMessage("my name is", "title", token);
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    child: const Text("hello"),
+                  ),
+                ),
                 const SizedBox(
                   height: 70,
                 ),
