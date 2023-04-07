@@ -1,6 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:mafqud_project/screens/posts/posts.dart';
+import 'package:mafqud_project/services/auth.dart';
+import 'package:mafqud_project/shared/AlertBox.dart';
+import 'package:mafqud_project/shared/Lists.dart';
 import 'package:mafqud_project/shared/NavMenu.dart';
+import 'package:badges/badges.dart' as badges;
+import '../../services/notifications.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -11,11 +17,22 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   String dropdownValue = 'Electronics';
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    //notifications
+    requestPermission();
+    getToken();
+    showNotification(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Home'),
+          title: const Text('Home'),
           backgroundColor: Colors.blue[900],
           centerTitle: true,
         ),
@@ -27,6 +44,21 @@ class _HomeState extends State<Home> {
             children: [
               const SizedBox(
                 height: 70,
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  DocumentSnapshot snap = await FirebaseFirestore.instance
+                      .collection("userToken")
+                      .doc(AuthService().currentUser!.uid)
+                      .get();
+                  String token = snap['token'];
+                  sendPushMessage("my name is", "title", token);
+                },
+                child: Container(
+                  color: Colors.amber,
+                  padding: const EdgeInsets.all(8),
+                  child: const Text("hello"),
+                ),
               ),
               const Text('Search an item:',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
@@ -49,13 +81,12 @@ class _HomeState extends State<Home> {
               DropdownButton<String>(
                 isExpanded: true,
                 value: dropdownValue,
-                items: <String>['Electronics', 'Personal items', 'Animals']
-                    .map<DropdownMenuItem<String>>((String value) {
+                items: Categories.map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Text(
                       value,
-                      style: TextStyle(fontSize: 17),
+                      style: const TextStyle(fontSize: 17),
                     ),
                   );
                 }).toList(),
@@ -81,7 +112,7 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ));

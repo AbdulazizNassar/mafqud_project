@@ -1,9 +1,9 @@
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mafqud_project/screens/posts/addPost.dart';
+import 'package:mafqud_project/screens/posts/postDetails.dart';
+import 'package:mafqud_project/shared/DateTime.dart';
 
 class Posts extends StatefulWidget {
   const Posts({Key? key}) : super(key: key);
@@ -13,7 +13,6 @@ class Posts extends StatefulWidget {
 }
 
 class _PostsState extends State<Posts> {
-
   CollectionReference postsRef = FirebaseFirestore.instance.collection('Posts');
 
   var posts = [];
@@ -26,45 +25,42 @@ class _PostsState extends State<Posts> {
     final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
     posts = allData;
   }
-  void initState()
-  {
+
+  void initState() {
     super.initState();
     getData();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Posts"),
+        title: const Text("Posts"),
         backgroundColor: Colors.blue[900],
       ),
-      body:
-            FutureBuilder(
-                future: postsRef.get(),
-                builder: (context, snapshot){
-                  if (snapshot.hasData) {
-                    return ListView.builder(
-                        itemCount: snapshot.data?.docs.length,
-                        itemBuilder: (context, i){
-                          return ListPosts(posts:snapshot.data?.docs[i]);
-
-                    });
-                  }
-                  else if (snapshot.hasError){
-                    return Text("Error");
-                  }
-                  else if (snapshot.connectionState == ConnectionState.waiting){
-                    Text("loading");
-                  }
-                  return Text(".");
-                }),
-        floatingActionButton: FloatingActionButton(
-          onPressed: (){Navigator.of(context).pushNamed("AddPost");},
-          tooltip: 'Increment',
-          child: const Icon(Icons.add),
-        ),
-
+      body: FutureBuilder(
+          future: postsRef.get(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return ListView.builder(
+                  itemCount: snapshot.data?.docs.length,
+                  itemBuilder: (context, i) {
+                    return ListPosts(posts: snapshot.data?.docs[i]);
+                  });
+            } else if (snapshot.hasError) {
+              return const Text("Error");
+            } else if (snapshot.connectionState == ConnectionState.waiting) {
+              const Text("loading");
+            }
+            return const Text(".");
+          }),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).pushNamed("AddPost");
+        },
+        tooltip: 'Increment',
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }
@@ -74,25 +70,57 @@ class ListPosts extends StatelessWidget {
   ListPosts({this.posts});
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Row(
-        children: [
-          Expanded(
-              flex: 2,
-              child:Image.asset("assets/flower.jpg",     // For test
-               height:100,fit: BoxFit.fitWidth,
-              )),
-          Expanded(
-              flex: 3,
-              child: ListTile(
-                title: Text("${posts['title']}"),
-                subtitle: Text("${posts['category']}"),
-              )),
-          SizedBox(height: 90,)
-        ],
+    return InkWell(
+      onTap: () {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => postDetails(posts: posts)));
+      },
+      child: Card(
+        child: Row(
+          children: [
+            Expanded(
+                flex: 2,
+                child: Image.asset(
+                  "assets/flower.jpg", // For test
+                  height: 100, fit: BoxFit.fitWidth,
+                )),
+            Expanded(
+                flex: 3,
+                child: ListTile(
+                  title: Text("${posts['title']}"),
+                  subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                            padding: const EdgeInsets.only(top: 5),
+                            child: Text("${posts['category']}")),
+                        Container(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: Text(
+                            "${posts['status']}",
+                            style: const TextStyle(
+                              backgroundColor: Colors.amber,
+                              fontSize: 15,
+                            ),
+                          ),
+                        )
+                      ]),
+                )),
+            const Icon(
+              Icons.timer_outlined,
+              size: 30,
+            ),
+            Text(
+              readTimestamp(posts["Date"]),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            ),
+            const Icon(Icons.keyboard_double_arrow_right_outlined),
+            const SizedBox(
+              height: 90,
+            )
+          ],
+        ),
       ),
     );
   }
 }
-
-
