@@ -1,6 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'Screens/homepage/Home.dart';
 import 'screens/Authentication/register.dart';
 import 'screens/Authentication/sign_in.dart';
@@ -9,7 +8,6 @@ import 'screens/posts/posts.dart';
 import 'Screens/Authentication/auth.dart';
 import 'MainScreen.dart';
 import 'firebase_options.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

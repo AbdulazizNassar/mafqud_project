@@ -1,101 +1,95 @@
+import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:mafqud_project/shared/constants.dart';
-import 'package:mafqud_project/shared/loading.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:http/http.dart' as http;
+import 'package:mafqud_project/services/auth.dart';
 
-import '../../shared/DateTime.dart';
+var _token = FirebaseMessaging.instance;
+String? mtoken = " ";
 
-class postDetails extends StatefulWidget {
-  final posts;
-  const postDetails({super.key, this.posts});
-  @override
-  State<postDetails> createState() => _postDetailsState();
+void getToken() async {
+  await FirebaseMessaging.instance.getToken().then((token) {
+    mtoken = token;
+    saveToken(token!);
+  });
 }
 
-class _postDetailsState extends State<postDetails> {
-  @override
-  Widget build(BuildContext context) {
-    //get user that created post
-    CollectionReference user = FirebaseFirestore.instance.collection("users");
+void saveToken(String token) async {
+  await FirebaseFirestore.instance
+      .collection("userToken")
+      .doc(AuthService().currentUser!.uid)
+      .set({
+    "uid": AuthService().currentUser!.uid,
+    "token": token,
+  });
+}
 
-    return FutureBuilder<DocumentSnapshot>(
-        future: user.doc("${widget.posts["userID"]}").get(),
-        builder:
-            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            Map<String, dynamic> data =
-                snapshot.data!.data() as Map<String, dynamic>;
-            return Scaffold(
-              appBar: AppBar(
-                title: Text("${widget.posts['title']}"),
-              ),
-              body: Column(children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [],
-                ),
-                const SizedBox(
-                  height: 300,
-                ),
-                Row(children: const [
-                  Icon(
-                    Icons.pin_drop_outlined,
-                    size: 40,
-                  ),
-                  //Todo edit to make location written by user
-                  Text("Ksu", style: textStyle),
-                ]),
-                const SizedBox(height: 15),
-                Container(
-                    margin: const EdgeInsets.only(right: 250),
-                    color: Colors.grey,
-                    child: Text(
-                      "status: ${widget.posts["status"]}",
-                      style: textStyle,
-                    )),
-                const SizedBox(height: 15),
-                Row(
-                  children: [
-                    const Icon(
-                      Icons.timer_outlined,
-                      size: 30,
-                    ),
-                    Text(
-                      readTimestamp(widget.posts["Date"]),
-                      style: textStyle,
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 1),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                  margin: const EdgeInsets.fromLTRB(0, 30, 190, 0),
-                  color: Colors.blue,
-                  child: Text(
-                    "Description: \n ${widget.posts["description"]}",
-                    style: textStyle,
-                  ),
-                ),
-                const SizedBox(height: 25),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "ad posted by : ${data["name"]}",
-                      style: textStyle,
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton.icon(
-                    onPressed: () {},
-                    icon: const Icon(Icons.message),
-                    label: const Text("Send a Message"))
-              ]),
-            );
-          }
-          return Loading();
-        });
+void requestPermission() async {
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+  NotificationSettings settings = await messaging.requestPermission(
+    alert: true,
+    announcement: false,
+    badge: true,
+    carPlay: false,
+    criticalAlert: false,
+    provisional: false,
+    sound: true,
+  );
+
+  if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+    print('User granted permission');
+  } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
+    print('User granted provisional permission');
+  } else {
+    print('User declined or has not accepted permission');
   }
 }
+
+void sendPushMessage(String body, String title, String token) async {
+  try {
+    await http.post(
+      Uri.parse('https://fcm.googleapis.com/fcm/send'),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization':
+            'key=AAAATrnSN4M:APA91bFclWR-GxPruTqUuZZ3nMx-Sl1KGSlxeXhhkpEkS7wIbXYTexjvKlw2eMcpdH_qFLR6e72fMIhKtdlqtEwAZSw0XLZYpaSLgZbmkbkTd_uDfUWHRoAyIsreGgK9f8lJVhxeIERw',
+      },
+      body: jsonEncode(
+        <String, dynamic>{
+          'priority': 'high',
+          'data': <String, dynamic>{
+            'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+            'id': '1',
+            'status': 'done',
+            "body": body,
+            "title": title
+          },
+          'notification': <String, dynamic>{
+            'body': body,
+            'title': title,
+          },
+          "to": token,
+        },
+      ),
+    );
+  } catch (e) {
+    print("error push notificatiot");
+  }
+}
+
+
+ ElevatedButton(
+                onPressed: () async {
+                  DocumentSnapshot snap = await FirebaseFirestore.instance
+                      .collection("userToken")
+                      .doc(AuthService().currentUser!.uid)
+                      .get();
+                  String token = snap['token'];
+                  sendPushMessage("my name is", "title", token);
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  child: const Text("hello"),
+                ),
+              ),

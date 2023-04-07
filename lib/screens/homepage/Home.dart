@@ -45,21 +45,6 @@ class _HomeState extends State<Home> {
               const SizedBox(
                 height: 70,
               ),
-              ElevatedButton(
-                onPressed: () async {
-                  DocumentSnapshot snap = await FirebaseFirestore.instance
-                      .collection("userToken")
-                      .doc(AuthService().currentUser!.uid)
-                      .get();
-                  String token = snap['token'];
-                  sendPushMessage("my name is", "title", token);
-                },
-                child: Container(
-                  color: Colors.amber,
-                  padding: const EdgeInsets.all(8),
-                  child: const Text("hello"),
-                ),
-              ),
               const Text('Search an item:',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
               const SizedBox(
