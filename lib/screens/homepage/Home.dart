@@ -37,15 +37,14 @@ class _HomeState extends State<Home> {
     }
   }
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    setState(() {
-      if (searchString != '') {
-        searchString = '';
-      }
-    });
-  }
+  // @override
+  // void initState() {
+  //   setState(() {
+  //     if (searchString != '') {
+  //       searchString = '';
+  //     }
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
