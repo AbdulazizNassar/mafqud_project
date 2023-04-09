@@ -1,19 +1,12 @@
 import 'dart:io';
-import 'package:mafqud_project/shared/AlertBox.dart';
-import 'package:path/path.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mafqud_project/services/auth.dart';
 import 'package:mafqud_project/shared/Lists.dart';
-import 'package:mafqud_project/shared/NavMenu.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 
 import '../../services/imagePicker.dart';
 import '../../shared/constants.dart';
-import '../../shared/size_config.dart';
 
 class EditPost extends StatefulWidget {
   final posts;

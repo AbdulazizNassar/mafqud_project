@@ -29,19 +29,8 @@ class _HomeState extends State<Home> {
               builder: (context) => Posts(
                     searchValue: searchString,
                   )));
-    } else {
-      print("searchString");
     }
   }
-
-  // @override
-  // void initState() {
-  //   setState(() {
-  //     if (searchString != '') {
-  //       searchString = '';
-  //     }
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -66,11 +55,11 @@ class _HomeState extends State<Home> {
                         .doc(AuthService().currentUser!.uid)
                         .get();
                     String token = snap['token'];
-                    sendPushMessage("my name is", "title", token);
+                    sendPushMessage("title", "subtitle", token);
                   },
                   child: Container(
                     padding: const EdgeInsets.all(8),
-                    child: const Text("hello"),
+                    child: const Text("send Notification test"),
                   ),
                 ),
                 const SizedBox(

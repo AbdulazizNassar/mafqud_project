@@ -4,7 +4,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
 import 'package:mafqud_project/services/auth.dart';
 
-var _token = FirebaseMessaging.instance;
 String? mtoken = " ";
 
 void getToken() async {
@@ -46,7 +45,7 @@ void requestPermission() async {
   }
 }
 
-void sendPushMessage(String body, String title, String token) async {
+void sendPushMessage(String title, String body, String token) async {
   try {
     await http.post(
       Uri.parse('https://fcm.googleapis.com/fcm/send'),
@@ -73,6 +72,12 @@ void sendPushMessage(String body, String title, String token) async {
         },
       ),
     );
+    await FirebaseFirestore.instance.collection("notifications").add({
+      "uid": AuthService().currentUser!.uid,
+      "title": title,
+      'subtitle': body,
+      "date": DateTime.now(),
+    });
   } catch (e) {
     print("error push notificatiot");
   }
