@@ -16,7 +16,6 @@ class PostCards extends StatelessWidget {
       onTap: () async {
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
         await showPostDetailsPage(posts: posts, context: context);
-        // ignore: use_build_context_synchronously
       },
       child: Card(
         child: Row(
