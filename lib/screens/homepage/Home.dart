@@ -119,7 +119,6 @@ class _HomeState extends State<Home> {
                   child: TextButton(
                     onPressed: () {
                       searchPosts();
-                      // Navigator.of(context).pushNamed("Posts");
                     },
                     child: const Text(
                       "Search",
