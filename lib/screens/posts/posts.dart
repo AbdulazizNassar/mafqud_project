@@ -66,8 +66,8 @@ class _PostsState extends State<Posts> {
           ),
           body: TabBarView(
             children: [
-              displayPosts("Found"),
-              displayPosts("Lost"),
+              displayPosts("Found", ""),
+              displayPosts("Lost", ""),
             ],
           ),
           floatingActionButton: FloatingActionButton(
@@ -82,7 +82,8 @@ class _PostsState extends State<Posts> {
     );
   }
 
-  FutureBuilder<QuerySnapshot<Object?>> displayPosts(String status) {
+  FutureBuilder<QuerySnapshot<Object?>> displayPosts(
+      String status, String searchValue) {
     return FutureBuilder<QuerySnapshot>(
         future: postsRef.where("status", isEqualTo: status).get(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -91,6 +92,14 @@ class _PostsState extends State<Posts> {
           } else {
             if (snapshot.data!.docs.isEmpty) {
               return noPostFoundMsg;
+            }
+            if (searchValue.isEmpty) {
+              return ListView.builder(
+                itemCount: snapshot.data!.docs.length,
+                itemBuilder: (context, index) {
+                  return PostCards(posts: snapshot.data!.docs[index]);
+                },
+              );
             } else {
               //return all posts containing title
               Iterable<QueryDocumentSnapshot<Object?>> titleQuery =

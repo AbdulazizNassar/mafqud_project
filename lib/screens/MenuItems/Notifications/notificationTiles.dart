@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:mafqud_project/screens/Notifications/constant.dart';
+import 'package:mafqud_project/screens/MenuItems/Notifications/constant.dart';
 import 'package:mafqud_project/shared/DateTime.dart';
 
 class NotificationTiles extends StatelessWidget {
