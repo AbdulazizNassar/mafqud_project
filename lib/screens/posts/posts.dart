@@ -121,11 +121,12 @@ class _PostsState extends State<Posts> {
     );
   }
 
-  //to show error when searching for empty fields
+  final _controller = TextEditingController();
   Widget validateSearch(BuildContext context) {
     return Form(
         key: _formKey,
         child: TextFormField(
+          controller: _controller,
           validator: (value) {
             if (value == '') {
               setState(() {
