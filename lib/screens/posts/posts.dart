@@ -121,11 +121,12 @@ class _PostsState extends State<Posts> {
     );
   }
 
-  //to show error when searching for empty fields
+  final _controller = TextEditingController();
   Widget validateSearch(BuildContext context) {
     return Form(
         key: _formKey,
         child: TextFormField(
+          controller: _controller,
           validator: (value) {
             if (value == '') {
               setState(() {
@@ -138,6 +139,16 @@ class _PostsState extends State<Posts> {
             });
           },
           decoration: InputDecoration(
+            suffixIcon: IconButton(
+              icon: const Icon(
+                Icons.clear,
+                size: 28,
+                color: Colors.red,
+              ),
+              onPressed: () {
+                _controller.clear();
+              },
+            ),
             prefixIcon: IconButton(
               icon: const Icon(
                 Icons.search,
