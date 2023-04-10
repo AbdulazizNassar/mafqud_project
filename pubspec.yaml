@@ -62,6 +62,7 @@ dependencies:
   firebase_storage: ^11.0.16
   google_maps_webservice: ^0.0.20-nullsafety.5
   awesome_snackbar_content: ^0.1.2
+  flutter_slidable: ^2.0.0
 
 
 dev_dependencies:

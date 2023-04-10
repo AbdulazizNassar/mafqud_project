@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:mafqud_project/screens/MainScreen.dart';
+import 'package:mafqud_project/screens/Notifications/notificationList.dart';
 import 'package:mafqud_project/screens/homepage/Home.dart';
-import 'package:mafqud_project/screens/support.dart';
+import 'package:mafqud_project/screens/MenuItems/support.dart';
 import 'package:mafqud_project/services/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mafqud_project/shared/AlertBox.dart';
 import 'package:mafqud_project/shared/loading.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:mafqud_project/screens/RateUs.dart';
+import 'package:mafqud_project/screens/MenuItems/RateUs.dart';
 import 'package:mafqud_project/screens/posts/history.dart';
 
 // current logged in user
@@ -106,6 +105,12 @@ Widget buildMenuItems(BuildContext context) => Container(
                 MaterialPageRoute(builder: (context) => const Home())),
           ),
           ListTile(
+            leading: const Icon(Icons.notifications_active_outlined),
+            title: const Text("Notifications"),
+            onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => NotificationList())),
+          ),
+          ListTile(
             leading: const Icon(Icons.history_outlined),
             title: const Text("History"),
             onTap: () => Navigator.of(context).pushReplacement(
@@ -134,7 +139,10 @@ Widget buildMenuItems(BuildContext context) => Container(
           ),
           const Divider(color: Colors.black54),
           ListTile(
-            leading: const Icon(Icons.logout),
+            leading: const Icon(
+              Icons.logout,
+              color: Colors.red,
+            ),
             title: const Text("Log out"),
             onTap: () {
               signOutConfirm(context);

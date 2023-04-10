@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mafqud_project/models/currentUser.dart';
 import 'package:mafqud_project/screens/posts/editPost.dart';
-import 'package:mafqud_project/screens/posts/postDetails.dart';
 
 import '../../services/auth.dart';
 import '../../shared/DateTime.dart';

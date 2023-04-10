@@ -42,7 +42,7 @@ savePostToFirebase(
     "category": category,
     "userID": userID,
     "status": status,
-    "image": imageUrl.toString(),
+    "image": imageUrl,
     "Date": DateTime.now(),
     "Lat": selectedLocation!.latitude,
     "Lng": selectedLocation!.longitude,

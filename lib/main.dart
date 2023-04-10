@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:mafqud_project/screens/posts/DetailPage.dart';
 import 'package:mafqud_project/screens/posts/history.dart';
 import 'Screens/homepage/Home.dart';
 import 'screens/Authentication/register.dart';
@@ -27,22 +28,22 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Mafqud',
       theme: ThemeData(
-        backgroundColor: Colors.white,
         appBarTheme: const AppBarTheme(color: Colors.blue, elevation: 2),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      initialRoute: "MainScreen",
+      initialRoute: "Home",
       routes: {
         "MainScreen": (context) => const MainScreen(),
         "Auth": (context) => Auth(),
         "SignIn": (context) => SignIn(),
         "Register": (context) => Register(),
         "Home": (context) => const Home(),
-        "Posts": (context) => const Posts(),
+        "Posts": (context) => Posts(),
         "AddPost": (context) => const AddPosts(),
         "History": (context) => const History(),
         "GoogleMap": (context) => const MapScreen(),
         "MapPosts": (context) => const MapPosts(),
+        "ProductDetailPage": (context) => const ProductDetailPage(),
       },
     );
   }

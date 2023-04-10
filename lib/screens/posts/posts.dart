@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:mafqud_project/screens/posts/addPost.dart';
-import 'package:mafqud_project/screens/posts/postDetails.dart';
 import 'package:mafqud_project/services/showPostDetails.dart';
 import 'package:mafqud_project/shared/DateTime.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +11,11 @@ import '../../shared/PostCards.dart';
 import '../../shared/loading.dart';
 
 class Posts extends StatefulWidget {
-  const Posts({Key? key}) : super(key: key);
+  String? searchValue;
+  Posts({Key? key, this.searchValue})
+      : super(
+          key: key,
+        );
 
   @override
   State<Posts> createState() => _PostsState();
@@ -21,6 +24,10 @@ class Posts extends StatefulWidget {
 class _PostsState extends State<Posts> {
   Query<Map<String, dynamic>> postsRef =
       FirebaseFirestore.instance.collection('Posts').orderBy('Date');
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) => PostsMaterialApp(context);
@@ -65,8 +72,8 @@ class _PostsState extends State<Posts> {
           ),
           body: TabBarView(
             children: [
-              postListBuilder("Found"),
-              postListBuilder("Lost"),
+              displayPosts("Found"),
+              displayPosts("Lost"),
             ],
           ),
           floatingActionButton: FloatingActionButton(
@@ -74,7 +81,6 @@ class _PostsState extends State<Posts> {
             onPressed: () {
               Navigator.of(context).pushNamed("AddPost");
             },
-            tooltip: 'Increment',
             child: const Icon(Icons.add),
           ),
         ),
@@ -82,22 +88,57 @@ class _PostsState extends State<Posts> {
     );
   }
 
-  FutureBuilder<QuerySnapshot<Object?>> postListBuilder(String status) {
-    return FutureBuilder(
+  FutureBuilder<QuerySnapshot<Object?>> displayPosts(String status) {
+    return FutureBuilder<QuerySnapshot>(
         future: postsRef.where("status", isEqualTo: status).get(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return ListView.builder(
-                itemCount: snapshot.data?.docs.length,
-                itemBuilder: (context, i) {
-                  return PostCards(posts: snapshot.data?.docs[i]);
-                });
-          } else if (snapshot.hasError) {
-            return const Text("Error");
-          } else if (snapshot.connectionState == ConnectionState.waiting) {
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return Loading();
+          } else {
+            if (snapshot.data!.docs.isEmpty) {
+              return noPostFoundMsg;
+            } else {
+              //return all posts containing title
+              Iterable<QueryDocumentSnapshot<Object?>> titleQuery =
+                  searchByTitle(snapshot);
+              if (titleQuery.isEmpty) {
+                return noPostFoundMsg;
+              } else {
+                return ListView(
+                  children: [
+                    ...titleQuery.map((QueryDocumentSnapshot<Object?> post) {
+                      return PostCards(
+                        posts: post,
+                      );
+                    })
+                  ],
+                );
+              }
+            }
           }
-          return const Text(".");
         });
   }
+
+  Iterable<QueryDocumentSnapshot<Object?>> searchByTitle(
+      AsyncSnapshot<QuerySnapshot<Object?>> snapshot) {
+    return snapshot.data!.docs.where((QueryDocumentSnapshot<Object?> element) =>
+        element['title']
+            .toString()
+            .toLowerCase()
+            .contains(widget.searchValue!));
+  }
+
+  Widget noPostFoundMsg = Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Icon(
+        Icons.warning,
+        color: Colors.yellow.shade800,
+      ),
+      Text(
+        "No Posts Found",
+        style: TextStyle(color: Colors.red.shade500, fontSize: 25),
+      ),
+    ],
+  );
 }
