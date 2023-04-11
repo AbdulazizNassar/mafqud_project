@@ -3,6 +3,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:mafqud_project/shared/AlertBox.dart';
 
 import '../screens/posts/DetailPage.dart';
+import '../screens/posts/Details.dart';
 
 showPostDetailsPage({required posts, required context}) async {
   try {
@@ -12,7 +13,7 @@ showPostDetailsPage({required posts, required context}) async {
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => ProductDetailPage(
+            builder: (context) => Details(
                   posts: posts,
                   locality: placemarks.first.locality!,
                   subLocality: placemarks.first.subLocality!,
