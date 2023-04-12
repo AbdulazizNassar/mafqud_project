@@ -28,9 +28,6 @@ class ChatCubit extends Cubit<ChatState> {
   }
 
   void getChatList() {
-    if (users!.isEmpty) {
-      return;
-    }
     users = [];
     emit(AllUsersLoadingState());
     FirebaseFirestore.instance

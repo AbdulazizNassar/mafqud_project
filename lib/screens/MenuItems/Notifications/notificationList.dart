@@ -4,7 +4,6 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:mafqud_project/screens/MenuItems/Notifications/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:mafqud_project/screens/MenuItems/Notifications/notificationTiles.dart';
-import 'package:mafqud_project/services/auth.dart';
 import 'package:mafqud_project/shared/loading.dart';
 
 class NotificationList extends StatefulWidget {
