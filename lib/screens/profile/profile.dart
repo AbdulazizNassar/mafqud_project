@@ -32,42 +32,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
       key: _scaffoldKey,
       drawer: const NavMenu(),
       appBar: AppBar(
-        leadingWidth: 50,
-        leading: IconButton(
-          onPressed: () async{
-            await ChatCubit.get(context).getUserData();
-            _scaffoldKey.currentState!.openDrawer();
-          },
-          icon: const Icon(
-            size: 40,
-            Icons.menu,
-            color: Colors.black,
+          centerTitle: true,
+          title: const Text(
+            'Profile',
+            style: TextStyle(
+                fontSize: 25, color: Colors.white, fontWeight: FontWeight.bold),
           ),
-        ),
-        toolbarHeight: 80,
-        centerTitle: true,
-        title: const Text(
-          'Profile',
-          style: TextStyle(
-              fontSize: 25, color: Colors.black, fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: const Color.fromRGBO(59, 92, 222, 1.0),
-        actions: [
-          IconButton(
-            onPressed: () {
-              uid = '';
-              FirebaseAuth.instance.signOut();
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const MainScreen()));
-            },
-            icon: const Icon(
-              size: 40,
-              Icons.logout,
-              color: Colors.black,
-            ),
-          )
-        ],
-      ),
+          backgroundColor:
+              Colors.blue.shade900 //const Color.fromRGBO(59, 92, 222, 1.0) ,
+          ),
       body: SingleChildScrollView(
         child: Container(
           alignment: Alignment.center,

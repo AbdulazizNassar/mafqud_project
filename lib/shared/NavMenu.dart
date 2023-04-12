@@ -73,42 +73,40 @@ Widget buildHeader(BuildContext context) => Material(
             top: 24 + MediaQuery.of(context).padding.top,
             bottom: 24,
           ),
-          child: BlocConsumer<ChatCubit ,ChatState>(
-              listener: (context, state) {
-                if(state is GetUserSuccessState){
-                  print('data updated');
-                }
-              },
-              builder: (context, state) {
-                return Column(children: [
-                  ChatCubit.get(context).userData!.image == ''
-                      ? const CircleAvatar(
-                          radius: 60,
-                          child: Image(
-                              image: AssetImage('assets/user.png'), height: 70),
-                        )
-                      : CircleAvatar(
-                          radius: 60,
-                          backgroundColor: Colors.white,
-                          backgroundImage: NetworkImage(
-                              ChatCubit.get(context).userData!.image!),
-                        ),
-                  const SizedBox(height: 12),
-                  Text(
-                    // ignore: unnecessary_string_interpolations
-                    '${ChatCubit.get(context).userData!.name}'
-                    // "${data['name']}"
-                    ,
-                    style: const TextStyle(fontSize: 28, color: Colors.white),
-                  ),
-                  Text(
-                    '${ChatCubit.get(context).userData!.email}'
-                    // "${data['email']}"
-                    ,
-                    style: const TextStyle(fontSize: 16, color: Colors.white),
-                  ),
-                ]);
-              }),
+          child: BlocConsumer<ChatCubit, ChatState>(listener: (context, state) {
+            if (state is GetUserSuccessState) {
+              print('data updated');
+            }
+          }, builder: (context, state) {
+            return Column(children: [
+              ChatCubit.get(context).userData!.image == ''
+                  ? const CircleAvatar(
+                      radius: 60,
+                      child: Image(
+                          image: AssetImage('assets/user.png'), height: 70),
+                    )
+                  : CircleAvatar(
+                      radius: 60,
+                      backgroundColor: Colors.white,
+                      backgroundImage:
+                          NetworkImage(ChatCubit.get(context).userData!.image!),
+                    ),
+              const SizedBox(height: 12),
+              Text(
+                // ignore: unnecessary_string_interpolations
+                '${ChatCubit.get(context).userData!.name}'
+                // "${data['name']}"
+                ,
+                style: const TextStyle(fontSize: 28, color: Colors.white),
+              ),
+              Text(
+                '${ChatCubit.get(context).userData!.email}'
+                // "${data['email']}"
+                ,
+                style: const TextStyle(fontSize: 16, color: Colors.white),
+              ),
+            ]);
+          }),
         ),
       ),
     );
