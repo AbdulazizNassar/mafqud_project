@@ -14,6 +14,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mafqud_project/screens/MenuItems/RateUs.dart';
 import 'package:mafqud_project/screens/posts/history.dart';
 
+import '../Screens/homepage/Home.dart';
 import '../screens/profile/profile.dart';
 
 // current logged in user
@@ -139,6 +140,7 @@ Widget buildMenuItems(BuildContext context) => Container(
             title: const Text("Messages"),
             onTap: () {
               ChatCubit.get(context).getChatList();
+
               Navigator.push(context,
                   MaterialPageRoute(builder: (_) => const ChatListScreen()));
             },

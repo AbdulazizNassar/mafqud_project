@@ -53,7 +53,7 @@ class ChatListScreen extends StatelessWidget {
                     centerTitle: true,
                   ),
                   drawer: const NavMenu(),
-                  body: const LinearProgressIndicator(),
+                  body: Text(''),
                 ));
       },
     );
