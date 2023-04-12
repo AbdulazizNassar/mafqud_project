@@ -5,7 +5,7 @@ import 'package:mafqud_project/shared/NavMenu.dart';
 import 'package:mafqud_project/shared/constants.dart';
 import 'package:mafqud_project/shared/loading.dart';
 
-import '../services/auth.dart';
+import 'package:mafqud_project/services/auth.dart';
 
 class support extends StatefulWidget {
   const support({super.key});

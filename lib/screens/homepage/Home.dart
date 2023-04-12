@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:mafqud_project/screens/posts/posts.dart';
-import 'package:mafqud_project/services/notifications.dart';
+import 'package:mafqud_project/services/notification.dart';
 import 'package:mafqud_project/shared/AlertBox.dart';
 import 'package:mafqud_project/shared/Lists.dart';
 import 'package:mafqud_project/shared/NavMenu.dart';
+
+import '../../services/auth.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -18,13 +19,16 @@ class _HomeState extends State<Home> {
   String dropdownValue = 'Electronics';
   final _formKey = GlobalKey<FormState>();
   String searchString = '';
-  //TODO: finish func
   searchPosts() {
-    CollectionReference postRef =
-        FirebaseFirestore.instance.collection("Posts");
     var data = _formKey.currentState;
-    if (data!.validate()) {
+    if (data!.validate() && searchString != '') {
       data.save();
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => Posts(
+                    searchValue: searchString,
+                  )));
     }
   }
 
@@ -44,6 +48,20 @@ class _HomeState extends State<Home> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                ElevatedButton(
+                  onPressed: () async {
+                    DocumentSnapshot snap = await FirebaseFirestore.instance
+                        .collection("userToken")
+                        .doc(AuthService().currentUser!.uid)
+                        .get();
+                    String token = snap['token'];
+                    sendPushMessage("title", "subtitle", token);
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    child: const Text("send Notification test"),
+                  ),
+                ),
                 const SizedBox(
                   height: 70,
                 ),
@@ -55,13 +73,13 @@ class _HomeState extends State<Home> {
                 ),
                 TextFormField(
                   validator: (value) {
-                    if (value!.isEmpty) {
+                    if (value == '') {
                       ScaffoldMessenger.of(context).showSnackBar(snackBarError(
                           "Error", "Cannot search for empty fields"));
                     }
-                  },
-                  onSaved: (newValue) {
-                    searchString = newValue!;
+                    setState(() {
+                      searchString = value!;
+                    });
                   },
                   decoration: const InputDecoration(
                       labelText: 'Search', suffixIcon: Icon(Icons.search)),
@@ -100,7 +118,7 @@ class _HomeState extends State<Home> {
                 Center(
                   child: TextButton(
                     onPressed: () {
-                      Navigator.of(context).pushNamed("Posts");
+                      searchPosts();
                     },
                     child: const Text(
                       "Search",

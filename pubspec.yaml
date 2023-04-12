@@ -68,6 +68,7 @@ dependencies:
   flutter_bloc:
   conditional_builder_null_safety:
   shared_preferences: ^2.0.17
+  flutter_slidable: ^2.0.0
 
 
 dev_dependencies:

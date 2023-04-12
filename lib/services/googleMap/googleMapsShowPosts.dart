@@ -40,6 +40,7 @@ class _MapPostsState extends State<MapPosts> {
                   markerId: MarkerId(post.id),
                   position: LatLng(post["Lat"], post["Lng"]),
                   onTap: () {
+                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
                     snackBarPostDetails(post, context);
                   },
                 ));

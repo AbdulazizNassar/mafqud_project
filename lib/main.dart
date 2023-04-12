@@ -52,7 +52,7 @@ class MyApp extends StatelessWidget {
         "SignIn": (context) => SignIn(),
         "Register": (context) => Register(),
         "Home": (context) => const Home(),
-        "Posts": (context) => const Posts(),
+        "Posts": (context) => Posts(),
         "AddPost": (context) => const AddPosts(),
         "History": (context) => const History(),
         "GoogleMap": (context) => const MapScreen(),
