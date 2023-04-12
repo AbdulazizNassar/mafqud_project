@@ -32,34 +32,31 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MultiProvider( providers: [
-      BlocProvider(
-        create: (BuildContext context) => ChatCubit()
-
-      ),
-    ],
-    child: MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Mafqud',
-      theme: ThemeData(
-        appBarTheme: const AppBarTheme(color: Colors.blue, elevation: 2),
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      initialRoute: "MainScreen",
-      routes: {
-        "MainScreen": (context) => const MainScreen(),
-        "Auth": (context) => Auth(),
-        "SignIn": (context) => SignIn(),
-        "Register": (context) => Register(),
-        "Home": (context) => const Home(),
-        "Posts": (context) => Posts(),
-        "AddPost": (context) => const AddPosts(),
-        "History": (context) => const History(),
-        "GoogleMap": (context) => const MapScreen(),
-        "MapPosts": (context) => const MapPosts(),
-        "ProductDetailPage": (context) => const ProductDetailPage(),
-      },
-    )
-    );
+    return MultiProvider(
+        providers: [
+          BlocProvider(create: (BuildContext context) => ChatCubit()),
+        ],
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Mafqud',
+          theme: ThemeData(
+            appBarTheme: const AppBarTheme(color: Colors.blue, elevation: 2),
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+          ),
+          initialRoute: "MainScreen",
+          routes: {
+            "MainScreen": (context) => const MainScreen(),
+            "Auth": (context) => Auth(),
+            "SignIn": (context) => SignIn(),
+            "Register": (context) => Register(),
+            "Home": (context) => const Home(),
+            "Posts": (context) => Posts(),
+            "AddPost": (context) => const AddPosts(),
+            "History": (context) => const History(),
+            "GoogleMap": (context) => const MapScreen(),
+            "MapPosts": (context) => const MapPosts(),
+            "ProductDetailPage": (context) => const ProductDetailPage(),
+          },
+        ));
   }
 }

@@ -13,7 +13,7 @@ import 'package:mafqud_project/shared/loading.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mafqud_project/screens/MenuItems/RateUs.dart';
 import 'package:mafqud_project/screens/posts/history.dart';
-
+import 'package:mafqud_project/screens/posts/posts.dart';
 import '../screens/profile/profile.dart';
 
 // current logged in user
@@ -120,7 +120,7 @@ Widget buildMenuItems(BuildContext context) => Container(
             leading: const Icon(Icons.home_outlined),
             title: const Text("Home"),
             onTap: () => Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => const Home())),
+                .push(MaterialPageRoute(builder: (context) => Posts())),
           ),
           ListTile(
             leading: const Icon(Icons.notifications_active_outlined),
