@@ -6,6 +6,7 @@ import 'package:mafqud_project/shared/constants.dart';
 import 'package:regexed_validator/regexed_validator.dart';
 
 import '../../shared/AlertBox.dart';
+import '../chat/cubit/chat_cubit.dart';
 
 class Register extends StatefulWidget {
   @override
@@ -22,6 +23,9 @@ class _RegisterState extends State<Register> {
       formData.save();
       UserCredential response = await AuthService()
           .registerWithEmailAndPassword(name, email, password, idNum, PhoneNum);
+      uId = response.user!.uid;
+      print(uId);
+      ChatCubit.get(context).getUserData();
       if (response != null) {
         Navigator.of(context).pushReplacementNamed("Home");
       }

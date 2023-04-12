@@ -7,20 +7,18 @@ import '../../shared/DateTime.dart';
 import '../chat/chat_details.dart';
 import '../chat/cubit/chat_cubit.dart';
 
-class ProductDetailPage extends StatefulWidget {
+class Details extends StatefulWidget {
   final posts;
   final locality;
   final subLocality;
 
-  const ProductDetailPage(
-      {super.key, this.posts, this.locality, this.subLocality});
+  const Details({super.key, this.posts, this.locality, this.subLocality});
 
   @override
-  State<ProductDetailPage> createState() => _ProductDetailPageState();
+  State<Details> createState() => _DetailsState();
 }
 
-class _ProductDetailPageState extends State<ProductDetailPage>
-    with TickerProviderStateMixin {
+class _DetailsState extends State<Details> with TickerProviderStateMixin {
   Map<String, dynamic> ?  data ;
   @override
   Widget build(BuildContext context) {
@@ -46,7 +44,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
         ),
       ),
       body: _buildProductDetailsPage(context),
-      bottomNavigationBar: _buildBottomNavigationBar(),
+      bottomNavigationBar: _buildBottomNavigationBar(context),
     );
   }
 
@@ -167,7 +165,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Loading();
             } else if (snapshot.connectionState == ConnectionState.done) {
-              Map<String, dynamic> data =
+               data =
                   snapshot.data!.data() as Map<String, dynamic>;
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -233,7 +231,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                                     height: 50,
                                   ),
                                   Text(
-                                    "Ad posted by : ${data['name']}",
+                                    "Ad posted by : ${data!['name']}",
                                     style: textStyle,
                                   ),
                                 ],
@@ -261,7 +259,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
     }
   }
 
-  _buildBottomNavigationBar() {
+  _buildBottomNavigationBar(context) {
     return SizedBox(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height / 15,
@@ -307,12 +305,12 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                     context,
                     MaterialPageRoute(
                         builder: (_) => ChatDetailsScreen(
-                          receiverUid: widget.posts.id,
-                          senderUid: uId,
-                          userData: data,
-                          receiverName:data!['name'],
-                          senderName: ChatCubit.get(context).username,
-                        )));
+                              receiverUid: data!['uid'],
+                              senderUid: uId,
+                              userData: data,
+                              receiverName:data!['name'],
+                              senderName: ChatCubit.get(context).username,
+                            )));
               },
               child: Center(
                 child: Row(

@@ -6,6 +6,7 @@ import 'package:mafqud_project/shared/size_config.dart';
 import 'package:mafqud_project/services/auth.dart';
 import 'package:regexed_validator/regexed_validator.dart';
 import '../../services/firebase_exceptions.dart';
+import '../chat/cubit/chat_cubit.dart';
 
 class SignIn extends StatefulWidget {
   @override
@@ -23,6 +24,9 @@ class _SignInState extends State<SignIn> {
       formData.save();
       UserCredential response =
           await AuthService().signInWithEmailAndPassword(email, password);
+      uId = response.user!.uid;
+      print(uId);
+      ChatCubit.get(context).getUserData();
       if (response != null) {
         Navigator.of(context).pushReplacementNamed("Home");
       }

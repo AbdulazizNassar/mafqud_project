@@ -41,8 +41,8 @@ class _HomeState extends State<Home> {
           centerTitle: true,
         ),
         drawer: const NavMenu(),
-        body: Padding(
-          padding: const EdgeInsets.all(10),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Form(
             key: _formKey,
             child: Column(

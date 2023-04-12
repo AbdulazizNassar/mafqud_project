@@ -8,9 +8,11 @@ class AuthService {
   static late AuthStatus _status;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
   User? get currentUser => _auth.currentUser;
 
   Stream<User?> get authStateChanges => _auth.authStateChanges();
+
   //document IDs
 
   Future createUserModel(
@@ -21,6 +23,7 @@ class AuthService {
       'ID': int.parse(ID),
       'phoneNum': phoneNum,
       "uid": _auth.currentUser!.uid,
+      'image': '',
     });
     UserData(
         uid: currentUser!.uid,
