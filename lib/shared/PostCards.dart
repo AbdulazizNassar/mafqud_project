@@ -36,26 +36,29 @@ class PostCards extends StatelessWidget {
                         Container(
                             padding: const EdgeInsets.only(top: 5),
                             child: Text("${posts['category']}")),
-                        Container(
-                          padding: const EdgeInsets.only(top: 5),
-                          child: Text(
-                            "${posts['status']}",
-                            style: const TextStyle(
-                              backgroundColor: Colors.amber,
-                              fontSize: 15,
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.timer_outlined,
+                              size: 30,
                             ),
-                          ),
+                            Container(
+                              padding: const EdgeInsets.only(top: 5),
+                              child: Text(
+                                readTimestamp(posts["Date"]),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 15),
+                              ),
+                            ),
+                          ],
                         )
                       ]),
                 )),
-            const Icon(
-              Icons.timer_outlined,
-              size: 30,
-            ),
-            Text(
-              readTimestamp(posts["Date"]),
-              style: const TextStyle(fontWeight: FontWeight.w100, fontSize: 15),
-            ),
+
+            // Text(
+            //   readTimestamp(posts["Date"]),
+            //   style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            // ),
             const Icon(
               Icons.keyboard_double_arrow_right_outlined,
               size: 30,
