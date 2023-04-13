@@ -27,9 +27,14 @@ class PostCards extends StatelessWidget {
                   fit: BoxFit.cover,
                 )),
             Expanded(
-                flex: 9,
+                flex: 10,
                 child: ListTile(
-                  title: Text("${posts['title']}"),
+                  title: Text(
+                    "${posts['title']}",
+                    style: const TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
                   subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

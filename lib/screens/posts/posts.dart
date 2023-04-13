@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:mafqud_project/services/googleMap/googleMapsShowPosts.dart';
+import 'package:mafqud_project/services/notification.dart';
 import 'package:mafqud_project/shared/NavMenu.dart';
 import '../../shared/AlertBox.dart';
 import '../../shared/PostCards.dart';
@@ -37,6 +38,11 @@ class _PostsState extends State<Posts> {
         flag = false;
       });
     }
+  }
+
+  @override
+  void initState() {
+    getToken();
   }
 
   @override

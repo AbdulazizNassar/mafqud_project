@@ -60,17 +60,15 @@ class ChatCubit extends Cubit<ChatState> {
       dateTime: dateTime,
       text: text,
     );
-
-    // set my chats (sender)
-
-    FirebaseFirestore.instance
+    var messagesRef = FirebaseFirestore.instance
         .collection('users')
         .doc(senderId)
         .collection('chats')
         .doc(receiverId)
-        .collection('messages')
-        .add(messageModel.toMap())
-        .then((value) {
+        .collection('messages');
+    // set my chats (sender)
+
+    messagesRef.add(messageModel.toMap()).then((value) {
       emit(SendMessageSuccessState());
     }).catchError((error) {
       emit(SendMessageErrorState(error.toString()));
@@ -78,14 +76,7 @@ class ChatCubit extends Cubit<ChatState> {
 
     //set receiver chats
 
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(receiverId)
-        .collection('chats')
-        .doc(senderId)
-        .collection('messages')
-        .add(messageModel.toMap())
-        .then((value) {
+    messagesRef.add(messageModel.toMap()).then((value) {
       emit(SendMessageSuccessState());
     }).catchError((error) {
       emit(SendMessageErrorState(error.toString()));

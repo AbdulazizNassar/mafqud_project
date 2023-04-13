@@ -24,6 +24,7 @@ class AuthService {
       'phoneNum': phoneNum,
       "uid": _auth.currentUser!.uid,
       'image': '',
+      'rating': 0.0,
     });
     UserData(
         uid: currentUser!.uid,

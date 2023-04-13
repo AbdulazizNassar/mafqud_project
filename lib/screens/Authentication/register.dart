@@ -27,7 +27,7 @@ class _RegisterState extends State<Register> {
       print(uId);
       ChatCubit.get(context).getUserData();
       if (response != null) {
-        Navigator.of(context).pushReplacementNamed("Home");
+        Navigator.of(context).pushReplacementNamed("Posts");
       }
     }
   }

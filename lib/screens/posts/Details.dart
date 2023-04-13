@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:mafqud_project/shared/constants.dart';
 import 'package:mafqud_project/shared/loading.dart';
 
 import '../../shared/DateTime.dart';
 import '../chat/chat_details.dart';
 import '../chat/cubit/chat_cubit.dart';
+import 'package:mafqud_project/screens/MenuItems/RateUs.dart';
 
 class Details extends StatefulWidget {
   final posts;
@@ -19,7 +21,7 @@ class Details extends StatefulWidget {
 }
 
 class _DetailsState extends State<Details> with TickerProviderStateMixin {
-  Map<String, dynamic> ?  data ;
+  Map<String, dynamic>? data;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -111,13 +113,11 @@ class _DetailsState extends State<Details> with TickerProviderStateMixin {
             length: 1,
             child: Stack(
               children: <Widget>[
-                Expanded(
-                    flex: 3,
-                    child: Image.network(
-                      widget.posts['image'],
-                      fit: BoxFit.fill,
-                      height: 350,
-                    )),
+                Image.network(
+                  widget.posts['image'],
+                  fit: BoxFit.fill,
+                  height: 350,
+                ),
               ],
             ),
           ),
@@ -154,9 +154,10 @@ class _DetailsState extends State<Details> with TickerProviderStateMixin {
     );
   }
 
+  CollectionReference user = FirebaseFirestore.instance.collection("users");
+
   _buildDetailsAndMaterialWidgets() {
     TabController tabController = TabController(length: 2, vsync: this);
-    CollectionReference user = FirebaseFirestore.instance.collection("users");
     try {
       return FutureBuilder<DocumentSnapshot>(
           future: user.doc("${widget.posts['userID']}").get(),
@@ -165,8 +166,7 @@ class _DetailsState extends State<Details> with TickerProviderStateMixin {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Loading();
             } else if (snapshot.connectionState == ConnectionState.done) {
-               data =
-                  snapshot.data!.data() as Map<String, dynamic>;
+              data = snapshot.data!.data() as Map<String, dynamic>;
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
@@ -228,11 +228,24 @@ class _DetailsState extends State<Details> with TickerProviderStateMixin {
                                     style: textStyle,
                                   ),
                                   const SizedBox(
-                                    height: 50,
+                                    height: 35,
                                   ),
-                                  Text(
-                                    "Ad posted by : ${data!['name']}",
-                                    style: textStyle,
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "Ad posted by :\n ${data!['name']}(",
+                                        style: textStyle,
+                                      ),
+                                      Icon(
+                                        Icons.star,
+                                        color: Colors.yellow.shade700,
+                                        size: 35,
+                                      ),
+                                      Text(
+                                        "\n${data!['rating']})",
+                                        style: textStyle,
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
@@ -259,6 +272,116 @@ class _DetailsState extends State<Details> with TickerProviderStateMixin {
     }
   }
 
+  double _rating = 0;
+  bool isLoading = false;
+  IconData? _selectedIcon;
+
+  Column rate() {
+    var elevatedButton = ElevatedButton(
+      child: const Text(
+        "send",
+        style: TextStyle(fontSize: 22, color: Colors.white),
+      ),
+      onPressed: () async {
+        if (!(_rating.isNaN)) {
+          setState(() {
+            isLoading = true;
+          });
+          await user.doc(data!["uid"]).update({
+            "rating": _rating,
+          });
+          setState(() {
+            isLoading = false;
+            // confirm = "  Thank you for rating !";
+          });
+        } else {
+          setState(() {
+            // confirm = "Please Select at least 1 star";
+          });
+        }
+      },
+    );
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        _heading('Rating'),
+        _ratingBar(),
+        const SizedBox(height: 20.0),
+        SizedBox(
+          height: 50,
+          width: 120,
+          child: elevatedButton,
+        ),
+      ],
+    );
+  }
+
+  Widget _ratingBar() {
+    return RatingBar.builder(
+      minRating: 0,
+      allowHalfRating: true,
+      initialRating: 1,
+      unratedColor: Colors.amber.withAlpha(50),
+      itemCount: 5,
+      itemSize: 42.0,
+      itemPadding: const EdgeInsets.symmetric(horizontal: 5),
+      itemBuilder: (context, _) => Icon(
+        _selectedIcon ?? Icons.star,
+        color: Colors.amber,
+      ),
+      onRatingUpdate: (rating) {
+        setState(() {
+          _rating = rating;
+        });
+      },
+      updateOnDrag: true,
+    );
+  }
+
+  Widget _heading(String text) => Column(
+        children: [
+          Text(
+            text,
+            style: const TextStyle(
+              fontWeight: FontWeight.w300,
+              fontSize: 24.0,
+            ),
+          ),
+          const SizedBox(
+            height: 20.0,
+          ),
+        ],
+      );
+
+  Future openDialog() => showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                "Rate ${data!['name']}",
+              ),
+              IconButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                icon: const Icon(
+                  Icons.close,
+                  color: Colors.red,
+                  size: 40,
+                ),
+              )
+            ],
+          ),
+          content: rate(),
+          actionsAlignment: MainAxisAlignment.center,
+          actions: [],
+        ),
+      );
+
+  //message and rate button
   _buildBottomNavigationBar(context) {
     return SizedBox(
       width: MediaQuery.of(context).size.width,
@@ -273,7 +396,9 @@ class _DetailsState extends State<Details> with TickerProviderStateMixin {
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue.shade900),
-              onPressed: () {},
+              onPressed: () {
+                openDialog();
+              },
               child: Center(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -300,7 +425,6 @@ class _DetailsState extends State<Details> with TickerProviderStateMixin {
               style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue.shade900),
               onPressed: () {
-                print(data!['name']);
                 Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -308,7 +432,7 @@ class _DetailsState extends State<Details> with TickerProviderStateMixin {
                               receiverUid: data!['uid'],
                               senderUid: uId,
                               userData: data,
-                              receiverName:data!['name'],
+                              receiverName: data!['name'],
                               senderName: ChatCubit.get(context).username,
                             )));
               },
