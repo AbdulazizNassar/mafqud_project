@@ -120,6 +120,46 @@ buildCategoryInfoWidget(dynamic posts) {
   );
 }
 
+buildAuthorInfoWidget(dynamic data) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 12.0),
+    child: Row(
+      children: <Widget>[
+        // const Text(
+        //   'Author:',
+        //   style: TextStyle(fontSize: 16.0, color: Colors.black),
+        // ),
+        const Icon(
+          Icons.person_pin_circle_outlined,
+          size: 28,
+        ),
+        const SizedBox(
+          width: 12.0,
+        ),
+        Text(
+          "${data!['name']}",
+          style: TextStyle(
+            fontSize: 18.0,
+            color: Colors.blue[700],
+          ),
+        ),
+        const SizedBox(
+          width: 50,
+        ),
+        Icon(
+          Icons.star,
+          color: Colors.yellow.shade700,
+          size: 35,
+        ),
+        Text(
+          "${data!['rating']}",
+          style: textStyle,
+        ),
+      ],
+    ),
+  );
+}
+
 buildDetailsAndMaterialWidgets(dynamic widget, dynamic data,
     CollectionReference user, TabController tabController) {
   try {
@@ -179,31 +219,6 @@ buildDetailsAndMaterialWidgets(dynamic widget, dynamic data,
                                 Text(
                                     "${widget.locality}, ${widget.subLocality}",
                                     style: textStyle),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      "Ad posted by :\n ${data!['name']}(",
-                                      style: textStyle,
-                                    ),
-                                    Icon(
-                                      Icons.star,
-                                      color: Colors.yellow.shade700,
-                                      size: 35,
-                                    ),
-                                    Text(
-                                      "\n${data!['rating']})",
-                                      style: textStyle,
-                                    ),
-                                  ],
-                                ),
                               ],
                             ),
                           ),

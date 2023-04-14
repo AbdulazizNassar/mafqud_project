@@ -81,6 +81,9 @@ class _DetailsState extends State<Details> with TickerProviderStateMixin {
                         const SizedBox(height: 12.0),
                         buildDivider(screenSize),
                         const SizedBox(height: 12.0),
+                        buildAuthorInfoWidget(data),
+                        const SizedBox(height: 12.0),
+                        buildDivider(screenSize),
                         buildDetailsAndMaterialWidgets(
                           widget,
                           data,

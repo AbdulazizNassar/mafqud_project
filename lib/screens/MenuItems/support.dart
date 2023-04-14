@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:mafqud_project/shared/AlertBox.dart';
 import 'package:mafqud_project/shared/NavMenu.dart';
 import 'package:mafqud_project/shared/constants.dart';
@@ -25,6 +26,8 @@ class _supportState extends State<support> {
       : Scaffold(
           appBar: AppBar(
             title: const Text("Support"),
+            centerTitle: true,
+            backgroundColor: Colors.blue.shade900,
           ),
           drawer: const NavMenu(),
           body: Padding(
@@ -147,7 +150,9 @@ class _supportState extends State<support> {
                           isLoading = false;
                         });
                       },
-                      child: const Text("submit"),
+                      child: const Text(
+                        "submit",
+                      ),
                     ),
                   ],
                 )

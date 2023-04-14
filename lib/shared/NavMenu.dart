@@ -105,6 +105,10 @@ Widget buildHeader(BuildContext context) => Material(
                 ,
                 style: const TextStyle(fontSize: 16, color: Colors.white),
               ),
+              const Icon(
+                Icons.double_arrow_outlined,
+                color: Colors.white,
+              ),
             ]);
           }),
         ),
