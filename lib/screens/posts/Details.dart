@@ -1,13 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:mafqud_project/services/auth.dart';
+import 'package:mafqud_project/shared/AlertBox.dart';
 import 'package:mafqud_project/shared/constants.dart';
 import 'package:mafqud_project/shared/loading.dart';
-
+import 'package:mafqud_project/screens/posts/detailPageWidgets.dart';
 import '../../shared/DateTime.dart';
 import '../chat/chat_details.dart';
 import '../chat/cubit/chat_cubit.dart';
-import 'package:mafqud_project/screens/MenuItems/RateUs.dart';
 
 class Details extends StatefulWidget {
   final posts;
@@ -22,6 +23,8 @@ class Details extends StatefulWidget {
 
 class _DetailsState extends State<Details> with TickerProviderStateMixin {
   Map<String, dynamic>? data;
+  CollectionReference user = FirebaseFirestore.instance.collection("users");
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,16 +70,25 @@ class _DetailsState extends State<Details> with TickerProviderStateMixin {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        _buildProductImagesWidgets(),
-                        _buildProductTitleWidget(),
+                        buildProductImagesWidgets(widget.posts),
+                        buildProductTitleWidget(widget.posts),
                         const SizedBox(height: 12.0),
-                        _buildDivider(screenSize),
+                        buildStatusWidget(widget.posts),
                         const SizedBox(height: 12.0),
-                        _buildDivider(screenSize),
+                        buildDivider(screenSize),
                         const SizedBox(height: 12.0),
-                        _buildDetailsAndMaterialWidgets(),
+                        buildCategoryInfoWidget(widget.posts),
+                        const SizedBox(height: 12.0),
+                        buildDivider(screenSize),
+                        const SizedBox(height: 12.0),
+                        buildDetailsAndMaterialWidgets(
+                          widget,
+                          data,
+                          user,
+                          TabController(length: 2, vsync: this),
+                        ),
                         const SizedBox(height: 6.0),
-                        _buildDivider(screenSize),
+                        buildDivider(screenSize),
                         const SizedBox(height: 6.0),
                       ],
                     ),
@@ -87,189 +99,6 @@ class _DetailsState extends State<Details> with TickerProviderStateMixin {
           }
           return Loading();
         });
-  }
-
-  _buildDivider(Size screenSize) {
-    return Column(
-      children: <Widget>[
-        Container(
-          color: Colors.grey[600],
-          width: screenSize.width,
-          height: 0.25,
-        ),
-      ],
-    );
-  }
-
-  _buildProductImagesWidgets() {
-    TabController imagesController = TabController(length: 1, vsync: this);
-
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: SizedBox(
-        height: 250.0,
-        child: Center(
-          child: DefaultTabController(
-            length: 1,
-            child: Stack(
-              children: <Widget>[
-                Image.network(
-                  widget.posts['image'],
-                  fit: BoxFit.fill,
-                  height: 350,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  _buildProductTitleWidget() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            widget.posts['title'],
-            style: textStyle,
-          ),
-          Row(
-            children: [
-              Icon(
-                Icons.timer_outlined,
-                size: 30,
-                color: Colors.blue.shade900,
-              ),
-              Text(
-                readTimestamp(widget.posts["Date"]),
-                style: textStyle,
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  CollectionReference user = FirebaseFirestore.instance.collection("users");
-
-  _buildDetailsAndMaterialWidgets() {
-    TabController tabController = TabController(length: 2, vsync: this);
-    try {
-      return FutureBuilder<DocumentSnapshot>(
-          future: user.doc("${widget.posts['userID']}").get(),
-          builder:
-              (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Loading();
-            } else if (snapshot.connectionState == ConnectionState.done) {
-              data = snapshot.data!.data() as Map<String, dynamic>;
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  TabBar(
-                    controller: tabController,
-                    tabs: const <Widget>[
-                      Tab(
-                        child: Text(
-                          "DETAILS",
-                          style: TextStyle(
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                      Tab(
-                        child: Text(
-                          "Description",
-                          style: TextStyle(
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 12.0, vertical: 6.0),
-                    height: MediaQuery.of(context).size.height / 3.1,
-                    child: TabBarView(
-                      controller: tabController,
-                      children: <Widget>[
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(8.0),
-                              margin: const EdgeInsets.only(bottom: 20),
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    Icons.pin_drop_outlined,
-                                    size: 40,
-                                    color: Colors.blue.shade900,
-                                  ),
-                                  Text(
-                                      "${widget.locality}, ${widget.subLocality}",
-                                      style: textStyle),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Status: ${widget.posts["status"]}",
-                                    style: textStyle,
-                                  ),
-                                  const SizedBox(
-                                    height: 35,
-                                  ),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        "Ad posted by :\n ${data!['name']}(",
-                                        style: textStyle,
-                                      ),
-                                      Icon(
-                                        Icons.star,
-                                        color: Colors.yellow.shade700,
-                                        size: 35,
-                                      ),
-                                      Text(
-                                        "\n${data!['rating']})",
-                                        style: textStyle,
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        Text(
-                          "${widget.posts['description']}",
-                          style: const TextStyle(
-                              fontSize: 20,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold),
-                        )
-                      ],
-                    ),
-                  ),
-                ],
-              );
-            }
-            return Loading();
-          });
-    } catch (e) {
-      print(e);
-    }
   }
 
   double _rating = 0;
@@ -377,7 +206,6 @@ class _DetailsState extends State<Details> with TickerProviderStateMixin {
           ),
           content: rate(),
           actionsAlignment: MainAxisAlignment.center,
-          actions: [],
         ),
       );
 
@@ -397,7 +225,14 @@ class _DetailsState extends State<Details> with TickerProviderStateMixin {
               style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue.shade900),
               onPressed: () {
-                openDialog();
+                if (data!['uid']
+                    .toString()
+                    .contains(AuthService().currentUser!.uid)) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      snackBarError("Error", "Can't rate your account"));
+                } else {
+                  openDialog();
+                }
               },
               child: Center(
                 child: Row(
