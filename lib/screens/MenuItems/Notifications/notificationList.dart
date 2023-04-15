@@ -6,6 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:mafqud_project/screens/MenuItems/Notifications/notificationTiles.dart';
 import 'package:mafqud_project/shared/loading.dart';
 
+import '../../chat/chat_details.dart';
+import '../../chat/cubit/chat_cubit.dart';
+
 class NotificationList extends StatefulWidget {
   NotificationList({Key? key}) : super(key: key);
 
@@ -29,6 +32,24 @@ class _NotificationListState extends State<NotificationList> {
         body: displayNotification(),
       ),
     );
+  }
+
+  FutureBuilder<QuerySnapshot<Object?>> displayNotification() {
+    return FutureBuilder<QuerySnapshot>(
+        future: notificationsRef
+            .where("uid", isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+            .get(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Loading();
+          } else {
+            if (snapshot.data!.docs.isEmpty) {
+              return noNotification;
+            } else {
+              return listBuilder(snapshot.data!.docs);
+            }
+          }
+        });
   }
 
   ListView listBuilder(List<QueryDocumentSnapshot<Object?>> snapshot) {
@@ -60,8 +81,18 @@ class _NotificationListState extends State<NotificationList> {
                   )
                 ]),
             child: InkWell(
-              onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const Scaffold())),
+              onTap: () {
+                // Navigator.push(
+                //     context,
+                //     MaterialPageRoute(
+                //         builder: (_) => ChatDetailsScreen(
+                //               receiverUid: data['uid'],
+                //               senderUid: uId,
+                //               userData: data,
+                //               receiverName: data['name'],
+                //               senderName: ChatCubit.get(context).username,
+                //             )));
+              },
               child: NotificationTiles(
                 notification: snapshot[i],
                 enable: true,
@@ -74,24 +105,6 @@ class _NotificationListState extends State<NotificationList> {
         );
       },
     );
-  }
-
-  FutureBuilder<QuerySnapshot<Object?>> displayNotification() {
-    return FutureBuilder<QuerySnapshot>(
-        future: notificationsRef
-            .where("uid", isEqualTo: FirebaseAuth.instance.currentUser?.uid)
-            .get(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Loading();
-          } else {
-            if (snapshot.data!.docs.isEmpty) {
-              return noNotification;
-            } else {
-              return listBuilder(snapshot.data!.docs);
-            }
-          }
-        });
   }
 
   deleteNotification(String id) async {

@@ -13,6 +13,7 @@ import '../../shared/NavMenu.dart';
 import '../../shared/constants.dart';
 import 'chat_details.dart';
 import 'chat_details_list.dart';
+import 'chat_list.dart';
 import 'cubit/chat_cubit.dart';
 import 'cubit/chat_state.dart';
 

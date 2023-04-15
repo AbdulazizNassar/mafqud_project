@@ -15,10 +15,10 @@ class NotificationTiles extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: const Icon(
-        Icons.warning,
+      leading: Icon(
+        Icons.message_rounded,
         size: 50,
-        color: Colors.redAccent,
+        color: Colors.blue.shade900,
       ),
       title: Text(notification['title'],
           style: const TextStyle(color: kDarkColor)),
