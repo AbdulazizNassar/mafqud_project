@@ -16,7 +16,6 @@ class ChatDetailsScreen extends StatelessWidget {
   final String? receiverName;
   final UserModel? model;
 
-
   ChatDetailsScreen({
     this.userData,
     this.receiverUid,
@@ -24,7 +23,6 @@ class ChatDetailsScreen extends StatelessWidget {
     this.model,
     this.senderName,
     this.receiverName,
-
     Key? key,
   }) : super(key: key);
 
@@ -47,11 +45,11 @@ class ChatDetailsScreen extends StatelessWidget {
             appBar: AppBar(
               title: Row(
                 children: [
-                const CircleAvatar(
-                          radius: 25,
-                          child: Image(
-                              image: AssetImage('assets/user.png'), height: 30),
-                        ),
+                  const CircleAvatar(
+                    radius: 25,
+                    child:
+                        Image(image: AssetImage('assets/user.png'), height: 30),
+                  ),
                   const SizedBox(
                     width: 10,
                   ),
@@ -62,23 +60,18 @@ class ChatDetailsScreen extends StatelessWidget {
                         children: [
                           Text(
                             '${userData!['name']}',
-                            style: const TextStyle(
-                              height: 1.2,
-                              fontSize: 16
-                            ),
+                            style: const TextStyle(height: 1.2, fontSize: 16),
                           ),
                         ],
                       ),
                       Text(
                         'Active',
-                        style:
-                            Theme.of(context).textTheme.bodySmall!.copyWith(
-                                  height: 1.2,
-                                ),
+                        style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                              height: 1.2,
+                            ),
                       ),
                     ],
                   ),
-
                 ],
               ),
               titleSpacing: 0,
@@ -139,7 +132,6 @@ class ChatDetailsScreen extends StatelessWidget {
                             color: Colors.deepPurple,
                             child: MaterialButton(
                               onPressed: () {
-                                print(receiverUid);
                                 ChatCubit.get(context).sendMessage(
                                   receiverId: receiverUid!,
                                   dateTime: DateTime.now().toString(),
@@ -148,7 +140,6 @@ class ChatDetailsScreen extends StatelessWidget {
                                   receivername: userData!['name'],
                                   receiverUid: receiverUid!,
                                   sendername: senderName!,
-
                                 );
                                 textController.clear();
                               },
@@ -228,7 +219,6 @@ class ChatDetailsScreen extends StatelessWidget {
                                   receivername: userData!['name'],
                                   receiverUid: receiverUid!,
                                   sendername: senderName!,
-
                                 );
                                 textController.clear();
                               },
@@ -267,10 +257,7 @@ class ChatDetailsScreen extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
           child: Text(
             model.text!,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 18
-            ),
+            style: const TextStyle(color: Colors.white, fontSize: 18),
           ),
         ),
       );
@@ -289,10 +276,7 @@ class ChatDetailsScreen extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
           child: Text(
             model.text!,
-            style: const TextStyle(
-                color: Colors.white,
-                fontSize: 18
-            ),
+            style: const TextStyle(color: Colors.white, fontSize: 18),
           ),
         ),
       );

@@ -5,6 +5,7 @@ import 'package:mafqud_project/screens/chat/cubit/chat_cubit.dart';
 import 'package:mafqud_project/screens/chat/cubit/chat_state.dart';
 import 'package:mafqud_project/screens/MenuItems/Notifications/notificationList.dart';
 import 'package:mafqud_project/screens/MenuItems/support.dart';
+import 'package:mafqud_project/screens/homepage/Home.dart';
 import 'package:mafqud_project/services/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mafqud_project/shared/AlertBox.dart';
@@ -124,7 +125,7 @@ Widget buildMenuItems(BuildContext context) => Container(
             leading: const Icon(Icons.home_outlined),
             title: const Text("Home"),
             onTap: () => Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => Posts())),
+                .push(MaterialPageRoute(builder: (context) => Home())),
           ),
           ListTile(
             leading: const Icon(Icons.notifications_active_outlined),

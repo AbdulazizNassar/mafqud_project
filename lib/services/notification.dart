@@ -17,7 +17,7 @@ void saveToken(String token) async {
   await FirebaseFirestore.instance
       .collection("userToken")
       .doc(AuthService().currentUser!.uid)
-      .update({
+      .set({
     "uid": AuthService().currentUser!.uid,
     "token": token,
   });

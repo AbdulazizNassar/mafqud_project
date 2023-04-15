@@ -87,7 +87,6 @@ class ChatDetailsList extends StatelessWidget {
                           itemBuilder: (context, index) {
                             var messages =
                                 ChatCubit.get(context).messages[index];
-
                             if (senderUid == messages.senderId) {
                               return buildSenderMessage(messages);
                             } else {
@@ -131,16 +130,13 @@ class ChatDetailsList extends StatelessWidget {
                             child: MaterialButton(
                               onPressed: () {
                                 ChatCubit.get(context).sendMessage(
-                                    receiverId: receiverUid!,
-                                    dateTime: DateTime.now().toString(),
-                                    text: textController.text,
-                                    senderId: senderUid!,
-                                    receivername: model!.name!,
-                                    receiverUid: receiverUid!,
-                                    sendername:
-                                        ChatCubit.get(context).username!,
-
-
+                                  receiverId: receiverUid!,
+                                  dateTime: DateTime.now().toString(),
+                                  text: textController.text,
+                                  senderId: senderUid!,
+                                  receivername: model!.name!,
+                                  receiverUid: receiverUid!,
+                                  sendername: ChatCubit.get(context).username!,
                                 );
                                 textController.clear();
                               },
@@ -219,8 +215,6 @@ class ChatDetailsList extends StatelessWidget {
                                   receivername: model!.name!,
                                   receiverUid: receiverUid!,
                                   sendername: ChatCubit.get(context).username!,
-
-
                                 );
 
                                 textController.clear();

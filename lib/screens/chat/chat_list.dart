@@ -6,6 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:mafqud_project/models/messageModel.dart';
 import 'package:mafqud_project/models/userModel.dart';
+import 'package:mafqud_project/services/auth.dart';
+import 'package:mafqud_project/services/notification.dart';
 
 import '../../shared/NavMenu.dart';
 import '../../shared/constants.dart';
@@ -21,19 +23,28 @@ class ChatListScreen extends StatefulWidget {
   State<ChatListScreen> createState() => _ChatListScreenState();
 }
 
-deleteChat({required String receiverId, required String senderUid}) async {
-  await FirebaseFirestore.instance
+deleteChat(UserModel model) async {
+  String currentUser = AuthService().currentUser!.uid;
+  //delete messages
+  CollectionReference<Map<String, dynamic>> messagesRef = FirebaseFirestore
+      .instance
       .collection('users')
-      .doc(senderUid)
-      .collection('chats')
-      .doc(receiverId)
-      .delete();
-  await FirebaseFirestore.instance
+      .doc(currentUser)
+      .collection("chats")
+      .doc(model.uid)
+      .collection('messages');
+  var snapshots = await messagesRef.get();
+  for (var doc in snapshots.docs) {
+    await doc.reference.delete();
+  }
+//delete chat with user
+  DocumentReference<Map<String, dynamic>> myUsersRef = FirebaseFirestore
+      .instance
       .collection('users')
-      .doc(senderUid)
-      .collection('MyUsers')
-      .doc(receiverId)
-      .delete();
+      .doc(currentUser)
+      .collection('myUsers')
+      .doc(model.uid);
+  await myUsersRef.delete();
 }
 
 class _ChatListScreenState extends State<ChatListScreen> {
@@ -58,25 +69,19 @@ class _ChatListScreenState extends State<ChatListScreen> {
                         key: UniqueKey(),
                         endActionPane: ActionPane(
                             motion: const ScrollMotion(),
-                            dismissible: DismissiblePane(onDismissed: () async {
-                              setState(() {
-                                deleteChat(
-                                    receiverId: ChatCubit.get(context)
-                                        .users![index]
-                                        .uid!,
-                                    senderUid: uId!);
-                              });
-                            }),
+                            dismissible: DismissiblePane(
+                              onDismissed: () async {
+                                await deleteChat(
+                                    ChatCubit.get(context).users![index]);
+                                setState(() {});
+                              },
+                            ),
                             children: [
                               SlidableAction(
-                                onPressed: (BuildContext context) {
-                                  setState(() {
-                                    deleteChat(
-                                        receiverId: ChatCubit.get(context)
-                                            .users![index]
-                                            .uid!,
-                                        senderUid: uId!);
-                                  });
+                                onPressed: (BuildContext context) async {
+                                  await deleteChat(
+                                      ChatCubit.get(context).users![index]);
+                                  setState(() {});
                                 },
                                 backgroundColor: const Color(0xFFFE4A49),
                                 foregroundColor: Colors.white,

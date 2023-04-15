@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mafqud_project/models/userModel.dart';
 import 'package:mafqud_project/models/userModel.dart';
+import 'package:mafqud_project/services/notification.dart';
 import 'package:mafqud_project/shared/constants.dart';
 import '../../../models/messageModel.dart';
 import 'chat_state.dart';
@@ -53,21 +54,27 @@ class ChatCubit extends Cubit<ChatState> {
     required String receivername,
     required String sendername,
     required String receiverUid,
-  }) {
+  }) async {
     ChatMessageModel messageModel = ChatMessageModel(
       senderId: senderId,
       receiverId: receiverId,
       dateTime: dateTime,
       text: text,
     );
-    var messagesRef = FirebaseFirestore.instance
+    DocumentSnapshot snap = await FirebaseFirestore.instance
+        .collection("userToken")
+        .doc(receiverId)
+        .get();
+    String token = snap['token'];
+    sendPushMessage("New message", "You've got a new message", token);
+    FirebaseFirestore.instance
         .collection('users')
         .doc(senderId)
         .collection('chats')
         .doc(receiverId)
-        .collection('messages');
-    // set my chats (sender)
-    messagesRef.add(messageModel.toMap()).then((value) {
+        .collection('messages')
+        .add(messageModel.toMap())
+        .then((value) {
       emit(SendMessageSuccessState());
     }).catchError((error) {
       emit(SendMessageErrorState(error.toString()));
@@ -75,7 +82,14 @@ class ChatCubit extends Cubit<ChatState> {
 
     //set receiver chats
 
-    messagesRef.add(messageModel.toMap()).then((value) {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(receiverId)
+        .collection('chats')
+        .doc(senderId)
+        .collection('messages')
+        .add(messageModel.toMap())
+        .then((value) {
       emit(SendMessageSuccessState());
     }).catchError((error) {
       emit(SendMessageErrorState(error.toString()));
