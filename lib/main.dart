@@ -1,11 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-// <<<<<<< Updated upstream
 import 'package:mafqud_project/screens/posts/DetailPage.dart';
-// =======
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mafqud_project/screens/chat/cubit/chat_cubit.dart';
-// >>>>>>> Stashed changes
 import 'package:mafqud_project/screens/posts/history.dart';
 import 'package:mafqud_project/services/sharedPreference.dart';
 import 'package:provider/provider.dart';

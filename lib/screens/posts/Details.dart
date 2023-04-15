@@ -22,9 +22,8 @@ class Details extends StatefulWidget {
 }
 
 class _DetailsState extends State<Details> with TickerProviderStateMixin {
-  Map<String, dynamic>? data;
   CollectionReference user = FirebaseFirestore.instance.collection("users");
-
+  bool flag = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,50 +54,52 @@ class _DetailsState extends State<Details> with TickerProviderStateMixin {
 
   _buildProductDetailsPage(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
-    CollectionReference user = FirebaseFirestore.instance.collection("users");
     return FutureBuilder<DocumentSnapshot>(
-        future: user.doc("${widget.posts['userID']}").get(),
+        future: user.doc("${widget.posts!['userID']}").get(),
         builder:
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-          if (snapshot.hasData) {
-            return ListView(
-              children: <Widget>[
-                Container(
-                  padding: const EdgeInsets.all(4.0),
-                  child: Card(
-                    elevation: 4.0,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        buildProductImagesWidgets(widget.posts),
-                        buildProductTitleWidget(widget.posts),
-                        const SizedBox(height: 12.0),
-                        buildStatusWidget(widget.posts),
-                        const SizedBox(height: 12.0),
-                        buildDivider(screenSize),
-                        const SizedBox(height: 12.0),
-                        buildCategoryInfoWidget(widget.posts),
-                        const SizedBox(height: 12.0),
-                        buildDivider(screenSize),
-                        const SizedBox(height: 12.0),
-                        buildAuthorInfoWidget(data),
-                        const SizedBox(height: 12.0),
-                        buildDivider(screenSize),
-                        buildDetailsAndMaterialWidgets(
-                          widget,
-                          data,
-                          user,
-                          TabController(length: 2, vsync: this),
-                        ),
-                        const SizedBox(height: 6.0),
-                        buildDivider(screenSize),
-                        const SizedBox(height: 6.0),
-                      ],
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Loading();
+          }
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.hasData) {
+              return ListView(
+                children: <Widget>[
+                  Container(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Card(
+                      elevation: 4.0,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          buildProductImagesWidgets(widget.posts),
+                          buildProductTitleWidget(widget.posts),
+                          const SizedBox(height: 12.0),
+                          buildStatusWidget(widget.posts),
+                          const SizedBox(height: 12.0),
+                          buildDivider(screenSize),
+                          const SizedBox(height: 12.0),
+                          buildCategoryInfoWidget(widget.posts),
+                          const SizedBox(height: 12.0),
+                          buildDivider(screenSize),
+                          const SizedBox(height: 12.0),
+                          buildAuthorInfoWidget(snapshot.data),
+                          const SizedBox(height: 12.0),
+                          buildDivider(screenSize),
+                          buildDetailsAndMaterialWidgets(
+                            widget,
+                            snapshot.data,
+                            user,
+                            TabController(length: 2, vsync: this),
+                          ),
+                          const SizedBox(height: 6.0),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
-            );
+                ],
+              );
+            }
           }
           return Loading();
         });
@@ -108,7 +109,7 @@ class _DetailsState extends State<Details> with TickerProviderStateMixin {
   bool isLoading = false;
   IconData? _selectedIcon;
 
-  Column rate() {
+  Column rate(dynamic data) {
     var elevatedButton = ElevatedButton(
       child: const Text(
         "send",
@@ -126,6 +127,7 @@ class _DetailsState extends State<Details> with TickerProviderStateMixin {
             isLoading = false;
             // confirm = "  Thank you for rating !";
           });
+          Navigator.of(context).pop();
         } else {
           setState(() {
             // confirm = "Please Select at least 1 star";
@@ -185,7 +187,7 @@ class _DetailsState extends State<Details> with TickerProviderStateMixin {
         ],
       );
 
-  Future openDialog() => showDialog(
+  Future openDialog(dynamic data) => showDialog(
         context: context,
         builder: (context) => AlertDialog(
           title: Row(
@@ -207,95 +209,111 @@ class _DetailsState extends State<Details> with TickerProviderStateMixin {
               )
             ],
           ),
-          content: rate(),
+          content: rate(data),
           actionsAlignment: MainAxisAlignment.center,
         ),
       );
 
   //message and rate button
   _buildBottomNavigationBar(context) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height / 15,
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: <Widget>[
-          Flexible(
-            fit: FlexFit.tight,
-            flex: 1,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue.shade900),
-              onPressed: () {
-                if (data!['uid']
-                    .toString()
-                    .contains(AuthService().currentUser!.uid)) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      snackBarError("Error", "Can't rate your account"));
-                } else {
-                  openDialog();
-                }
-              },
-              child: Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const <Widget>[
-                    Icon(
-                      Icons.star_border,
-                      color: Colors.white,
+    Map<String, dynamic> data;
+
+    return FutureBuilder<DocumentSnapshot>(
+        future: user.doc("${widget.posts!['userID']}").get(),
+        builder:
+            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Loading();
+          }
+          if (snapshot.connectionState == ConnectionState.done) {
+            data = snapshot.data!.data() as Map<String, dynamic>;
+            return SizedBox(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height / 15,
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Flexible(
+                    fit: FlexFit.tight,
+                    flex: 1,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue.shade900),
+                      onPressed: () {
+                        if (data['uid']
+                            .toString()
+                            .contains(AuthService().currentUser!.uid)) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              snackBarError(
+                                  "Error", "Can't rate your account"));
+                        } else {
+                          openDialog(data);
+                        }
+                      },
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const <Widget>[
+                            Icon(
+                              Icons.star_border,
+                              color: Colors.white,
+                            ),
+                            SizedBox(
+                              width: 4.0,
+                            ),
+                            Text(
+                              "Rate",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                    SizedBox(
-                      width: 4.0,
+                  ),
+                  Flexible(
+                    flex: 2,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue.shade900),
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => ChatDetailsScreen(
+                                      receiverUid: data['uid'],
+                                      senderUid: uId,
+                                      userData: data,
+                                      receiverName: data['name'],
+                                      senderName:
+                                          ChatCubit.get(context).username,
+                                    )));
+                      },
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const <Widget>[
+                            Icon(
+                              Icons.message_rounded,
+                              color: Colors.white,
+                            ),
+                            SizedBox(
+                              width: 4.0,
+                            ),
+                            Text(
+                              "Message",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                    Text(
-                      "Rate",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ),
-          ),
-          Flexible(
-            flex: 2,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue.shade900),
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => ChatDetailsScreen(
-                              receiverUid: data!['uid'],
-                              senderUid: uId,
-                              userData: data,
-                              receiverName: data!['name'],
-                              senderName: ChatCubit.get(context).username,
-                            )));
-              },
-              child: Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const <Widget>[
-                    Icon(
-                      Icons.message_rounded,
-                      color: Colors.white,
-                    ),
-                    SizedBox(
-                      width: 4.0,
-                    ),
-                    Text(
-                      "Message",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+            );
+          }
+          return Loading();
+        });
   }
 }

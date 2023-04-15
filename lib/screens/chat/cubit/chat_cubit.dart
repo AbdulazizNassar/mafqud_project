@@ -67,7 +67,6 @@ class ChatCubit extends Cubit<ChatState> {
         .doc(receiverId)
         .collection('messages');
     // set my chats (sender)
-
     messagesRef.add(messageModel.toMap()).then((value) {
       emit(SendMessageSuccessState());
     }).catchError((error) {

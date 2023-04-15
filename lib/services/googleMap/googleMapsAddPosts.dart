@@ -99,7 +99,7 @@ class _MapScreenState extends State<MapScreen> {
                       setState(() {
                         isLoading = false;
                       });
-                      Navigator.of(context).pushReplacementNamed("Home");
+                      Navigator.of(context).pushReplacementNamed("Posts");
                     }
                   },
                   icon: const Icon(Icons.done))
