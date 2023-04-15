@@ -22,7 +22,7 @@ class Details extends StatefulWidget {
 }
 
 class _DetailsState extends State<Details> with TickerProviderStateMixin {
-  CollectionReference user = FirebaseFirestore.instance.collection("users");
+  CollectionReference userRef = FirebaseFirestore.instance.collection("users");
   bool flag = false;
   @override
   Widget build(BuildContext context) {
@@ -55,7 +55,7 @@ class _DetailsState extends State<Details> with TickerProviderStateMixin {
   _buildProductDetailsPage(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
     return FutureBuilder<DocumentSnapshot>(
-        future: user.doc("${widget.posts!['userID']}").get(),
+        future: userRef.doc("${widget.posts!['userID']}").get(),
         builder:
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -89,7 +89,7 @@ class _DetailsState extends State<Details> with TickerProviderStateMixin {
                           buildDetailsAndMaterialWidgets(
                             widget,
                             snapshot.data,
-                            user,
+                            userRef,
                             TabController(length: 2, vsync: this),
                           ),
                           const SizedBox(height: 6.0),
@@ -120,7 +120,7 @@ class _DetailsState extends State<Details> with TickerProviderStateMixin {
           setState(() {
             isLoading = true;
           });
-          await user.doc(data!["uid"]).update({
+          await userRef.doc(data!["uid"]).update({
             "rating": _rating,
           });
           setState(() {
@@ -217,9 +217,8 @@ class _DetailsState extends State<Details> with TickerProviderStateMixin {
   //message and rate button
   _buildBottomNavigationBar(context) {
     Map<String, dynamic> data;
-
     return FutureBuilder<DocumentSnapshot>(
-        future: user.doc("${widget.posts!['userID']}").get(),
+        future: userRef.doc("${widget.posts!['userID']}").get(),
         builder:
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
