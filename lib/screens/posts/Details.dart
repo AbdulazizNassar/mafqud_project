@@ -2,11 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:mafqud_project/services/auth.dart';
-import 'package:mafqud_project/shared/AlertBox.dart';
 import 'package:mafqud_project/shared/constants.dart';
 import 'package:mafqud_project/shared/loading.dart';
 import 'package:mafqud_project/screens/posts/detailPageWidgets.dart';
-import '../../shared/DateTime.dart';
 import '../chat/chat_details.dart';
 import '../chat/cubit/chat_cubit.dart';
 

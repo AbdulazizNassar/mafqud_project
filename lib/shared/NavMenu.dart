@@ -125,7 +125,7 @@ Widget buildMenuItems(BuildContext context) => Container(
             leading: const Icon(Icons.home_outlined),
             title: const Text("Home"),
             onTap: () => Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => Home())),
+                .push(MaterialPageRoute(builder: (context) => Posts())),
           ),
           ListTile(
             leading: const Icon(Icons.notifications_active_outlined),
