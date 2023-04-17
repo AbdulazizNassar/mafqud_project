@@ -138,7 +138,6 @@ class _DetailsState extends State<Details> with TickerProviderStateMixin {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        _heading('Rating'),
         _ratingBar(),
         const SizedBox(height: 20.0),
         SizedBox(
@@ -226,6 +225,12 @@ class _DetailsState extends State<Details> with TickerProviderStateMixin {
           }
           if (snapshot.connectionState == ConnectionState.done) {
             data = snapshot.data!.data() as Map<String, dynamic>;
+            //prevent user from rating or messaging their own posts
+            if (data['uid']
+                .toString()
+                .contains(AuthService().currentUser!.uid)) {
+              return const Text('');
+            }
             return SizedBox(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height / 15,
@@ -240,15 +245,7 @@ class _DetailsState extends State<Details> with TickerProviderStateMixin {
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blue.shade900),
                       onPressed: () {
-                        if (data['uid']
-                            .toString()
-                            .contains(AuthService().currentUser!.uid)) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              snackBarError(
-                                  "Error", "Can't rate your account"));
-                        } else {
-                          openDialog(data);
-                        }
+                        openDialog(data);
                       },
                       child: Center(
                         child: Row(
