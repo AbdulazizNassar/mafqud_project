@@ -56,7 +56,8 @@ class _ChatListScreenState extends State<ChatListScreen> {
         listener: (context, state) {},
         builder: (context, state) {
           return ConditionalBuilder(
-              condition: ChatCubit.get(context).users!.isNotEmpty,
+              condition: ChatCubit.get(context).users!.isNotEmpty &&
+                  ChatCubit.get(context).messages.isNotEmpty,
               builder: (context) => Scaffold(
                     appBar: AppBar(
                       title: const Text('Messages'),
@@ -69,6 +70,9 @@ class _ChatListScreenState extends State<ChatListScreen> {
                         : ListView.separated(
                             physics: const BouncingScrollPhysics(),
                             itemBuilder: (context, index) {
+                              //get most recent message
+                              var message =
+                                  ChatCubit.get(context).messages.last;
                               return Slidable(
                                 key: UniqueKey(),
                                 endActionPane: ActionPane(
@@ -107,9 +111,9 @@ class _ChatListScreenState extends State<ChatListScreen> {
                                       ),
                                     ]),
                                 child: buildChatItem(
-                                  context,
-                                  ChatCubit.get(context).users![index],
-                                ),
+                                    context,
+                                    ChatCubit.get(context).users![index],
+                                    message),
                               );
                             },
                             separatorBuilder: (context, index) => Padding(
@@ -142,43 +146,43 @@ class _ChatListScreenState extends State<ChatListScreen> {
                   )));
         },
       );
-
-  Widget buildChatItem(context, UserModel model) => InkWell(
-      onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (_) => ChatDetailsList(
-                      senderUid: uId,
-                      receiverUid: model.uid,
-                      model: model,
-                    )));
-      },
-      child: ListTile(
-        leading: const CircleAvatar(
-            radius: 25,
-            child: Image(
-              image: AssetImage('assets/user.png'),
-              height: 30,
-            )),
-        title: Text(
-          '${model.name}',
-          style: const TextStyle(
-            height: 1.2,
-          ),
-        ),
-        subtitle: Text(
-          'Today',
-          style: Theme.of(context).textTheme.caption!.copyWith(
+  Widget buildChatItem(context, UserModel model, ChatMessageModel messages) =>
+      InkWell(
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => ChatDetailsList(
+                          senderUid: uId,
+                          receiverUid: model.uid,
+                          model: model,
+                        )));
+          },
+          child: ListTile(
+            leading: const CircleAvatar(
+                radius: 25,
+                child: Image(
+                  image: AssetImage('assets/user.png'),
+                  height: 30,
+                )),
+            title: Text(
+              '${model.name}',
+              style: const TextStyle(
                 height: 1.2,
               ),
-        ),
-        trailing: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [deleteIcon],
-        ),
-        enabled: true,
-      ));
+            ),
+            //show last message
+            subtitle: uId == messages.receiverId
+                ? Text(
+                    '${model.name}: ${messages.text}',
+                  )
+                : Text("You: ${messages.text}"),
+            trailing: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [deleteIcon],
+            ),
+            enabled: true,
+          ));
 }
 
 class NewWidget extends StatelessWidget {
@@ -203,16 +207,7 @@ class NewWidget extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    // Text(
-                    //   '${model.name}',
-                    //   style: const TextStyle(
-                    //     height: 1.2,
-                    //   ),
-                    // ),
-                  ],
-                ),
+                Row(),
                 Text(
                   'Today',
                   style: Theme.of(context).textTheme.caption!.copyWith(
