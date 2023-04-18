@@ -7,6 +7,7 @@ import 'package:mafqud_project/screens/MenuItems/Notifications/notificationTiles
 import 'package:mafqud_project/shared/loading.dart';
 
 import '../../chat/chat_details.dart';
+import '../../chat/chat_list.dart';
 import '../../chat/cubit/chat_cubit.dart';
 
 class NotificationList extends StatefulWidget {
@@ -92,6 +93,8 @@ class _NotificationListState extends State<NotificationList> {
                 //               receiverName: data['name'],
                 //               senderName: ChatCubit.get(context).username,
                 //             )));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (_) => const ChatListScreen()));
               },
               child: NotificationTiles(
                 notification: snapshot[i],
