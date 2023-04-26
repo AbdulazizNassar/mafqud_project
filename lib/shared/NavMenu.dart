@@ -93,7 +93,6 @@ Widget buildHeader(BuildContext context) => Material(
                     ),
               const SizedBox(height: 12),
               Text(
-                // ignore: unnecessary_string_interpolations
                 '${ChatCubit.get(context).userData!.name}'
                 // "${data['name']}"
                 ,

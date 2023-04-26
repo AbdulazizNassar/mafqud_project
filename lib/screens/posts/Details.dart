@@ -119,7 +119,8 @@ class _DetailsState extends State<Details> with TickerProviderStateMixin {
             isLoading = true;
           });
           await userRef.doc(data!["uid"]).update({
-            "rating": _rating,
+            "numOfRating": data!['numOfRating'] + 1,
+            "rating": _rating + data!['rating'],
           });
           setState(() {
             isLoading = false;

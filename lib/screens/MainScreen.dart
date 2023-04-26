@@ -78,7 +78,6 @@ class MainScreen extends StatelessWidget {
             duration: duration,
             delay: const Duration(milliseconds: 200),
             child: SizedBox(
-              width: 150,
               child: ElevatedButton.icon(
                   onPressed: () {
                     Navigator.of(context).pushReplacementNamed("Auth");
@@ -96,7 +95,6 @@ class MainScreen extends StatelessWidget {
             ),
           ),
 
-          ///
           const SizedBox(
             height: 15,
           ),
@@ -121,7 +119,6 @@ class MainScreen extends StatelessWidget {
                 ),
               )),
 
-          ///
           const SizedBox(
             height: 40,
           ),

@@ -143,6 +143,7 @@ buildAuthorInfoWidget(dynamic data) {
             color: Colors.blue[700],
           ),
         ),
+
         const SizedBox(
           width: 50,
         ),
@@ -152,8 +153,18 @@ buildAuthorInfoWidget(dynamic data) {
           size: 35,
         ),
         Text(
-          "${data!['rating']}",
+          "${data!['rating'] / data!['numOfRating']}",
           style: textStyle,
+        ),
+        const SizedBox(
+          width: 10,
+        ),
+        Text(
+          "(${data!['numOfRating']})",
+          style: TextStyle(
+            fontSize: 18.0,
+            color: Colors.blue[700],
+          ),
         ),
       ],
     ),
@@ -239,7 +250,5 @@ buildDetailsAndMaterialWidgets(dynamic widget, dynamic data,
           }
           return Loading();
         });
-  } catch (e) {
-    print(e);
-  }
+  } catch (e) {}
 }

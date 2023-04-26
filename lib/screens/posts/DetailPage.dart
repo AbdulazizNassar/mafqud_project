@@ -21,7 +21,7 @@ class ProductDetailPage extends StatefulWidget {
 
 class _ProductDetailPageState extends State<ProductDetailPage>
     with TickerProviderStateMixin {
-  Map<String, dynamic> ?  data ;
+  Map<String, dynamic>? data;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -302,17 +302,16 @@ class _ProductDetailPageState extends State<ProductDetailPage>
               style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue.shade900),
               onPressed: () {
-                print(data!['name']);
                 Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (_) => ChatDetailsScreen(
-                          receiverUid: widget.posts.id,
-                          senderUid: uId,
-                          userData: data,
-                          receiverName:data!['name'],
-                          senderName: ChatCubit.get(context).username,
-                        )));
+                              receiverUid: widget.posts.id,
+                              senderUid: uId,
+                              userData: data,
+                              receiverName: data!['name'],
+                              senderName: ChatCubit.get(context).username,
+                            )));
               },
               child: Center(
                 child: Row(

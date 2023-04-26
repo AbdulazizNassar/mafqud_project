@@ -4,7 +4,6 @@ import 'package:mafqud_project/screens/posts/DetailPage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mafqud_project/screens/chat/cubit/chat_cubit.dart';
 import 'package:mafqud_project/screens/posts/history.dart';
-import 'package:mafqud_project/services/notification.dart';
 import 'package:mafqud_project/services/sharedPreference.dart';
 import 'package:provider/provider.dart';
 import 'Screens/homepage/Home.dart';
