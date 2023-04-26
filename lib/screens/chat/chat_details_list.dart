@@ -1,10 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mafqud_project/models/userModel.dart';
 
 import '../../models/messageModel.dart';
+import '../../shared/DateTime.dart';
 import 'cubit/chat_cubit.dart';
 import 'cubit/chat_state.dart';
 
@@ -131,7 +133,7 @@ class ChatDetailsList extends StatelessWidget {
                               onPressed: () {
                                 ChatCubit.get(context).sendMessage(
                                   receiverId: receiverUid!,
-                                  dateTime: DateTime.now().toString(),
+                                  dateTime: Timestamp.fromDate(DateTime.now()),
                                   text: textController.text,
                                   senderId: senderUid!,
                                   receivername: model!.name!,
@@ -209,7 +211,7 @@ class ChatDetailsList extends StatelessWidget {
                               onPressed: () {
                                 ChatCubit.get(context).sendMessage(
                                   receiverId: receiverUid!,
-                                  dateTime: DateTime.now().toString(),
+                                  dateTime: Timestamp.fromDate(DateTime.now()),
                                   text: textController.text,
                                   senderId: senderUid!,
                                   receivername: model!.name!,
@@ -252,9 +254,15 @@ class ChatDetailsList extends StatelessWidget {
             ),
           ),
           padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-          child: Text(
-            model.text!,
-            style: const TextStyle(color: Colors.white, fontSize: 18),
+          child: Column(
+            children: [
+              Text(
+                model.text!,
+                style: const TextStyle(color: Colors.white, fontSize: 18),
+              ),
+              Text(readTimestamp(model.dateTime),
+                  style: const TextStyle(color: Colors.white, fontSize: 12))
+            ],
           ),
         ),
       );

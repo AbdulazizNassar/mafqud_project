@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -134,7 +135,7 @@ class ChatDetailsScreen extends StatelessWidget {
                               onPressed: () {
                                 ChatCubit.get(context).sendMessage(
                                   receiverId: receiverUid!,
-                                  dateTime: DateTime.now().toString(),
+                                  dateTime: Timestamp.fromDate(DateTime.now()),
                                   text: textController.text,
                                   senderId: senderUid!,
                                   receivername: userData!['name'],
@@ -213,7 +214,7 @@ class ChatDetailsScreen extends StatelessWidget {
                                 print(receiverUid);
                                 ChatCubit.get(context).sendMessage(
                                   receiverId: receiverUid!,
-                                  dateTime: DateTime.now().toString(),
+                                  dateTime: Timestamp.fromDate(DateTime.now()),
                                   text: textController.text,
                                   senderId: senderUid!,
                                   receivername: userData!['name'],

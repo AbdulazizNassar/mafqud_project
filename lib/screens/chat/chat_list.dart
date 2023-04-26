@@ -10,6 +10,7 @@ import 'package:mafqud_project/services/auth.dart';
 import 'package:mafqud_project/services/notification.dart';
 import 'package:mafqud_project/screens/MenuItems/Notifications/constant.dart';
 import 'package:mafqud_project/shared/loading.dart';
+import '../../shared/DateTime.dart';
 import '../../shared/NavMenu.dart';
 import '../../shared/constants.dart';
 import 'chat_details.dart';
@@ -179,7 +180,10 @@ class _ChatListScreenState extends State<ChatListScreen> {
                 : Text("You: ${messages.text}"),
             trailing: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [deleteIcon],
+              children: [
+                deleteIcon,
+                Text(readTimestamp(messages.dateTime)),
+              ],
             ),
             enabled: true,
           ));

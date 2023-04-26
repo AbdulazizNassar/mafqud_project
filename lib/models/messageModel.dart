@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class ChatMessageModel {
   String? senderId;
   String? receiverId;
   String? text;
-  String? dateTime;
+  Timestamp? dateTime;
 
   ChatMessageModel({
     this.senderId,

@@ -48,7 +48,7 @@ class ChatCubit extends Cubit<ChatState> {
 
   void sendMessage({
     required String receiverId,
-    required String dateTime,
+    required Timestamp? dateTime,
     required String senderId,
     required String text,
     required String receivername,
