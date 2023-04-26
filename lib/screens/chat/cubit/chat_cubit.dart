@@ -66,7 +66,7 @@ class ChatCubit extends Cubit<ChatState> {
         .doc(receiverId)
         .get();
     String token = snap['token'];
-    sendPushMessage("New message", "You've got a new message", token);
+    sendPushMessage("You've got a new message ", 'from $sendername', token);
     FirebaseFirestore.instance
         .collection('users')
         .doc(senderId)

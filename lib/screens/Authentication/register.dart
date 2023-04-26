@@ -23,8 +23,6 @@ class _RegisterState extends State<Register> {
       formData.save();
       UserCredential response = await AuthService()
           .registerWithEmailAndPassword(name, email, password, idNum, PhoneNum);
-      uId = response.user!.uid;
-      print(uId);
       ChatCubit.get(context).getUserData();
       if (response != null) {
         Navigator.of(context).pushReplacementNamed("Posts");

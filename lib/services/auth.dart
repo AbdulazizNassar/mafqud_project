@@ -25,6 +25,7 @@ class AuthService {
       "uid": _auth.currentUser!.uid,
       'image': '',
       'rating': 0.0,
+      'numOfRating': 1,
     });
     UserData(
         uid: currentUser!.uid,
