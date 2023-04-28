@@ -13,6 +13,8 @@ class ChatCubit extends Cubit<ChatState> {
 
   static ChatCubit get(context) => BlocProvider.of(context);
   List<UserModel>? users;
+  UserModel? userItem;
+
   String? username;
 
   UserModel? userData;
@@ -46,6 +48,25 @@ class ChatCubit extends Cubit<ChatState> {
     });
   }
 
+  void getChatItem({required String uidReciever}) {
+    emit(AllUsersLoadingState());
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(uId)
+        .collection('myUsers')
+        .doc(uidReciever)
+        .get()
+        .then((value) {
+      userItem = UserModel.fromJson(value.data()!);
+      print(userItem!.uid);
+      print(userItem!.name);
+
+      emit(GetChatItemSuccessState(model: userItem!));
+    }).catchError((error) {
+      emit(GetChatItemErrorState(error.toString()));
+    });
+  }
+
   void sendMessage({
     required String receiverId,
     required Timestamp? dateTime,
@@ -66,7 +87,8 @@ class ChatCubit extends Cubit<ChatState> {
         .doc(receiverId)
         .get();
     String token = snap['token'];
-    sendPushMessage("You've got a new message ", 'from $sendername', token);
+    sendPushMessage("You've got a new message ", 'from $sendername', token,
+        uidReceiver: receiverId , nameReceiver: receivername);
     FirebaseFirestore.instance
         .collection('users')
         .doc(senderId)
