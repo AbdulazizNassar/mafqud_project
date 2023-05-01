@@ -15,7 +15,7 @@ class NotificationList extends StatefulWidget {
 }
 
 class _NotificationListState extends State<NotificationList> {
-  Query<Map<String, dynamic>> notificationsRef =
+  CollectionReference notificationsRef =
       FirebaseFirestore.instance.collection('notifications');
   @override
   Widget build(BuildContext context) {
@@ -79,7 +79,10 @@ class _NotificationListState extends State<NotificationList> {
                   )
                 ]),
             child: InkWell(
-              onTap: () {
+              onTap: () async {
+                await notificationsRef
+                    .doc(snapshot[i].id)
+                    .update({'status': "old"});
                 // Navigator.push(
                 //     context,
                 //     MaterialPageRoute(
@@ -90,8 +93,8 @@ class _NotificationListState extends State<NotificationList> {
                 //               receiverName: data['name'],
                 //               senderName: ChatCubit.get(context).username,
                 //             )));
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (_) => const ChatListScreen()));
+                // Navigator.push(context,
+                //     MaterialPageRoute(builder: (_) => const ChatListScreen()));
               },
               child: NotificationTiles(
                 notification: snapshot[i],

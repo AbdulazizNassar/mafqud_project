@@ -211,7 +211,6 @@ class ChatDetailsScreen extends StatelessWidget {
                             color: Colors.deepPurple,
                             child: MaterialButton(
                               onPressed: () {
-                                print(receiverUid);
                                 ChatCubit.get(context).sendMessage(
                                   receiverId: receiverUid!,
                                   dateTime: Timestamp.fromDate(DateTime.now()),

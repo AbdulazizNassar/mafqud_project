@@ -15,11 +15,13 @@ class NotificationTiles extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Icon(
-        Icons.message_rounded,
-        size: 50,
-        color: Colors.blue.shade900,
-      ),
+      tileColor:
+          notification['status'] == "new" ? Colors.amberAccent : Colors.white,
+      leading: notification['status'] == "new"
+          ? Stack(
+              children: [msgIcon, newIndicator],
+            )
+          : msgIcon,
       title: Text(notification['title'],
           style: const TextStyle(color: kDarkColor)),
       subtitle: Text(notification['subtitle'],

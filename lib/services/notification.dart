@@ -77,6 +77,7 @@ void sendPushMessage(String title, String body, String token) async {
       "title": title,
       'subtitle': body,
       "date": DateTime.now(),
+      'status': "new"
     });
   } catch (e) {
     print("error push notificatiot");

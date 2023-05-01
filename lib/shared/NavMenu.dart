@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mafqud_project/screens/MenuItems/Notifications/constant.dart';
 import 'package:mafqud_project/screens/chat/chat_list.dart';
 import 'package:mafqud_project/screens/chat/cubit/chat_cubit.dart';
 import 'package:mafqud_project/screens/chat/cubit/chat_state.dart';
@@ -36,10 +37,36 @@ class NavMenu extends StatefulWidget {
   State<NavMenu> createState() => _NavMenuState();
 }
 
+dynamic notificationIcon;
+
 class _NavMenuState extends State<NavMenu> {
   bool isLoading = false;
-
   @override
+  void initState() {
+    super.initState();
+    setState(() {
+      isLoading = true;
+    });
+    Query<Map<String, dynamic>> notificationRef = FirebaseFirestore.instance
+        .collection("notifications")
+        .where("uid", isEqualTo: AuthService().currentUser!.uid);
+    notificationRef.get().then((value) => value.docs.forEach((element) {
+          if (element['status'] == 'new') {
+            notificationIcon = Stack(
+              children: [
+                const Icon(Icons.notifications_outlined),
+                newIndicator
+              ],
+            );
+          } else {
+            notificationIcon = const Icon(Icons.notifications_outlined);
+          }
+        }));
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   Widget build(BuildContext context) {
     return isLoading
         ? Loading()
@@ -113,7 +140,6 @@ Widget buildHeader(BuildContext context) => Material(
         ),
       ),
     );
-
 Widget buildMenuItems(BuildContext context) => Container(
       padding: const EdgeInsets.all(0),
       child: Wrap(
@@ -126,7 +152,7 @@ Widget buildMenuItems(BuildContext context) => Container(
                 .push(MaterialPageRoute(builder: (context) => Posts())),
           ),
           ListTile(
-            leading: const Icon(Icons.notifications_active_outlined),
+            leading: notificationIcon,
             title: const Text("Notifications"),
             onTap: () => Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => NotificationList())),
