@@ -102,53 +102,94 @@ buildHeader(BuildContext context) => isLoading
               top: 24 + MediaQuery.of(context).padding.top,
               bottom: 24,
             ),
-            child: BlocConsumer<ChatCubit, ChatState>(
-                listener: (context, state) {},
-                builder: (context, state) {
-                  if (state is GetUserLoadingState) {
-                    return Loading();
-                  }
-                  if (state is GetMessagesSuccessState) {
-                    return Column(children: [
-                      ChatCubit.get(context).userData!.image == ''
-                          ? const CircleAvatar(
-                              radius: 60,
-                              child: Image(
-                                  image: AssetImage('assets/user.png'),
-                                  height: 70),
-                            )
-                          : CircleAvatar(
-                              radius: 60,
-                              backgroundColor: Colors.white,
-                              backgroundImage: NetworkImage(
-                                  ChatCubit.get(context).userData!.image!),
-                            ),
-                      const SizedBox(height: 12),
-                      Text(
-                        '${ChatCubit.get(context).userData!.name}'
-                        // "${data['name']}"
-                        ,
-                        style:
-                            const TextStyle(fontSize: 28, color: Colors.white),
-                      ),
-                      Text(
-                        '${ChatCubit.get(context).userData!.email}'
-                        // "${data['email']}"
-                        ,
-                        style:
-                            const TextStyle(fontSize: 16, color: Colors.white),
-                      ),
-                      const Icon(
-                        Icons.double_arrow_outlined,
-                        color: Colors.white,
-                      ),
-                    ]);
-                  }
-                  return const Text("Something went wrong");
-                }),
+            child: FutureBuilder(
+              future:
+                  _userCollection.where("uid", isEqualTo: userAuth!.uid).get(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Loading();
+                }
+                if (snapshot.connectionState == ConnectionState.done) {
+                  var user = snapshot.data!.docs.first;
+                  return Column(children: [
+                    user['image'] == ''
+                        ? const CircleAvatar(
+                            radius: 60,
+                            child: Image(
+                                image: AssetImage('assets/user.png'),
+                                height: 70),
+                          )
+                        : CircleAvatar(
+                            radius: 60,
+                            backgroundColor: Colors.white,
+                            backgroundImage: NetworkImage(user['image']),
+                          ),
+                    const SizedBox(height: 12),
+                    Text(
+                      '${user['name']}',
+                      style: const TextStyle(fontSize: 28, color: Colors.white),
+                    ),
+                    Text(
+                      '${user['email']}',
+                      style: const TextStyle(fontSize: 16, color: Colors.white),
+                    ),
+                    const Icon(
+                      Icons.double_arrow_outlined,
+                      color: Colors.white,
+                    ),
+                  ]);
+                }
+                return const Text("Something has gone wrong");
+              },
+            ),
           ),
         ),
       );
+
+// BlocConsumer<ChatCubit, ChatState> newMethod() {
+//   return BlocConsumer<ChatCubit, ChatState>(
+//       listener: (context, state) {},
+//       builder: (context, state) {
+//         if (state is GetUserLoadingState) {
+//           return Loading();
+//         }
+//         if (state is GetMessagesSuccessState) {
+//           return Column(children: [
+//             ChatCubit.get(context).userData!.image == ''
+//                 ? const CircleAvatar(
+//                     radius: 60,
+//                     child:
+//                         Image(image: AssetImage('assets/user.png'), height: 70),
+//                   )
+//                 : CircleAvatar(
+//                     radius: 60,
+//                     backgroundColor: Colors.white,
+//                     backgroundImage:
+//                         NetworkImage(ChatCubit.get(context).userData!.image!),
+//                   ),
+//             const SizedBox(height: 12),
+//             Text(
+//               '${ChatCubit.get(context).userData!.name}'
+//               // "${data['name']}"
+//               ,
+//               style: const TextStyle(fontSize: 28, color: Colors.white),
+//             ),
+//             Text(
+//               '${ChatCubit.get(context).userData!.email}'
+//               // "${data['email']}"
+//               ,
+//               style: const TextStyle(fontSize: 16, color: Colors.white),
+//             ),
+//             const Icon(
+//               Icons.double_arrow_outlined,
+//               color: Colors.white,
+//             ),
+//           ]);
+//         }
+//         return const Text("Something went wrong");
+//       });
+// }
+
 Widget buildMenuItems(BuildContext context) => Container(
       padding: const EdgeInsets.all(0),
       child: Wrap(
