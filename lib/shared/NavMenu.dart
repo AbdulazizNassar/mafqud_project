@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mafqud_project/screens/MenuItems/Notifications/constant.dart';
 import 'package:mafqud_project/screens/chat/chat_list.dart';
 import 'package:mafqud_project/screens/chat/cubit/chat_cubit.dart';
-import 'package:mafqud_project/screens/chat/cubit/chat_state.dart';
 import 'package:mafqud_project/screens/MenuItems/Notifications/notificationList.dart';
 import 'package:mafqud_project/screens/MenuItems/support.dart';
 import 'package:mafqud_project/services/auth.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mafqud_project/shared/AlertBox.dart';
 import 'package:mafqud_project/shared/constants.dart';
 import 'package:mafqud_project/shared/loading.dart';
@@ -16,9 +13,6 @@ import 'package:mafqud_project/screens/MenuItems/RateUs.dart';
 import 'package:mafqud_project/screens/posts/history.dart';
 import 'package:mafqud_project/screens/posts/posts.dart';
 import '../screens/profile/profile.dart';
-
-// current logged in user
-User? userAuth = AuthService().currentUser;
 
 CollectionReference _userCollection =
     FirebaseFirestore.instance.collection('users');
@@ -30,7 +24,7 @@ class NavMenu extends StatefulWidget {
   State<NavMenu> createState() => _NavMenuState();
 }
 
-dynamic notificationIcon = const Icon(Icons.notifications_outlined);
+dynamic notificationIcon;
 
 class _NavMenuState extends State<NavMenu> {
   bool isLoading = false;
@@ -51,8 +45,6 @@ class _NavMenuState extends State<NavMenu> {
                 newIndicator
               ],
             );
-          } else {
-            notificationIcon = const Icon(Icons.notifications_outlined);
           }
         }));
     setState(() {
@@ -96,8 +88,9 @@ buildHeader(BuildContext context) => isLoading
               bottom: 24,
             ),
             child: FutureBuilder(
-              future:
-                  _userCollection.where("uid", isEqualTo: userAuth!.uid).get(),
+              future: _userCollection
+                  .where("uid", isEqualTo: AuthService().currentUser!.uid)
+                  .get(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Loading();
@@ -195,7 +188,8 @@ Widget buildMenuItems(BuildContext context) => Container(
                 .push(MaterialPageRoute(builder: (context) => Posts())),
           ),
           ListTile(
-            leading: notificationIcon,
+            leading:
+                notificationIcon ?? const Icon(Icons.notifications_outlined),
             title: const Text("Notifications"),
             onTap: () => Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => NotificationList())),
