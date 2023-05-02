@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mafqud_project/shared/size_config.dart';
 
 const textInputDecoration = InputDecoration(
   fillColor: Colors.white,
@@ -20,6 +21,24 @@ const textStyle = TextStyle(
   fontWeight: FontWeight.bold,
   fontSize: 25.0,
 );
+InputDecoration textFormFieldStyle(String LabelText) {
+  return InputDecoration(
+    labelText: LabelText,
+    labelStyle: const TextStyle(color: primaryColor),
+    prefixIcon: Icon(
+      Icons.mail,
+      size: SizeConfig.defaultSize * 2,
+      color: primaryColor,
+    ),
+    filled: true,
+    enabledBorder: UnderlineInputBorder(
+      borderRadius: BorderRadius.circular(10),
+      borderSide: BorderSide.none,
+    ),
+    focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: const BorderSide(color: primaryColor)),
+  );
+}
 
-
-String  ? uId = 'start' ;
+String? uId = 'start';

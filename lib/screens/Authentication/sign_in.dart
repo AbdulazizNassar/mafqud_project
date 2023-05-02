@@ -77,25 +77,7 @@ class _SignInState extends State<SignIn> {
                                 }
                                 return null;
                               },
-                              decoration: InputDecoration(
-                                labelText: 'Email',
-                                labelStyle:
-                                    const TextStyle(color: primaryColor),
-                                prefixIcon: Icon(
-                                  Icons.mail,
-                                  size: SizeConfig.defaultSize * 2,
-                                  color: primaryColor,
-                                ),
-                                filled: true,
-                                enabledBorder: UnderlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide.none,
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide:
-                                        const BorderSide(color: primaryColor)),
-                              ),
+                              decoration: textFormFieldStyle('Email'),
                             ),
                             SizedBox(
                               height: SizeConfig.defaultSize * 3,
@@ -104,25 +86,7 @@ class _SignInState extends State<SignIn> {
                               onSaved: (val) {
                                 password = val!;
                               },
-                              decoration: InputDecoration(
-                                labelText: 'Password',
-                                labelStyle:
-                                    const TextStyle(color: primaryColor),
-                                prefixIcon: Icon(
-                                  Icons.lock,
-                                  size: SizeConfig.defaultSize * 2,
-                                  color: primaryColor,
-                                ),
-                                filled: true,
-                                enabledBorder: UnderlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide.none,
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide:
-                                        const BorderSide(color: primaryColor)),
-                              ),
+                              decoration: textFormFieldStyle('Password'),
                               validator: (val) => val!.isEmpty
                                   ? "password cannot be empty"
                                   : null,
