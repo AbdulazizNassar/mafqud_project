@@ -29,26 +29,14 @@ class _NotificationListState extends State<NotificationList> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: BlocConsumer<ChatCubit, ChatState>(
-        listener: (context, state) {
-          if (state is GetChatItemSuccessState) {
-            model = state.model;
-            print('model.name');
-            print(model!.name);
-          }
-          // TODO: implement listener
-        },
-        builder: (context, state) {
-          return Scaffold(
-            backgroundColor: kWhiteColor,
-            appBar: AppBar(
-              title: const Text('Notifications'),
-              centerTitle: true,
-              backgroundColor: Colors.blue.shade900,
-            ),
-            body: displayNotification(),
-          );
-        },
+      child: Scaffold(
+        backgroundColor: kWhiteColor,
+        appBar: AppBar(
+          title: const Text('Notifications'),
+          centerTitle: true,
+          backgroundColor: Colors.blue.shade900,
+        ),
+        body: displayNotification(),
       ),
     );
   }
@@ -101,7 +89,7 @@ class _NotificationListState extends State<NotificationList> {
                 ]),
             child: InkWell(
               onTap: () async {
-                await Navigator.push(
+                await Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                         builder: (_) => ChatNotification(
@@ -112,7 +100,6 @@ class _NotificationListState extends State<NotificationList> {
                 await notificationsRef
                     .doc(snapshot[i].id)
                     .update({'status': "old"});
-               
               },
               child: NotificationTiles(
                 notification: snapshot[i],
