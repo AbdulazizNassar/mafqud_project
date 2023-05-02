@@ -23,13 +23,6 @@ User? userAuth = AuthService().currentUser;
 CollectionReference _userCollection =
     FirebaseFirestore.instance.collection('users');
 
-//return current user doc
-final userDoc = _userCollection
-    .doc(userAuth!.uid)
-    .get()
-    .then((value) => value)
-    .then((value) => value.data());
-
 class NavMenu extends StatefulWidget {
   const NavMenu({super.key});
 
