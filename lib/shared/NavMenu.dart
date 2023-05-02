@@ -31,24 +31,17 @@ class _NavMenuState extends State<NavMenu> {
   @override
   void initState() {
     super.initState();
-    setState(() {
-      isLoading = true;
-    });
     Query<Map<String, dynamic>> notificationRef = FirebaseFirestore.instance
         .collection("notifications")
         .where("uid", isEqualTo: AuthService().currentUser!.uid);
-    notificationRef.get().then((value) => value.docs.forEach((element) {
-          if (element['status'] == 'new') {
-            notificationIcon = Stack(
-              children: [
-                const Icon(Icons.notifications_outlined),
-                newIndicator
-              ],
-            );
-          }
-        }));
-    setState(() {
-      isLoading = false;
+    notificationRef.get().then((value) {
+      value.docs.forEach((element) {
+        if (element['status'] == 'new') {
+          notificationIcon = Stack(
+            children: [const Icon(Icons.notifications_outlined), newIndicator],
+          );
+        }
+      });
     });
   }
 
@@ -188,12 +181,9 @@ Widget buildMenuItems(BuildContext context) => Container(
                 .push(MaterialPageRoute(builder: (context) => Posts())),
           ),
           ListTile(
-            leading:
-                notificationIcon ?? const Icon(Icons.notifications_outlined),
+            leading: notificationIcon,
             title: const Text("Notifications"),
-
-            onTap: ()
-            {
+            onTap: () {
               ChatCubit.get(context).getChatList();
               Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => NotificationList()));

@@ -195,39 +195,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           )
                         ],
                       ),
-                      Container(
-                        padding: const EdgeInsets.all(30),
-                        child: Row(
-                          children: [
-                            const Text(
-                              "Notifications",
-                              style: TextStyle(
-                                  fontSize: 25, fontWeight: FontWeight.bold),
-                            ),
-                            const SizedBox(
-                              width: 20,
-                            ),
-                            SizedBox(
-                              width: 80,
-                              height: 70,
-                              child: FittedBox(
-                                fit: BoxFit.fill,
-                                child: Switch(
-                                  // This bool value toggles the switch.
-                                  value: light!,
+                      // Container(
+                      //   padding: const EdgeInsets.all(30),
+                      //   child: Row(
+                      //     children: [
+                      //       const Text(
+                      //         "Notifications",
+                      //         style: TextStyle(
+                      //             fontSize: 25, fontWeight: FontWeight.bold),
+                      //       ),
+                      //       const SizedBox(
+                      //         width: 20,
+                      //       ),
+                      //       SizedBox(
+                      //         width: 80,
+                      //         height: 70,
+                      //         child: FittedBox(
+                      //           fit: BoxFit.fill,
+                      //           child: Switch(
+                      //             // This bool value toggles the switch.
+                      //             value: light!,
 
-                                  onChanged: (bool value) {
-                                    // This is called when the user toggles the switch.
-                                    setState(() {
-                                      light = value;
-                                    });
-                                  },
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      //             onChanged: (bool value) {
+                      //               // This is called when the user toggles the switch.
+                      //               setState(() {
+                      //                 light = value;
+                      //               });
+                      //             },
+                      //           ),
+                      //         ),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),
