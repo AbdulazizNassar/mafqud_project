@@ -191,8 +191,13 @@ Widget buildMenuItems(BuildContext context) => Container(
             leading:
                 notificationIcon ?? const Icon(Icons.notifications_outlined),
             title: const Text("Notifications"),
-            onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => NotificationList())),
+
+            onTap: ()
+            {
+              ChatCubit.get(context).getChatList();
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => NotificationList()));
+            },
           ),
           ListTile(
             leading: const Icon(Icons.history_outlined),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mafqud_project/models/userModel.dart';
 
 
 
@@ -38,3 +39,15 @@ class SendMessageErrorState extends ChatState {
 }
 
 class GetMessagesSuccessState extends ChatState {}
+
+
+class GetChatItemSuccessState extends ChatState {
+  UserModel model ;
+  GetChatItemSuccessState({required this.model});
+}
+
+class GetChatItemErrorState extends ChatState {
+  late final String error;
+
+  GetChatItemErrorState(this.error);
+}
