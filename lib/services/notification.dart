@@ -80,6 +80,7 @@ void sendPushMessage(String title, String body, String token,
       "date": DateTime.now(),
       'uidReceiver': uidReceiver,
       'nameReceiver': nameReceiver,
+      'status': "new"
     });
   } catch (e) {
     print("error push notificatiot");

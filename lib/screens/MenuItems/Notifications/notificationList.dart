@@ -23,7 +23,7 @@ class NotificationList extends StatefulWidget {
 }
 
 class _NotificationListState extends State<NotificationList> {
-  Query<Map<String, dynamic>> notificationsRef =
+  CollectionReference notificationsRef =
       FirebaseFirestore.instance.collection('notifications');
   UserModel? model;
   @override
@@ -109,6 +109,10 @@ class _NotificationListState extends State<NotificationList> {
                               receiverUid: snapshot[i]['uidReceiver'],
                               receiverName: snapshot[i]['nameReceiver'],
                             )));
+                await notificationsRef
+                    .doc(snapshot[i].id)
+                    .update({'status': "old"});
+               
               },
               child: NotificationTiles(
                 notification: snapshot[i],
