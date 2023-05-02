@@ -24,18 +24,18 @@ class NotificationList extends StatefulWidget {
 
 class _NotificationListState extends State<NotificationList> {
   Query<Map<String, dynamic>> notificationsRef =
-  FirebaseFirestore.instance.collection('notifications');
-  UserModel  ? model ;
+      FirebaseFirestore.instance.collection('notifications');
+  UserModel? model;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: BlocConsumer<ChatCubit, ChatState>(
         listener: (context, state) {
-            if(state is GetChatItemSuccessState){
-               model = state.model;
-              print('model.name');
-              print(model!.name);
-            }
+          if (state is GetChatItemSuccessState) {
+            model = state.model;
+            print('model.name');
+            print(model!.name);
+          }
           // TODO: implement listener
         },
         builder: (context, state) {
@@ -77,7 +77,6 @@ class _NotificationListState extends State<NotificationList> {
       padding: EdgeInsets.zero,
       itemCount: snapshot.length,
       itemBuilder: (context, i) {
-
         return Slidable(
             key: UniqueKey(),
             endActionPane: ActionPane(
@@ -101,15 +100,15 @@ class _NotificationListState extends State<NotificationList> {
                   )
                 ]),
             child: InkWell(
-              onTap: () async{
-                Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (_) =>ChatNotification(
-                      senderUid: snapshot[i]['uid']  ,
-                      receiverUid: snapshot[i]['uidReceiver'],
-                      receiverName:  snapshot[i]['nameReceiver'],
-                    )));
+              onTap: () async {
+                await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => ChatNotification(
+                              senderUid: snapshot[i]['uid'],
+                              receiverUid: snapshot[i]['uidReceiver'],
+                              receiverName: snapshot[i]['nameReceiver'],
+                            )));
               },
               child: NotificationTiles(
                 notification: snapshot[i],
