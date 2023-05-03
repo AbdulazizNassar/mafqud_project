@@ -59,15 +59,11 @@ class _PostsState extends State<Posts> {
           backgroundColor: Colors.blue[900],
           bottom: TabBar(
               indicator: BoxDecoration(
-                  borderRadius: BorderRadius.circular(25),
-                  color: Colors.blue.shade300),
-              tabs: const [
-                Tab(
-                  child: Text("Found"),
-                ),
-                Tab(
-                  child: Text("Lost"),
-                )
+                borderRadius: BorderRadius.circular(25),
+              ),
+              tabs: [
+                tabView(Colors.green, "Found"),
+                tabView(Colors.red, "Lost")
               ]),
           actions: [
             IconButton(
@@ -100,6 +96,29 @@ class _PostsState extends State<Posts> {
             Navigator.of(context).pushNamed("AddPost");
           },
           child: const Icon(Icons.add),
+        ),
+      ),
+    );
+  }
+
+  Container tabView(Color? color, String title) {
+    return Container(
+      decoration:
+          BoxDecoration(borderRadius: BorderRadius.circular(25), color: color),
+      width: double.infinity,
+      child: Tab(
+        child: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Text(
+                title,
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
         ),
       ),
     );
