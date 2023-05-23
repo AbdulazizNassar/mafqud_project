@@ -109,7 +109,10 @@ class MainScreen extends StatelessWidget {
                 onPressed: () async {
                   UserCredential response =
                       await AuthService().signInWithGoogle();
-                  Navigator.of(context).pushReplacementNamed("Home");
+
+                  if (response != null) {
+                    Navigator.of(context).pushReplacementNamed("Posts");
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   shadowColor: Colors.grey,

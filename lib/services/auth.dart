@@ -47,14 +47,14 @@ class AuthService {
   }
 
   // register with email and password
-  registerWithEmailAndPassword(String name, String email, String password,
+  registerWithEmailAndPassword(String? name, String email, String password,
       String ID, String phoneNum) async {
     try {
       final dynamic credential = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
-      createUserModel(name, email, ID, phoneNum);
+      createUserModel(name!, email, ID, phoneNum);
       return credential;
     } on FirebaseAuthException catch (e) {
       return e.code;
@@ -66,7 +66,6 @@ class AuthService {
   Future<UserCredential> signInWithGoogle() async {
     // Trigger the authentication flow
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
     // Obtain the auth details from the request
     final GoogleSignInAuthentication? googleAuth =
         await googleUser?.authentication;
@@ -76,7 +75,19 @@ class AuthService {
       accessToken: googleAuth?.accessToken,
       idToken: googleAuth?.idToken,
     );
-
+    await _firestore
+        .collection("users")
+        .doc(AuthService().currentUser!.uid)
+        .set({
+      'name': googleUser!.displayName,
+      'email': googleUser.email,
+      'ID': 'none',
+      'phoneNum': 'none',
+      "uid": AuthService().currentUser!.uid,
+      'image': '',
+      'rating': 0.0,
+      'numOfRating': 1,
+    });
     // Once signed in, return the UserCredential
     return await FirebaseAuth.instance.signInWithCredential(credential);
   }

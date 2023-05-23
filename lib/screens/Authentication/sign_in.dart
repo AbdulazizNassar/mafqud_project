@@ -25,7 +25,6 @@ class _SignInState extends State<SignIn> {
       UserCredential response =
           await AuthService().signInWithEmailAndPassword(email, password);
       uId = response.user!.uid;
-      print(uId);
       ChatCubit.get(context).getUserData();
       if (response != null) {
         Navigator.of(context).pushReplacementNamed("Posts");
@@ -149,7 +148,12 @@ class _SignInState extends State<SignIn> {
                                       fontSize: 22, color: Colors.white),
                                 ),
                                 onPressed: () async {
-                                  await AuthService().signInWithGoogle();
+                                  UserCredential response =
+                                      await AuthService().signInWithGoogle();
+                                  if (response != null) {
+                                    Navigator.of(context)
+                                        .pushReplacementNamed("Posts");
+                                  }
                                 },
                               ),
                             ),
