@@ -37,9 +37,7 @@ class ChatDetailsScreen extends StatelessWidget {
 
       return BlocConsumer<ChatCubit, ChatState>(
         listener: (context, state) {
-          if (state is SendMessageErrorState) {
-            print(state.error);
-          }
+          if (state is SendMessageErrorState) {}
         },
         builder: (context, state) {
           return Scaffold(

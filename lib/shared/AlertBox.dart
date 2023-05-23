@@ -95,7 +95,7 @@ signOutConfirm(context) {
           onPressed: () async {
             Navigator.of(context).pop();
             await AuthService().signOut();
-            Navigator.of(context).push(
+            Navigator.of(context).pushReplacement(
                 MaterialPageRoute(builder: ((context) => const MainScreen())));
           }),
     ],

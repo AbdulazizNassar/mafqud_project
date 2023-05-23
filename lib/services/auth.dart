@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mafqud_project/models/currentUser.dart';
@@ -75,15 +76,12 @@ class AuthService {
       accessToken: googleAuth?.accessToken,
       idToken: googleAuth?.idToken,
     );
-    await _firestore
-        .collection("users")
-        .doc(AuthService().currentUser!.uid)
-        .set({
+    await _firestore.collection("users").doc(credential.idToken).set({
       'name': googleUser!.displayName,
       'email': googleUser.email,
       'ID': 'none',
       'phoneNum': 'none',
-      "uid": AuthService().currentUser!.uid,
+      "uid": currentUser!.uid,
       'image': '',
       'rating': 0.0,
       'numOfRating': 1,
