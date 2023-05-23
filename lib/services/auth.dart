@@ -48,14 +48,14 @@ class AuthService {
   }
 
   // register with email and password
-  registerWithEmailAndPassword(String? name, String email, String password,
+  registerWithEmailAndPassword(String name, String email, String password,
       String ID, String phoneNum) async {
     try {
       final dynamic credential = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
-      createUserModel(name!, email, ID, phoneNum);
+      createUserModel(name, email, ID, phoneNum);
       return credential;
     } on FirebaseAuthException catch (e) {
       return e.code;
@@ -76,16 +76,21 @@ class AuthService {
       accessToken: googleAuth?.accessToken,
       idToken: googleAuth?.idToken,
     );
-    await _firestore.collection("users").doc(credential.idToken).set({
-      'name': googleUser!.displayName,
-      'email': googleUser.email,
-      'ID': 'none',
-      'phoneNum': 'none',
-      "uid": currentUser!.uid,
-      'image': '',
-      'rating': 0.0,
-      'numOfRating': 1,
-    });
+    try {
+      await _firestore.collection("users").doc(currentUser!.uid).set({
+        'name': googleUser!.displayName,
+        'email': googleUser.email,
+        'ID': 'none',
+        'phoneNum': 'none',
+        "uid": currentUser!.uid,
+        'image': '',
+        'rating': 0.0,
+        'numOfRating': 1,
+      });
+    } catch (_) {
+      print('error');
+    }
+
     // Once signed in, return the UserCredential
     return await FirebaseAuth.instance.signInWithCredential(credential);
   }

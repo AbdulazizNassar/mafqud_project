@@ -94,8 +94,9 @@ class _MapScreenState extends State<MapScreen> {
                       });
                       await savePostToFirebase(widget.title, widget.description,
                           widget.category, widget.imageUrl, widget.status);
-                      ScaffoldMessenger.of(context)
-                          .showSnackBar(snackBarSuccess("success", "message"));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          snackBarSuccess(
+                              "success", "Post created successfully"));
                       setState(() {
                         isLoading = false;
                       });

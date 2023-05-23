@@ -88,6 +88,9 @@ buildHeader(BuildContext context) => isLoading
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Loading();
                 }
+                if (snapshot.connectionState == ConnectionState.none) {
+                  return Loading();
+                }
                 if (snapshot.connectionState == ConnectionState.done) {
                   var user = snapshot.data!.docs.first;
                   return Column(children: [
@@ -184,7 +187,6 @@ Widget buildMenuItems(BuildContext context) => Container(
             leading: notificationIcon,
             title: const Text("Notifications"),
             onTap: () {
-              ChatCubit.get(context).getChatList();
               Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => NotificationList()));
             },
