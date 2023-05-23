@@ -1,8 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mafqud_project/models/currentUser.dart';
+import 'package:mafqud_project/models/userModel.dart';
+import '../screens/chat/cubit/chat_cubit.dart';
 import 'firebase_exceptions.dart';
 
 class AuthService {
@@ -64,7 +67,7 @@ class AuthService {
     }
   }
 
-  Future<UserCredential> signInWithGoogle() async {
+  Future<UserCredential> signInWithGoogle(BuildContext context) async {
     // Trigger the authentication flow
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
     // Obtain the auth details from the request
@@ -76,19 +79,27 @@ class AuthService {
       accessToken: googleAuth?.accessToken,
       idToken: googleAuth?.idToken,
     );
-    try {
-      await _firestore.collection("users").doc(currentUser!.uid).set({
-        'name': googleUser!.displayName,
-        'email': googleUser.email,
-        'ID': 'none',
-        'phoneNum': 'none',
-        "uid": currentUser!.uid,
-        'image': '',
-        'rating': 0.0,
-        'numOfRating': 1,
-      });
-    } catch (_) {
-      print('error');
+    Query<Map<String, dynamic>> c = FirebaseFirestore.instance
+        .collection('users')
+        .where("email", isEqualTo: googleUser!.email);
+    if (c.count() == 0) {
+      try {
+        print("============");
+        await _firestore.collection("users").doc(currentUser!.uid).set({
+          'name': googleUser.displayName,
+          'email': googleUser.email,
+          'ID': 'none',
+          'phoneNum': 'none',
+          "uid": currentUser!.uid,
+          'image': ' ',
+          'rating': 0.0,
+          'numOfRating': 1,
+        });
+        ChatCubit.get(context).getUserData();
+      } catch (e) {
+        print("+===================");
+        print(e.toString());
+      }
     }
 
     // Once signed in, return the UserCredential

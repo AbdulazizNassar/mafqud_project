@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mafqud_project/screens/chat/cubit/chat_cubit.dart';
 import 'package:mafqud_project/screens/profile/profile.dart';
@@ -278,9 +279,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 SizedBox(height: MediaQuery.of(context).size.height * .02),
                 // about input field
                 TextFormField(
-                  // initialValue: widget.phone,
                   controller: phoneController,
-                  // onSaved: (val) => APIs.me.phone = val ?? '',
                   validator: (val) =>
                       val != null && val.isNotEmpty ? null : 'Required Field',
                   decoration: InputDecoration(
@@ -304,9 +303,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     if (_formKey.currentState!.validate()) {
                       FirebaseAuth.instance.currentUser!
                           .updateEmail(emailController.text)
-                          .then((value) {
-                        print('email update in firebaseAuth');
-                      });
+                          .then((value) {});
                       FirebaseFirestore.instance
                           .collection('users')
                           .doc(widget.uid)
@@ -317,7 +314,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           })
                           .then((value) => {
                                 ChatCubit.get(context).getUserData(),
-                                print('profile updated'),
                                 ScaffoldMessenger.of(context).showSnackBar(
                                     snackBarSuccess("Successful",
                                         "Information Update complete")),

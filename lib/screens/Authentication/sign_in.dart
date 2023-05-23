@@ -138,25 +138,24 @@ class _SignInState extends State<SignIn> {
                                     }
                                   }),
                             ),
-                            ButtonTheme(
-                              height: SizeConfig.defaultSize * 5,
-                              minWidth: MediaQuery.of(context).size.width,
-                              child: ElevatedButton(
-                                child: const Text(
-                                  'Sign in with Google',
-                                  style: TextStyle(
-                                      fontSize: 22, color: Colors.white),
-                                ),
-                                onPressed: () async {
-                                  UserCredential response =
-                                      await AuthService().signInWithGoogle();
-                                  if (response != null) {
-                                    Navigator.of(context)
-                                        .pushReplacementNamed("Posts");
-                                  }
-                                },
-                              ),
-                            ),
+                            // ButtonTheme(
+                            //   height: SizeConfig.defaultSize * 5,
+                            //   minWidth: MediaQuery.of(context).size.width,
+                            //   child: ElevatedButton(
+                            //     child: const Text(
+                            //       'Sign in with Google',
+                            //       style: TextStyle(
+                            //           fontSize: 22, color: Colors.white),
+                            //     ),
+                            //     onPressed: () async {
+                            //       UserCredential response = await AuthService()
+                            //           .signInWithGoogle(context);
+                            //       print("=----------------");
+                            //       Navigator.of(context)
+                            //           .pushReplacementNamed("Posts");
+                            //     },
+                            //   ),
+                            // ),
                             SizedBox(
                               height: SizeConfig.defaultSize * 2,
                             ),
@@ -185,6 +184,18 @@ class _SignInState extends State<SignIn> {
                       ),
                     ),
                   ),
+                  Positioned(
+                    top: 5,
+                    child: IconButton(
+                      onPressed: () {
+                        Navigator.of(context)
+                            .pushReplacementNamed("MainScreen");
+                      },
+                      icon: const Icon(Icons.arrow_back_outlined),
+                      color: Colors.red,
+                      iconSize: 30,
+                    ),
+                  ),
                   Center(
                     child: Container(
                       margin: EdgeInsets.only(top: SizeConfig.defaultSize * 1),
@@ -202,13 +213,22 @@ class _SignInState extends State<SignIn> {
                           ),
                         ],
                       ),
-                      child: const Center(
-                        child: Text(
-                          'Sign In',
-                          style: TextStyle(
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: const [
+                            Icon(
+                              Icons.login_outlined,
                               color: primaryColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18),
+                            ),
+                            Text(
+                              'Sign In',
+                              style: TextStyle(
+                                  color: primaryColor,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18),
+                            ),
+                          ],
                         ),
                       ),
                     ),

@@ -4,6 +4,7 @@ import 'package:lottie/lottie.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:mafqud_project/screens/Authentication/sign_in.dart';
 import '../services/auth.dart';
+import 'chat/cubit/chat_cubit.dart';
 
 class MainScreen extends StatelessWidget {
   final Duration duration = const Duration(milliseconds: 800);
@@ -108,8 +109,8 @@ class MainScreen extends StatelessWidget {
                 icon: const ImageIcon(AssetImage("assets/googleIcon.png")),
                 onPressed: () async {
                   UserCredential response =
-                      await AuthService().signInWithGoogle();
-
+                      await AuthService().signInWithGoogle(context);
+                  print("=----------------");
                   Navigator.of(context).pushReplacementNamed("Posts");
                 },
                 style: ElevatedButton.styleFrom(

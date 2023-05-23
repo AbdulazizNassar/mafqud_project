@@ -20,8 +20,11 @@ class ChatCubit extends Cubit<ChatState> {
   UserModel? userData;
 
   getUserData() {
+    users = [];
     emit(GetUserLoadingState());
     FirebaseFirestore.instance.collection('users').doc(uId).get().then((value) {
+      print("==============");
+      print(value.data());
       userData = UserModel.fromJson(value.data()!);
       username = value.data()!['name'];
       emit(GetUserSuccessState());
@@ -88,7 +91,7 @@ class ChatCubit extends Cubit<ChatState> {
         .get();
     String token = snap['token'];
     sendPushMessage("You've got a new message ", 'from $sendername', token,
-        uidReceiver: receiverId , nameReceiver: receivername);
+        uidReceiver: receiverId, nameReceiver: receivername);
     FirebaseFirestore.instance
         .collection('users')
         .doc(senderId)
