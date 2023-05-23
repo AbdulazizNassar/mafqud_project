@@ -69,8 +69,8 @@ class _SignInState extends State<SignIn> {
                         child: Column(
                           children: <Widget>[
                             TextFormField(
-                              onSaved: (val) {
-                                email = val!;
+                              onChanged: (val) {
+                                email = val;
                               },
                               validator: (val) {
                                 if (!validator.email(val!)) {
@@ -103,9 +103,17 @@ class _SignInState extends State<SignIn> {
                                 onTap: () async {
                                   AuthStatus status = await AuthService()
                                       .resetPassword(email: email);
-                                  setState(() {
-                                    confirmationAlert(context, status.name);
-                                  });
+                                  print(status.name);
+                                  if (status.name == "unknown" ||
+                                      status.name == "invalidEmail") {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        snackBarError("Erorr",
+                                            "Email is not registered try creating an account"));
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        snackBarSuccess("Success",
+                                            "Check your email to reset password"));
+                                  }
                                 },
                               ),
                             ),
