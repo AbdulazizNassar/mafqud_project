@@ -19,22 +19,25 @@ class Posts extends StatefulWidget {
   State<Posts> createState() => _PostsState();
 }
 
+enum CategoryItem { Animals, Personalitems, Electronics }
+
 class _PostsState extends State<Posts> {
   Query<Map<String, dynamic>> postsRef =
       FirebaseFirestore.instance.collection('Posts').orderBy('Date');
 
   final _formKey = GlobalKey<FormState>();
   String searchString = '';
+  String category = ' ';
   switchPage() {
     var data = _formKey.currentState;
     if (data!.validate() && searchString != '') {
       data.save();
       setState(() {
-        flag = true;
+        searchFlag = true;
       });
     } else {
       setState(() {
-        flag = false;
+        searchFlag = false;
       });
     }
   }
@@ -46,9 +49,11 @@ class _PostsState extends State<Posts> {
 
   @override
   Widget build(BuildContext context) => postsMaterialApp(context);
-  bool flag = false;
+  bool searchFlag = false;
+  bool categoryFlag = false;
   Icon customIcon = const Icon(Icons.search);
   Widget customSearchBar = const Text('Posts');
+  CategoryItem? selectedMenu;
   Widget postsMaterialApp(BuildContext context) {
     return DefaultTabController(
       length: 2,
@@ -78,26 +83,86 @@ class _PostsState extends State<Posts> {
           ],
         ),
         drawer: const NavMenu(),
-        body: flag
+        body: searchFlag
             ? TabBarView(
                 children: [
-                  displayPosts("Found", searchString),
-                  displayPosts("Lost", searchString)
+                  displayPosts("Found", searchString, ''),
+                  displayPosts("Lost", searchString, '')
                 ],
               )
-            : TabBarView(
-                children: [
-                  displayPosts("Found", ""),
-                  displayPosts("Lost", ""),
+            : categoryFlag
+                ? TabBarView(
+                    children: [
+                      displayPosts(
+                          "Found", "", selectedMenu.toString().substring(13)),
+                      displayPosts(
+                          "Lost", "", selectedMenu.toString().substring(13)),
+                    ],
+                  )
+                : TabBarView(
+                    children: [
+                      displayPosts("Found", "", ''),
+                      displayPosts("Lost", "", ''),
+                    ],
+                  ),
+        floatingActionButton: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              FloatingActionButton(
+                backgroundColor: Colors.blue[900],
+                onPressed: () {
+                  Navigator.of(context).pushNamed("AddPost");
+                },
+                child: const Icon(Icons.add),
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              PopupMenuButton<CategoryItem>(
+                icon: const Icon(Icons.abc),
+                initialValue: selectedMenu,
+                onSelected: (CategoryItem item) {
+                  setState(() {
+                    categoryFlag = true;
+                    selectedMenu = item;
+                  });
+                },
+                itemBuilder: (BuildContext context) =>
+                    <PopupMenuEntry<CategoryItem>>[
+                  PopupMenuItem(
+                    value: CategoryItem.Animals,
+                    child: ListTile(
+                      leading: IconButton(
+                          onPressed: () {},
+                          icon: const Icon(Icons.animation_outlined)),
+                      title: Text("Animals",
+                          style: Theme.of(context).textTheme.bodyLarge),
+                    ),
+                  ),
+                  PopupMenuItem(
+                    value: CategoryItem.Electronics,
+                    child: ListTile(
+                      leading: IconButton(
+                          onPressed: () {},
+                          icon: const Icon(Icons.phone_outlined)),
+                      title: Text("Electronics",
+                          style: Theme.of(context).textTheme.bodyLarge),
+                    ),
+                  ),
+                  PopupMenuItem(
+                    value: CategoryItem.Personalitems,
+                    child: ListTile(
+                      leading: IconButton(
+                          onPressed: () {},
+                          icon: const Icon(Icons.person_search_outlined)),
+                      title: Text("Personal Items",
+                          style: Theme.of(context).textTheme.bodyLarge),
+                    ),
+                  ),
                 ],
               ),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.blue[900],
-          onPressed: () {
-            Navigator.of(context).pushNamed("AddPost");
-          },
-          child: const Icon(Icons.add),
-        ),
+            ]),
       ),
     );
   }
@@ -139,7 +204,7 @@ class _PostsState extends State<Posts> {
             customIcon = const Icon(Icons.search);
             customSearchBar = const Text('Posts');
             setState(() {
-              flag = false;
+              searchFlag = false;
             });
           }
         });
@@ -198,7 +263,7 @@ class _PostsState extends State<Posts> {
   }
 
   FutureBuilder<QuerySnapshot<Object?>> displayPosts(
-      String status, String searchValue) {
+      String status, String searchValue, String category) {
     return FutureBuilder<QuerySnapshot>(
         future: postsRef.where("status", isEqualTo: status).get(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -207,6 +272,23 @@ class _PostsState extends State<Posts> {
           } else {
             if (snapshot.data!.docs.isEmpty) {
               return noPostFoundMsg;
+            }
+            if (category.isNotEmpty) {
+              Iterable<QueryDocumentSnapshot<Object?>> categoryQuery =
+                  searchByCategory(snapshot, category);
+              if (categoryQuery.isEmpty) {
+                return noPostFoundMsg;
+              } else {
+                return ListView(
+                  children: [
+                    ...categoryQuery.map((QueryDocumentSnapshot<Object?> post) {
+                      return PostCards(
+                        posts: post,
+                      );
+                    })
+                  ],
+                );
+              }
             }
             if (searchValue.isEmpty) {
               return ListView.builder(
@@ -241,6 +323,12 @@ class _PostsState extends State<Posts> {
       AsyncSnapshot<QuerySnapshot<Object?>> snapshot, String searchValue) {
     return snapshot.data!.docs.where((QueryDocumentSnapshot<Object?> element) =>
         element['title'].toString().toLowerCase().contains(searchValue));
+  }
+
+  Iterable<QueryDocumentSnapshot<Object?>> searchByCategory(
+      AsyncSnapshot<QuerySnapshot<Object?>> snapshot, String category) {
+    return snapshot.data!.docs.where((QueryDocumentSnapshot<Object?> element) =>
+        element['category'].toString().toLowerCase().contains(category));
   }
 
   Widget noPostFoundMsg = Row(

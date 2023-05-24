@@ -217,10 +217,6 @@ class _SignInState extends State<SignIn> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: const [
-                            Icon(
-                              Icons.login_outlined,
-                              color: primaryColor,
-                            ),
                             Text(
                               'Sign In',
                               style: TextStyle(
