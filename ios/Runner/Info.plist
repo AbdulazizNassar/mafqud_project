@@ -13,16 +13,6 @@
 			<string>com.googleusercontent.apps.338125010819-75qvg29luunu949ebiornqtkhu3rov02</string>
 		</array>
 	</dict>
-	 <dict>
-      <key>338125010819-v035t4euojsu2qrtlrrjp9ebh8e3g2hb.apps.googleusercontent.com</key>
-      <string>338125010819-v035t4euojsu2qrtlrrjp9ebh8e3g2hb.apps.googleusercontent.com</string>
-      <key>com.googleusercontent.apps.338125010819-75qvg29luunu949ebiornqtkhu3rov02</key>
-      <string>com.googleusercontent.apps.338125010819-v035t4euojsu2qrtlrrjp9ebh8e3g2hb</string>
-      <key>PLIST_VERSION</key>
-      <string>1</string>
-      <key>BUNDLE_ID</key>
-      <string>com.example.mafqud_project</string>
-    </dict>
 </array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
