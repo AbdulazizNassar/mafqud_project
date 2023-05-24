@@ -62,8 +62,6 @@ buildStatusWidget(dynamic posts) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 12.0),
     child: Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      mainAxisSize: MainAxisSize.max,
       children: <Widget>[
         const Text(
           "Status:",
@@ -77,6 +75,24 @@ buildStatusWidget(dynamic posts) {
           style: TextStyle(
             fontSize: 18.0,
             color: Colors.blue[700],
+          ),
+        ),
+        Container(
+          margin: const EdgeInsets.fromLTRB(100, 0, 50, 0),
+          child: Row(
+            children: [
+              const Text(
+                "Reward:",
+                style: TextStyle(fontSize: 16.0, color: Colors.black),
+              ),
+              Text(
+                "${posts['reward']} SAR",
+                style: TextStyle(
+                  fontSize: 18.0,
+                  color: Colors.blue[700],
+                ),
+              ),
+            ],
           ),
         ),
       ],

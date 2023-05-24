@@ -20,12 +20,14 @@ class MapScreen extends StatefulWidget {
       this.description,
       this.category,
       this.imageUrl,
-      this.status});
+      this.status,
+      this.reward});
   final title;
   final description;
   final category;
   final imageUrl;
   final status;
+  final reward;
   final lat;
   final long;
   @override
@@ -34,7 +36,7 @@ class MapScreen extends StatefulWidget {
 
 LatLng? selectedLocation;
 savePostToFirebase(
-    var title, description, category, imageUrl, String? status) async {
+    var title, description, category, imageUrl, String? status, reward) async {
   var userID = AuthService().currentUser!.uid;
   await FirebaseFirestore.instance.collection("Posts").add({
     "title": title,
@@ -46,6 +48,7 @@ savePostToFirebase(
     "Date": DateTime.now(),
     "Lat": selectedLocation!.latitude,
     "Lng": selectedLocation!.longitude,
+    'reward': reward,
   });
 }
 
@@ -92,8 +95,13 @@ class _MapScreenState extends State<MapScreen> {
                       setState(() {
                         isLoading = true;
                       });
-                      await savePostToFirebase(widget.title, widget.description,
-                          widget.category, widget.imageUrl, widget.status);
+                      await savePostToFirebase(
+                          widget.title,
+                          widget.description,
+                          widget.category,
+                          widget.imageUrl,
+                          widget.status,
+                          widget.reward);
                       ScaffoldMessenger.of(context).showSnackBar(
                           snackBarSuccess(
                               "success", "Post created successfully"));

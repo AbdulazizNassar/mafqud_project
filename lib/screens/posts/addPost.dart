@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:path/path.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -26,7 +27,7 @@ class AddPosts extends StatefulWidget {
 
 class _AddPostsState extends State<AddPosts> {
   String dropdownValue = 'Electronics';
-  var title, description, category, imageName, imageUrl;
+  var title, description, category, imageName, imageUrl, reward;
   String? status;
   String msg = '';
   var selectedValue;
@@ -55,6 +56,7 @@ class _AddPostsState extends State<AddPosts> {
                     category: category,
                     imageUrl: imageUrl,
                     status: status,
+                    reward: reward,
                   )));
       setState(() {
         msg = "Please choose image";
@@ -282,6 +284,7 @@ class _AddPostsState extends State<AddPosts> {
                   )
                 ],
               ),
+
               const SizedBox(
                 height: 7,
               ),
@@ -325,7 +328,43 @@ class _AddPostsState extends State<AddPosts> {
                   //Do something when changing the item if you want.
                 },
               ),
-              const SizedBox(height: 25),
+              const SizedBox(
+                height: 7,
+              ),
+              Row(
+                children: const [
+                  Text(
+                    "Reward",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+                  )
+                ],
+              ),
+              const SizedBox(
+                height: 7,
+              ),
+              TextFormField(
+                validator: (val) {
+                  if (!val!.isNum) {
+                    return "Enter Reward Value";
+                  }
+                },
+                maxLines: 1,
+                onSaved: (val) {
+                  reward = val;
+                },
+                decoration: InputDecoration(
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 10,
+                  ),
+                  hintText: '0 SAR',
+                  hintStyle: const TextStyle(fontSize: 14),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 15),
               Row(
                 children: const [
                   Text(
@@ -363,26 +402,31 @@ class _AddPostsState extends State<AddPosts> {
                 style: const TextStyle(color: Colors.red),
               ),
               const SizedBox(height: 2),
-              ElevatedButton(
-                onPressed: () {
-                  showBottomSheet(context);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue[900],
-                ),
-                child: const Text("Add Image"),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      showBottomSheet(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue[900],
+                    ),
+                    child: const Text("Add Image"),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      createPost(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.fromLTRB(60, 5, 60, 5),
+                      backgroundColor: Colors.blue[900],
+                    ),
+                    child: const Text('Select Location'),
+                  )
+                ],
               ),
-
-              ElevatedButton(
-                onPressed: () {
-                  createPost(context);
-                },
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.fromLTRB(60, 5, 60, 5),
-                  backgroundColor: Colors.blue[900],
-                ),
-                child: const Text('Select Location'),
-              )
             ],
           ),
         ),
