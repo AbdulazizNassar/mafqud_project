@@ -19,7 +19,8 @@ import '../../shared/size_config.dart';
 import 'package:mafqud_project/services/googleMap/googleMapsAddPosts.dart';
 
 class AddPosts extends StatefulWidget {
-  const AddPosts({Key? key}) : super(key: key);
+  AddPosts({Key? key, required this.paths}) : super(key: key);
+  final paths;
 
   @override
   State<AddPosts> createState() => _AddPostsState();
@@ -27,14 +28,13 @@ class AddPosts extends StatefulWidget {
 
 class _AddPostsState extends State<AddPosts> {
   String dropdownValue = 'Electronics';
-  var title, description, category, imageName, imageUrl, reward;
+  var title, description, category, imageName, reward;
   String? status;
   String msg = '';
   var selectedValue;
   var startlocation;
   double lat = 0.0;
   double long = 0.0;
-
   late MapScreen postition;
 
   late File file;
@@ -49,48 +49,20 @@ class _AddPostsState extends State<AddPosts> {
           context,
           MaterialPageRoute(
               builder: (context) => MapScreen(
+                    paths: widget.paths,
                     lat: lat,
                     long: long,
                     title: title,
                     description: description,
                     category: category,
-                    imageUrl: imageUrl,
                     status: status,
                     reward: reward.toString().isEmpty ? '0' : reward,
                   )));
-      setState(() {
-        msg = "Please choose image";
-      });
     } else {
       setState(() {
         msg = "Please choose type of the post";
       });
     }
-  }
-
-  imgUpload(file) async {
-    if (file == null) return 'Please choose image';
-    //Import dart:core
-    String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
-
-    /*Step 2: Upload to Firebase storage*/
-    //Install firebase_storage
-    //Import the library
-
-    //Get a reference to storage root
-    Reference referenceRoot = FirebaseStorage.instance.ref();
-    Reference referenceDirImages = referenceRoot.child('images');
-
-    //Create a reference for the image to be stored
-    Reference referenceImageToUpload = referenceDirImages.child(file.name);
-
-    //Handle errors/success
-    try {
-      //Store the file
-      await referenceImageToUpload.putFile(File(file!.path));
-      //Success: get the download URL
-      imageUrl = await referenceImageToUpload.getDownloadURL();
-    } catch (error) {}
   }
 
   Future<Position> getUserCurrentLocation() async {
@@ -102,80 +74,10 @@ class _AddPostsState extends State<AddPosts> {
     return await Geolocator.getCurrentPosition();
   }
 
-  showBottomSheet(BuildContext context) {
-    ImagePicker picker = ImagePicker();
-    XFile? file;
-    return showModalBottomSheet(
-        context: context,
-        builder: (context) {
-          return Container(
-            padding: const EdgeInsets.all(20),
-            height: 190,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  "Please Choose Image",
-                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                ),
-                InkWell(
-                  onTap: () async {
-                    file = await picker.pickImage(source: ImageSource.gallery);
-                    await imgUpload(file);
-                  },
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(10),
-                    child: Row(
-                      children: const [
-                        Icon(
-                          Icons.photo_outlined,
-                          size: 30,
-                        ),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        Text(
-                          "From Gallery",
-                          style: TextStyle(fontSize: 20),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                InkWell(
-                  onTap: () async {
-                    file = await picker.pickImage(source: ImageSource.camera);
-                    await imgUpload(file);
-                  },
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(10),
-                    child: Row(
-                      children: const [
-                        Icon(
-                          Icons.camera,
-                          size: 30,
-                        ),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        Text(
-                          "From Camera",
-                          style: TextStyle(fontSize: 20),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        });
-  }
-
   @override
   void initState() {
+    print("====================");
+    print(widget.paths);
     setState(() {
       getUserCurrentLocation().then((value) {
         lat = value.latitude;
@@ -411,15 +313,6 @@ class _AddPostsState extends State<AddPosts> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      showBottomSheet(context);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue[900],
-                    ),
-                    child: const Text("Add Image"),
-                  ),
                   ElevatedButton(
                     onPressed: () {
                       createPost(context);

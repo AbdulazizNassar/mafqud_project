@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:mafqud_project/screens/posts/test.dart';
 import 'package:mafqud_project/services/auth.dart';
 import 'package:mafqud_project/services/googleMap/googleMapsShowPosts.dart';
 import 'package:mafqud_project/services/notification.dart';
@@ -120,7 +121,10 @@ class _PostsState extends State<Posts> {
               FloatingActionButton(
                 backgroundColor: Colors.blue[900],
                 onPressed: () {
-                  Navigator.of(context).pushNamed("AddPost");
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const addImages()));
                 },
                 child: const Icon(Icons.add),
               ),
@@ -323,6 +327,7 @@ class _PostsState extends State<Posts> {
     );
   }
 
+  List<String> list = [];
   FutureBuilder<QuerySnapshot<Object?>> displayPosts(
       String status, String searchValue, String category) {
     return FutureBuilder<QuerySnapshot>(
@@ -333,6 +338,9 @@ class _PostsState extends State<Posts> {
           } else {
             if (snapshot.data!.docs.isEmpty) {
               return noPostFoundMsg;
+            } else {
+              print(';================');
+              print(snapshot.data!.docs.first['image']);
             }
             if (category.isNotEmpty) {
               Iterable<QueryDocumentSnapshot<Object?>> categoryQuery =
@@ -345,6 +353,7 @@ class _PostsState extends State<Posts> {
                     ...categoryQuery.map((QueryDocumentSnapshot<Object?> post) {
                       return PostCards(
                         posts: post,
+                        image: post['image'],
                       );
                     })
                   ],
@@ -355,7 +364,9 @@ class _PostsState extends State<Posts> {
               return ListView.builder(
                 itemCount: snapshot.data!.docs.length,
                 itemBuilder: (context, index) {
-                  return PostCards(posts: snapshot.data!.docs[index]);
+                  return PostCards(
+                    posts: snapshot.data!.docs[index],
+                  );
                 },
               );
             } else {
@@ -370,6 +381,7 @@ class _PostsState extends State<Posts> {
                     ...titleQuery.map((QueryDocumentSnapshot<Object?> post) {
                       return PostCards(
                         posts: post,
+                        image: post["image"],
                       );
                     })
                   ],

@@ -12,8 +12,10 @@ class Details extends StatefulWidget {
   final posts;
   final locality;
   final subLocality;
+  final images;
 
-  const Details({super.key, this.posts, this.locality, this.subLocality});
+  const Details(
+      {super.key, this.posts, this.locality, this.subLocality, this.images});
 
   @override
   State<Details> createState() => _DetailsState();
@@ -47,6 +49,51 @@ class _DetailsState extends State<Details> with TickerProviderStateMixin {
       ),
       body: _buildProductDetailsPage(context),
       bottomNavigationBar: _buildBottomNavigationBar(context),
+    );
+  }
+
+  buildProductImagesWidgets(dynamic posts) {
+    TabController imagesController = TabController(length: 1, vsync: this);
+    List<String> list = [];
+    for (var i = 0; i < 3; i++) {
+      if (posts["image"] != null) {
+        list.add(posts["image"][i]);
+      }
+    }
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: SizedBox(
+        height: 250.0,
+        child: Center(
+          child: DefaultTabController(
+              length: list.length,
+              child: GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3),
+                  itemCount: list.length,
+                  itemBuilder: (BuildContext context, index) {
+                    return TabBarView(controller: imagesController, children: [
+                      Stack(
+                        children: <Widget>[
+                          TabBarView(
+                            controller: imagesController,
+                            children: [
+                              Container(
+                                alignment: const FractionalOffset(0.5, 0.95),
+                                child: TabPageSelector(
+                                  controller: imagesController,
+                                  selectedColor: Colors.grey,
+                                  color: Colors.white,
+                                ),
+                              )
+                            ],
+                          )
+                        ],
+                      ),
+                    ]);
+                  })),
+        ),
+      ),
     );
   }
 

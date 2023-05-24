@@ -5,7 +5,7 @@ import 'package:mafqud_project/shared/AlertBox.dart';
 import '../screens/posts/DetailPage.dart';
 import '../screens/posts/Details.dart';
 
-showPostDetailsPage({required posts, required context}) async {
+showPostDetailsPage({required posts, required context, required images}) async {
   try {
     List<Placemark> placemarks =
         await placemarkFromCoordinates(posts["Lat"], posts['Lng']);

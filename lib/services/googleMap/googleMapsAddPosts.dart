@@ -6,26 +6,27 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_api_headers/google_api_headers.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mafqud_project/screens/posts/posts.dart';
 import 'package:mafqud_project/services/auth.dart';
 import 'package:mafqud_project/shared/AlertBox.dart';
 import 'package:mafqud_project/shared/loading.dart';
 
 class MapScreen extends StatefulWidget {
-  const MapScreen(
+  MapScreen(
       {super.key,
       this.long,
       this.lat,
       this.title,
       this.description,
       this.category,
-      this.imageUrl,
+      required this.paths,
       this.status,
       this.reward});
   final title;
   final description;
   final category;
-  final imageUrl;
+  final paths;
   final status;
   final reward;
   final lat;
@@ -38,6 +39,10 @@ LatLng? selectedLocation;
 savePostToFirebase(
     var title, description, category, imageUrl, String? status, reward) async {
   var userID = AuthService().currentUser!.uid;
+  List<String> imagePath = [];
+
+  print("===5555==========");
+
   await FirebaseFirestore.instance.collection("Posts").add({
     "title": title,
     "description": description,
@@ -99,15 +104,16 @@ class _MapScreenState extends State<MapScreen> {
                           widget.title,
                           widget.description,
                           widget.category,
-                          widget.imageUrl,
+                          widget.paths,
                           widget.status,
                           widget.reward);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          snackBarSuccess(
-                              "success", "Post created successfully"));
                       setState(() {
                         isLoading = false;
                       });
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          snackBarSuccess(
+                              "success", "Post created successfully"));
+
                       Navigator.of(context).pushReplacementNamed("Posts");
                     }
                   },

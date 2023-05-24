@@ -4,18 +4,21 @@ import 'package:mafqud_project/shared/DateTime.dart';
 import '../services/showPostDetails.dart';
 
 class PostCards extends StatelessWidget {
-  const PostCards({
+  PostCards({
     super.key,
     required this.posts,
+    this.image,
   });
   final posts;
+  dynamic image;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () async {
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
-        await showPostDetailsPage(posts: posts, context: context);
+        await showPostDetailsPage(
+            posts: posts, context: context, images: posts["image"]);
       },
       child: Card(
         child: Row(
@@ -23,7 +26,7 @@ class PostCards extends StatelessWidget {
             Expanded(
                 flex: 3,
                 child: Image.network(
-                  posts['image'],
+                  posts["image"][0],
                   fit: BoxFit.cover,
                 )),
             Expanded(

@@ -5,31 +5,6 @@ import '../../shared/DateTime.dart';
 import '../../shared/constants.dart';
 import '../../shared/loading.dart';
 
-buildProductImagesWidgets(dynamic posts) {
-  // TabController imagesController = TabController(length: 1, vsync: this);
-
-  return Padding(
-    padding: const EdgeInsets.all(16.0),
-    child: SizedBox(
-      height: 250.0,
-      child: Center(
-        child: DefaultTabController(
-          length: 1,
-          child: Stack(
-            children: <Widget>[
-              Image.network(
-                posts['image'],
-                fit: BoxFit.fill,
-                height: 350,
-              ),
-            ],
-          ),
-        ),
-      ),
-    ),
-  );
-}
-
 buildProductTitleWidget(dynamic posts) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 12.0),
