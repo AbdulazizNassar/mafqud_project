@@ -4,6 +4,7 @@ import 'package:mafqud_project/services/auth.dart';
 import 'package:mafqud_project/services/googleMap/googleMapsShowPosts.dart';
 import 'package:mafqud_project/services/notification.dart';
 import 'package:mafqud_project/shared/NavMenu.dart';
+import 'package:mafqud_project/shared/constants.dart';
 import '../../shared/AlertBox.dart';
 import '../../shared/PostCards.dart';
 import '../../shared/loading.dart';
@@ -49,11 +50,13 @@ class _PostsState extends State<Posts> {
 
   @override
   Widget build(BuildContext context) => postsMaterialApp(context);
+
   bool searchFlag = false;
   bool categoryFlag = false;
   Icon customIcon = const Icon(Icons.search);
   Widget customSearchBar = const Text('Posts');
   CategoryItem? selectedMenu;
+  bool highLightedColor = false;
   Widget postsMaterialApp(BuildContext context) {
     return DefaultTabController(
       length: 2,
@@ -119,48 +122,68 @@ class _PostsState extends State<Posts> {
               const SizedBox(
                 height: 15,
               ),
-              PopupMenuButton<CategoryItem>(
-                icon: const Icon(Icons.abc),
-                initialValue: selectedMenu,
-                onSelected: (CategoryItem item) {
-                  setState(() {
-                    categoryFlag = true;
-                    selectedMenu = item;
-                  });
-                },
-                itemBuilder: (BuildContext context) =>
-                    <PopupMenuEntry<CategoryItem>>[
-                  PopupMenuItem(
-                    value: CategoryItem.Animals,
-                    child: ListTile(
-                      leading: IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.animation_outlined)),
-                      title: Text("Animals",
-                          style: Theme.of(context).textTheme.bodyLarge),
+              Theme(
+                data: themeData(context, highLightedColor),
+                child: FloatingActionButton(
+                  onPressed: () {},
+                  backgroundColor: Colors.blue.shade900,
+                  child: PopupMenuButton<CategoryItem>(
+                    icon: const Icon(
+                      Icons.filter_alt_outlined,
+                      color: Colors.white,
                     ),
+                    initialValue: selectedMenu,
+                    onCanceled: () {
+                      setState(() {
+                        highLightedColor = false;
+                        categoryFlag = false;
+                      });
+                    },
+                    onSelected: (CategoryItem item) {
+                      setState(() {
+                        highLightedColor = true;
+                        categoryFlag = true;
+                        selectedMenu = item;
+                      });
+                    },
+                    itemBuilder: (BuildContext context) =>
+                        <PopupMenuEntry<CategoryItem>>[
+                      PopupMenuItem(
+                        value: CategoryItem.Animals,
+                        child: ListTile(
+                          leading: IconButton(
+                              onPressed: () {},
+                              icon: const Icon(Icons.pets_outlined,
+                                  color: Colors.white)),
+                          title:
+                              Text("Animals", style: popupMenuStyle(context)),
+                        ),
+                      ),
+                      PopupMenuItem(
+                        value: CategoryItem.Electronics,
+                        child: ListTile(
+                          leading: IconButton(
+                              onPressed: () {},
+                              icon: const Icon(Icons.phone_outlined,
+                                  color: Colors.white)),
+                          title: Text("Electronics",
+                              style: popupMenuStyle(context)),
+                        ),
+                      ),
+                      PopupMenuItem(
+                        value: CategoryItem.Personalitems,
+                        child: ListTile(
+                          leading: IconButton(
+                              onPressed: () {},
+                              icon: const Icon(Icons.person_search_outlined,
+                                  color: Colors.white)),
+                          title: Text("Personal Items",
+                              style: popupMenuStyle(context)),
+                        ),
+                      ),
+                    ],
                   ),
-                  PopupMenuItem(
-                    value: CategoryItem.Electronics,
-                    child: ListTile(
-                      leading: IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.phone_outlined)),
-                      title: Text("Electronics",
-                          style: Theme.of(context).textTheme.bodyLarge),
-                    ),
-                  ),
-                  PopupMenuItem(
-                    value: CategoryItem.Personalitems,
-                    child: ListTile(
-                      leading: IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.person_search_outlined)),
-                      title: Text("Personal Items",
-                          style: Theme.of(context).textTheme.bodyLarge),
-                    ),
-                  ),
-                ],
+                ),
               ),
             ]),
       ),
@@ -328,7 +351,7 @@ class _PostsState extends State<Posts> {
   Iterable<QueryDocumentSnapshot<Object?>> searchByCategory(
       AsyncSnapshot<QuerySnapshot<Object?>> snapshot, String category) {
     return snapshot.data!.docs.where((QueryDocumentSnapshot<Object?> element) =>
-        element['category'].toString().toLowerCase().contains(category));
+        element['category'].toString().contains(category));
   }
 
   Widget noPostFoundMsg = Row(

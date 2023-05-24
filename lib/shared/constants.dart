@@ -41,4 +41,16 @@ InputDecoration textFormFieldStyle(String LabelText) {
   );
 }
 
+ThemeData themeData(BuildContext context, bool flag) {
+  return Theme.of(context).copyWith(
+    highlightColor: flag ? Colors.green.shade700 : Colors.blue.shade900,
+    cardColor: Colors.blue.shade900,
+    textTheme: const TextTheme(displayLarge: TextStyle(color: Colors.white)),
+  );
+}
+
+TextStyle? popupMenuStyle(BuildContext context) {
+  return Theme.of(context).textTheme.bodyLarge;
+}
+
 String? uId = 'start';
