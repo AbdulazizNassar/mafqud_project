@@ -56,7 +56,7 @@ class _AddPostsState extends State<AddPosts> {
                     category: category,
                     imageUrl: imageUrl,
                     status: status,
-                    reward: reward,
+                    reward: reward.toString().isEmpty ? '0' : reward,
                   )));
       setState(() {
         msg = "Please choose image";
@@ -344,12 +344,17 @@ class _AddPostsState extends State<AddPosts> {
               ),
               TextFormField(
                 validator: (val) {
-                  if (!val!.isNum) {
+                  if (val == null || val.isEmpty) {
+                    return null;
+                  }
+                  if (!val.isNum && !val.isNotEmpty) {
                     return "Enter Reward Value";
                   }
                 },
                 maxLines: 1,
                 onSaved: (val) {
+                  print(val.isBlank);
+                  print("======================");
                   reward = val;
                 },
                 decoration: InputDecoration(
@@ -357,7 +362,7 @@ class _AddPostsState extends State<AddPosts> {
                     horizontal: 20,
                     vertical: 10,
                   ),
-                  hintText: '0 SAR',
+                  hintText: '0 SAR (OPTIONAL)',
                   hintStyle: const TextStyle(fontSize: 14),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(15),
