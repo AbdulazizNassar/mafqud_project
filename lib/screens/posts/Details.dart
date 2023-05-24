@@ -53,13 +53,14 @@ class _DetailsState extends State<Details> with TickerProviderStateMixin {
   }
 
   buildProductImagesWidgets(dynamic posts) {
-    TabController imagesController = TabController(length: 1, vsync: this);
     List<String> list = [];
     for (var i = 0; i < 3; i++) {
       if (posts["image"] != null) {
         list.add(posts["image"][i]);
       }
     }
+    TabController imagesController =
+        TabController(length: list.length - 1, vsync: this);
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: SizedBox(
@@ -68,29 +69,32 @@ class _DetailsState extends State<Details> with TickerProviderStateMixin {
           child: DefaultTabController(
               length: list.length,
               child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3),
-                  itemCount: list.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: list.length - 1),
+                  itemCount: list.length - 1,
                   itemBuilder: (BuildContext context, index) {
-                    return TabBarView(controller: imagesController, children: [
-                      Stack(
-                        children: <Widget>[
-                          TabBarView(
-                            controller: imagesController,
-                            children: [
-                              Container(
-                                alignment: const FractionalOffset(0.5, 0.95),
-                                child: TabPageSelector(
-                                  controller: imagesController,
-                                  selectedColor: Colors.grey,
-                                  color: Colors.white,
-                                ),
-                              )
-                            ],
-                          )
-                        ],
-                      ),
-                    ]);
+                    return Stack(
+                      children: <Widget>[
+                        TabBarView(
+                          controller: imagesController,
+                          children: [
+                            Image.network(
+                              list[index],
+                              fit: BoxFit.fill,
+                              height: 350,
+                            ),
+                            Container(
+                              alignment: const FractionalOffset(0.5, 0.95),
+                              child: TabPageSelector(
+                                controller: imagesController,
+                                selectedColor: Colors.grey,
+                                color: Colors.white,
+                              ),
+                            )
+                          ],
+                        )
+                      ],
+                    );
                   })),
         ),
       ),
