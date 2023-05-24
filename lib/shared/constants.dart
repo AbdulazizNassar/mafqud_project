@@ -49,6 +49,13 @@ ThemeData themeData(BuildContext context, bool flag) {
   );
 }
 
+Icon listIcon(bool highLightedColor, Icon icon) => highLightedColor
+    ? const Icon(
+        Icons.close_outlined,
+        color: Colors.red,
+      )
+    : icon;
+
 TextStyle? popupMenuStyle(BuildContext context) {
   return Theme.of(context).textTheme.bodyLarge;
 }
