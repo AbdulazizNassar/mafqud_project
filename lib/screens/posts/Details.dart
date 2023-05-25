@@ -60,43 +60,36 @@ class _DetailsState extends State<Details> with TickerProviderStateMixin {
       }
     }
     TabController imagesController =
-        TabController(length: list.length - 1, vsync: this);
+        TabController(length: list.length, vsync: this);
+
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: SizedBox(
-        height: 250.0,
+        height: 250,
         child: Center(
-          child: DefaultTabController(
-              length: list.length,
-              child: GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: list.length - 1),
-                  itemCount: list.length - 1,
-                  itemBuilder: (BuildContext context, index) {
-                    return Stack(
-                      children: <Widget>[
-                        TabBarView(
-                          controller: imagesController,
-                          children: [
-                            Image.network(
-                              list[index],
-                              fit: BoxFit.fill,
-                              height: 350,
-                            ),
-                            Container(
-                              alignment: const FractionalOffset(0.5, 0.95),
-                              child: TabPageSelector(
-                                controller: imagesController,
-                                selectedColor: Colors.grey,
-                                color: Colors.white,
-                              ),
-                            )
-                          ],
-                        )
-                      ],
-                    );
-                  })),
-        ),
+            child: DefaultTabController(
+                length: list.length,
+                child: Stack(
+                  children: <Widget>[
+                    TabBarView(
+                      children: list.map((image) {
+                        if (!image.contains('https:??')) {
+                          return Text('data');
+                        } else {
+                          return Image.network(image);
+                        }
+                      }).toList(),
+                    ),
+                    Container(
+                      alignment: const FractionalOffset(0.5, 0.95),
+                      child: TabPageSelector(
+                        controller: imagesController,
+                        selectedColor: Colors.grey,
+                        color: Colors.white,
+                      ),
+                    )
+                  ],
+                ))),
       ),
     );
   }
