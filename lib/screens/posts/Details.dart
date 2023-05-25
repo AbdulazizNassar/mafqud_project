@@ -55,8 +55,12 @@ class _DetailsState extends State<Details> with TickerProviderStateMixin {
   buildProductImagesWidgets(dynamic posts) {
     List<String> list = [];
     for (var i = 0; i < 3; i++) {
-      if (posts["image"] != null) {
-        list.add(posts["image"][i]);
+      try {
+        if (posts["image"][i] != null) {
+          list.add(posts["image"][i]);
+        }
+      } catch (e) {
+        print(e);
       }
     }
     TabController imagesController =
