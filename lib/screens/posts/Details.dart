@@ -73,11 +73,7 @@ class _DetailsState extends State<Details> with TickerProviderStateMixin {
                   children: <Widget>[
                     TabBarView(
                       children: list.map((image) {
-                        if (!image.contains('https:??')) {
-                          return Text('data');
-                        } else {
-                          return Image.network(image);
-                        }
+                        return Image.network(image);
                       }).toList(),
                     ),
                     Container(
