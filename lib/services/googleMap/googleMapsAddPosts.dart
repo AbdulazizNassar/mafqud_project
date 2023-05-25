@@ -80,7 +80,7 @@ class _MapScreenState extends State<MapScreen> {
       ? Loading()
       : Scaffold(
           appBar: AppBar(
-            title: const Text("Select Location 2/2"),
+            title: const Text("Select Location 2/3"),
             centerTitle: true,
             backgroundColor: Colors.blue.shade900,
             leading: IconButton(

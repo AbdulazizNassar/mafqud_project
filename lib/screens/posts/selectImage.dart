@@ -159,7 +159,7 @@ class _addImagesState extends State<addImages> {
                     child: images.isEmpty
                         ? const Center(
                             child: Text(
-                            "No Images uploaded",
+                            "No Images uploaded\n Maximum 3 images",
                             style: TextStyle(fontSize: 25),
                           ))
                         : ListView.separated(

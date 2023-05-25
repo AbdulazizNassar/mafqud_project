@@ -84,7 +84,7 @@ class _DetailsState extends State<Details> with TickerProviderStateMixin {
                       alignment: const FractionalOffset(0.5, 0.95),
                       child: TabPageSelector(
                         controller: imagesController,
-                        selectedColor: Colors.grey,
+                        selectedColor: Colors.blue.shade900,
                         color: Colors.white,
                       ),
                     )

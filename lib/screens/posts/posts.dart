@@ -338,9 +338,6 @@ class _PostsState extends State<Posts> {
           } else {
             if (snapshot.data!.docs.isEmpty) {
               return noPostFoundMsg;
-            } else {
-              print(';================');
-              print(snapshot.data!.docs.first['image']);
             }
             if (category.isNotEmpty) {
               Iterable<QueryDocumentSnapshot<Object?>> categoryQuery =

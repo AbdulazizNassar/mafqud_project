@@ -76,8 +76,6 @@ class _AddPostsState extends State<AddPosts> {
 
   @override
   void initState() {
-    print("====================");
-    print(widget.paths);
     setState(() {
       getUserCurrentLocation().then((value) {
         lat = value.latitude;
@@ -96,7 +94,7 @@ class _AddPostsState extends State<AddPosts> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Add Post 1/2"),
+        title: const Text("Add Post 2/3"),
         backgroundColor: Colors.blue[900],
       ),
       body: Form(
@@ -255,8 +253,6 @@ class _AddPostsState extends State<AddPosts> {
                 },
                 maxLines: 1,
                 onSaved: (val) {
-                  print(val.isBlank);
-                  print("======================");
                   reward = val;
                 },
                 decoration: InputDecoration(

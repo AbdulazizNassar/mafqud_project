@@ -22,9 +22,12 @@ buildProductTitleWidget(dynamic posts) {
               size: 30,
               color: Colors.blue.shade900,
             ),
-            Text(
-              readTimestamp(posts["Date"]),
-              style: textStyle,
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                readTimestamp(posts["Date"]),
+                style: textStyle,
+              ),
             ),
           ],
         ),
@@ -36,29 +39,39 @@ buildProductTitleWidget(dynamic posts) {
 buildStatusWidget(dynamic posts) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 12.0),
-    child: Row(
-      children: <Widget>[
-        const Text(
-          "Status:",
-          style: TextStyle(fontSize: 16.0, color: Colors.black),
-        ),
-        const SizedBox(
-          width: 8.0,
-        ),
-        Text(
-          "${posts['status']}",
-          style: TextStyle(
-            fontSize: 18.0,
-            color: Colors.blue[700],
+    child: Stack(
+      children: [
+        Container(
+          margin: const EdgeInsets.fromLTRB(0, 0, 50, 0),
+          child: Row(
+            children: [
+              const Text(
+                "Status:",
+                style: TextStyle(fontSize: 16.0, color: Colors.black),
+              ),
+              const SizedBox(
+                width: 8.0,
+              ),
+              Text(
+                "${posts['status']}",
+                style: TextStyle(
+                  fontSize: 18.0,
+                  color: Colors.blue[700],
+                ),
+              ),
+            ],
           ),
         ),
         Container(
-          margin: const EdgeInsets.fromLTRB(100, 0, 50, 0),
+          margin: const EdgeInsets.fromLTRB(150, 0, 50, 0),
           child: Row(
             children: [
               const Text(
                 "Reward:",
                 style: TextStyle(fontSize: 16.0, color: Colors.black),
+              ),
+              const SizedBox(
+                width: 8.0,
               ),
               Text(
                 "${posts['reward']} SAR",
