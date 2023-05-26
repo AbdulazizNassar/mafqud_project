@@ -17,6 +17,7 @@ class _SignInState extends State<SignIn> {
   final GlobalKey<FormState> _formState = GlobalKey<FormState>();
 
   var email, password;
+  var _passwordVisible = true;
 
   signInWithEmailAndPassword() async {
     var formData = _formState.currentState;
@@ -77,7 +78,10 @@ class _SignInState extends State<SignIn> {
                                 }
                                 return null;
                               },
-                              decoration: textFormFieldStyle('Email'),
+                              decoration: textFormFieldStyle(
+                                'Email',
+                                Icons.email_outlined,
+                              ),
                             ),
                             SizedBox(
                               height: SizeConfig.defaultSize * 3,
@@ -86,11 +90,26 @@ class _SignInState extends State<SignIn> {
                               onSaved: (val) {
                                 password = val!;
                               },
-                              decoration: textFormFieldStyle('Password'),
+                              decoration: textFormFieldStyle(
+                                'Password',
+                                Icons.key_outlined,
+                                IconButton(
+                                  icon: Icon(_passwordVisible
+                                      ? Icons.visibility_outlined
+                                      : Icons.visibility_off_outlined),
+                                  onPressed: () {
+                                    setState(
+                                      () {
+                                        _passwordVisible = !_passwordVisible;
+                                      },
+                                    );
+                                  },
+                                ),
+                              ),
                               validator: (val) => val!.isEmpty
                                   ? "password cannot be empty"
                                   : null,
-                              obscureText: true,
+                              obscureText: _passwordVisible,
                             ),
                             Align(
                               alignment: Alignment.centerRight,
@@ -102,7 +121,6 @@ class _SignInState extends State<SignIn> {
                                 onTap: () async {
                                   AuthStatus status = await AuthService()
                                       .resetPassword(email: email);
-                                  print(status.name);
                                   if (status.name == "unknown" ||
                                       status.name == "invalidEmail") {
                                     ScaffoldMessenger.of(context).showSnackBar(

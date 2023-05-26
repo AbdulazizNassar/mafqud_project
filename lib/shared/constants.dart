@@ -21,15 +21,17 @@ const textStyle = TextStyle(
   fontWeight: FontWeight.bold,
   fontSize: 25.0,
 );
-InputDecoration textFormFieldStyle(String LabelText) {
+InputDecoration textFormFieldStyle(String LabelText, IconData? icon,
+    [IconButton? iconButton]) {
   return InputDecoration(
     labelText: LabelText,
     labelStyle: const TextStyle(color: primaryColor),
     prefixIcon: Icon(
-      Icons.mail,
+      icon,
       size: SizeConfig.defaultSize * 2,
       color: primaryColor,
     ),
+    suffixIcon: iconButton,
     filled: true,
     enabledBorder: UnderlineInputBorder(
       borderRadius: BorderRadius.circular(10),
