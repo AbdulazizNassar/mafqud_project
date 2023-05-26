@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "338125010819-n6h7ir86liqqasm6mmr6cn5qcag70cso.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.mafqud_project",
+            "certificate_hash": "9bbbdcac3985ac1510d23d35d941c8f85db47a16"
+          }
+        },
+        {
           "client_id": "338125010819-gfomqp3khc70bhfslm9cg909v8sosj4o.apps.googleusercontent.com",
           "client_type": 3
         }
