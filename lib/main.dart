@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
         appBarTheme: const AppBarTheme(color: Colors.blue, elevation: 2),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      initialRoute: "Home",
+      initialRoute: "MainScreen",
       routes: {
         "MainScreen": (context) => const MainScreen(),
         "Auth": (context) => Auth(),
