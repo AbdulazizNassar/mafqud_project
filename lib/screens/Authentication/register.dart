@@ -6,7 +6,6 @@ import 'package:mafqud_project/shared/constants.dart';
 import 'package:regexed_validator/regexed_validator.dart';
 
 import '../../shared/AlertBox.dart';
-import '../chat/cubit/chat_cubit.dart';
 
 class Register extends StatefulWidget {
   @override
@@ -16,7 +15,6 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
   final GlobalKey<FormState> _formState = GlobalKey<FormState>();
   var email, password, idNum, PhoneNum, name;
-  bool _passwordVisible = true;
 
   signup() async {
     var formData = _formState.currentState;
@@ -24,11 +22,8 @@ class _RegisterState extends State<Register> {
       formData.save();
       UserCredential response = await AuthService()
           .registerWithEmailAndPassword(name, email, password, idNum, PhoneNum);
-      uId = response.user!.uid;
-      print(uId);
-      ChatCubit.get(context).getUserData();
       if (response != null) {
-        Navigator.of(context).pushReplacementNamed("Posts");
+        Navigator.of(context).pushReplacementNamed("Home");
       }
     }
   }
@@ -101,17 +96,35 @@ class _RegisterState extends State<Register> {
 
                             //Email Field
                             TextFormField(
-                                onSaved: (val) {
-                                  email = val!;
-                                },
-                                validator: (val) {
-                                  if (!validator.email(val!)) {
-                                    return "Please enter a valid email";
-                                  }
-                                  return null;
-                                },
-                                decoration:
-                                    textFormFieldStyle('Email', Icons.email)),
+                              onSaved: (val) {
+                                email = val!;
+                              },
+                              validator: (val) {
+                                if (!validator.email(val!)) {
+                                  return "Please enter a valid email";
+                                }
+                                return null;
+                              },
+                              decoration: InputDecoration(
+                                labelText: 'Email',
+                                labelStyle:
+                                    const TextStyle(color: primaryColor),
+                                prefixIcon: Icon(
+                                  Icons.mail,
+                                  size: SizeConfig.defaultSize * 2,
+                                  color: primaryColor,
+                                ),
+                                filled: true,
+                                enabledBorder: UnderlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide.none,
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide:
+                                        const BorderSide(color: primaryColor)),
+                              ),
+                            ),
                             SizedBox(
                               height: SizeConfig.defaultSize * 2,
                             ),
@@ -121,28 +134,28 @@ class _RegisterState extends State<Register> {
                               onSaved: (val) {
                                 password = val!;
                               },
-                              obscureText: _passwordVisible,
+                              obscureText: true,
                               validator: (val) => val!.length < 6
                                   ? "Password must be at least 6 characters long"
                                   : null,
-                              decoration: textFormFieldStyle(
-                                "Password",
-                                Icons.key_outlined,
-                                IconButton(
-                                  icon: Icon(
-                                    _passwordVisible
-                                        ? Icons.visibility_outlined
-                                        : Icons.visibility_off_outlined,
-                                    color: Colors.blueAccent,
-                                  ),
-                                  onPressed: () {
-                                    setState(
-                                      () {
-                                        _passwordVisible = !_passwordVisible;
-                                      },
-                                    );
-                                  },
+                              decoration: InputDecoration(
+                                labelText: 'Password',
+                                labelStyle:
+                                    const TextStyle(color: primaryColor),
+                                prefixIcon: Icon(
+                                  Icons.lock,
+                                  size: SizeConfig.defaultSize * 2,
+                                  color: primaryColor,
                                 ),
+                                filled: true,
+                                enabledBorder: UnderlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide.none,
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide:
+                                        const BorderSide(color: primaryColor)),
                               ),
                             ),
                             SizedBox(

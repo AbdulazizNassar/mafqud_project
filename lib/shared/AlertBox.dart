@@ -93,7 +93,7 @@ signOutConfirm(context) {
       DialogButton(
           child: const Text("Sign out"),
           onPressed: () async {
-            Navigator.of(context).pop();
+            Navigator.pop(context);
             await AuthService().signOut();
             Navigator.of(context).pushReplacement(
                 MaterialPageRoute(builder: ((context) => const MainScreen())));

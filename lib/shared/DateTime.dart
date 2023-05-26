@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
-String readTimestamp(Timestamp? timestamp) {
+String readTimestamp(Timestamp timestamp) {
   var now = DateTime.now();
   var format = DateFormat('h:mm a');
-  var date = DateTime.fromMillisecondsSinceEpoch(timestamp!.seconds * 1000);
+  var date = DateTime.fromMillisecondsSinceEpoch(timestamp.seconds * 1000);
   var diff = now.difference(date);
   var time = '';
 

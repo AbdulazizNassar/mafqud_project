@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:mafqud_project/screens/MenuItems/Notifications/constant.dart';
+import 'package:mafqud_project/screens/Notifications/constant.dart';
 import 'package:mafqud_project/shared/DateTime.dart';
 
 class NotificationTiles extends StatelessWidget {
@@ -15,13 +15,11 @@ class NotificationTiles extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      tileColor:
-          notification['status'] == "new" ? Colors.amberAccent : Colors.white,
-      leading: notification['status'] == "new"
-          ? Stack(
-              children: [msgIcon, newIndicator],
-            )
-          : msgIcon,
+      leading: const Icon(
+        Icons.warning,
+        size: 50,
+        color: Colors.redAccent,
+      ),
       title: Text(notification['title'],
           style: const TextStyle(color: kDarkColor)),
       subtitle: Text(notification['subtitle'],

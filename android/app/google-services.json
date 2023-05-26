@@ -1,7 +1,6 @@
 {
   "project_info": {
     "project_number": "338125010819",
-    "firebase_url": "https://mafqud-352bc-default-rtdb.asia-southeast1.firebasedatabase.app",
     "project_id": "mafqud-352bc",
     "storage_bucket": "mafqud-352bc.appspot.com"
   },
@@ -38,13 +37,6 @@
             {
               "client_id": "338125010819-0c97o4th85639qos653ksvgvaknv95qe.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "338125010819-75qvg29luunu949ebiornqtkhu3rov02.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.example.mafqudProject"
-              }
             }
           ]
         }

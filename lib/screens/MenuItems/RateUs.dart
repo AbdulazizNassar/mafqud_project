@@ -44,56 +44,51 @@ class _RatingState extends State<Rating> {
               ),
               drawer: const NavMenu(),
               body: Center(
-                child: rate(),
+                child: Column(
+                  children: <Widget>[
+                    const SizedBox(
+                      height: 40.0,
+                    ),
+                    _heading('Rating'),
+                    _ratingBar(),
+                    const SizedBox(height: 20.0),
+                    SizedBox(
+                      height: 50,
+                      width: 120,
+                      child: ElevatedButton(
+                        child: const Text(
+                          "send",
+                          style: TextStyle(fontSize: 22, color: Colors.white),
+                        ),
+                        onPressed: () async {
+                          if (!(_rating.isNaN)) {
+                            setState(() {
+                              isLoading = true;
+                            });
+                            await ratingCollection.doc(user!.uid).set({
+                              "rating": _rating,
+                              "uid": user!.uid,
+                            });
+                            setState(() {
+                              isLoading = false;
+                              confirm = "  Thank you for rating !";
+                            });
+                          } else {
+                            setState(() {
+                              confirm = "Please Select at least 1 star";
+                            });
+                          }
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 20.0),
+                    if (confirm.isNotEmpty) _confirmation(confirm),
+                  ],
+                ),
               ),
             ),
           ),
         );
-
-  Column rate() {
-    var elevatedButton = ElevatedButton(
-      child: const Text(
-        "send",
-        style: TextStyle(fontSize: 22, color: Colors.white),
-      ),
-      onPressed: () async {
-        if (!(_rating.isNaN)) {
-          setState(() {
-            isLoading = true;
-          });
-          await ratingCollection.doc(user!.uid).set({
-            "rating": _rating,
-            "uid": user!.uid,
-          });
-          setState(() {
-            isLoading = false;
-            confirm = "  Thank you for rating !";
-          });
-        } else {
-          setState(() {
-            confirm = "Please Select at least 1 star";
-          });
-        }
-      },
-    );
-    return Column(
-      children: <Widget>[
-        const SizedBox(
-          height: 40.0,
-        ),
-        _heading('Rating'),
-        _ratingBar(),
-        const SizedBox(height: 20.0),
-        SizedBox(
-          height: 50,
-          width: 120,
-          child: elevatedButton,
-        ),
-        const SizedBox(height: 20.0),
-        if (confirm.isNotEmpty) _confirmation(confirm),
-      ],
-    );
-  }
 
   Widget _ratingBar() {
     return RatingBar.builder(

@@ -1,7 +1,5 @@
 import 'dart:io';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:path/path.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -14,13 +12,13 @@ import 'package:mafqud_project/shared/NavMenu.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:mafqud_project/services/googleMap/googleMapsAddPosts.dart';
+import '../../services/imagePicker.dart';
 import '../../shared/constants.dart';
 import '../../shared/size_config.dart';
 import 'package:mafqud_project/services/googleMap/googleMapsAddPosts.dart';
 
 class AddPosts extends StatefulWidget {
-  AddPosts({Key? key, required this.paths}) : super(key: key);
-  final paths;
+  const AddPosts({Key? key}) : super(key: key);
 
   @override
   State<AddPosts> createState() => _AddPostsState();
@@ -28,13 +26,14 @@ class AddPosts extends StatefulWidget {
 
 class _AddPostsState extends State<AddPosts> {
   String dropdownValue = 'Electronics';
-  var title, description, category, imageName, reward;
+  var title, description, category, imageName, imageUrl;
   String? status;
   String msg = '';
   var selectedValue;
   var startlocation;
   double lat = 0.0;
   double long = 0.0;
+
   late MapScreen postition;
 
   late File file;
@@ -49,15 +48,17 @@ class _AddPostsState extends State<AddPosts> {
           context,
           MaterialPageRoute(
               builder: (context) => MapScreen(
-                    paths: widget.paths,
                     lat: lat,
                     long: long,
                     title: title,
                     description: description,
                     category: category,
+                    imageUrl: imageUrl,
                     status: status,
-                    reward: reward.toString().isEmpty ? '0' : reward,
                   )));
+      setState(() {
+        msg = "Please choose image";
+      });
     } else {
       setState(() {
         msg = "Please choose type of the post";
@@ -72,6 +73,78 @@ class _AddPostsState extends State<AddPosts> {
       await Geolocator.requestPermission();
     });
     return await Geolocator.getCurrentPosition();
+  }
+
+  showBottomSheet(BuildContext context) {
+    ImagePicker picker = ImagePicker();
+    XFile? file;
+    return showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Container(
+            padding: const EdgeInsets.all(20),
+            height: 190,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Please Choose Image",
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                ),
+                InkWell(
+                  onTap: () async {
+                    file = await picker.pickImage(source: ImageSource.gallery);
+                    await imgUpload(file);
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(10),
+                    child: Row(
+                      children: const [
+                        Icon(
+                          Icons.photo_outlined,
+                          size: 30,
+                        ),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Text(
+                          "From Gallery",
+                          style: TextStyle(fontSize: 20),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                InkWell(
+                  onTap: () async {
+                    file = await picker.pickImage(source: ImageSource.camera);
+                    await imgUpload(file);
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(10),
+                    child: Row(
+                      children: const [
+                        Icon(
+                          Icons.camera,
+                          size: 30,
+                        ),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Text(
+                          "From Camera",
+                          style: TextStyle(fontSize: 20),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        });
   }
 
   @override
@@ -94,12 +167,12 @@ class _AddPostsState extends State<AddPosts> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Add Post 2/3"),
+        title: const Text("Add Post 1/2"),
         backgroundColor: Colors.blue[900],
       ),
       body: Form(
         key: _formKey,
-        child: SingleChildScrollView(
+        child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -184,7 +257,6 @@ class _AddPostsState extends State<AddPosts> {
                   )
                 ],
               ),
-
               const SizedBox(
                 height: 7,
               ),
@@ -193,10 +265,14 @@ class _AddPostsState extends State<AddPosts> {
                   category = val;
                 },
                 decoration: InputDecoration(
+                  //Add isDense true and zero Padding.
+                  //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
                   contentPadding: EdgeInsets.zero,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(14),
                   ),
+                  //Add more decoration as you want here
+                  //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
                 ),
                 isExpanded: true,
                 hint: const Text(
@@ -228,46 +304,7 @@ class _AddPostsState extends State<AddPosts> {
                   //Do something when changing the item if you want.
                 },
               ),
-              const SizedBox(
-                height: 7,
-              ),
-              Row(
-                children: const [
-                  Text(
-                    "Reward",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
-                  )
-                ],
-              ),
-              const SizedBox(
-                height: 7,
-              ),
-              TextFormField(
-                validator: (val) {
-                  if (val == null || val.isEmpty) {
-                    return null;
-                  }
-                  if (!val.isNum && !val.isNotEmpty) {
-                    return "Enter Reward Value";
-                  }
-                },
-                maxLines: 1,
-                onSaved: (val) {
-                  reward = val;
-                },
-                decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 10,
-                  ),
-                  hintText: '0 SAR (OPTIONAL)',
-                  hintStyle: const TextStyle(fontSize: 14),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 15),
+              const SizedBox(height: 25),
               Row(
                 children: const [
                   Text(
@@ -305,22 +342,26 @@ class _AddPostsState extends State<AddPosts> {
                 style: const TextStyle(color: Colors.red),
               ),
               const SizedBox(height: 2),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      createPost(context);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.fromLTRB(60, 5, 60, 5),
-                      backgroundColor: Colors.blue[900],
-                    ),
-                    child: const Text('Select Location'),
-                  )
-                ],
+              ElevatedButton(
+                onPressed: () {
+                  showBottomSheet(context);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue[900],
+                ),
+                child: const Text("Add Image"),
               ),
+
+              ElevatedButton(
+                onPressed: () {
+                  createPost(context);
+                },
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.fromLTRB(60, 5, 60, 5),
+                  backgroundColor: Colors.blue[900],
+                ),
+                child: const Text('Select Location'),
+              )
             ],
           ),
         ),

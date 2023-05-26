@@ -3,140 +3,137 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:mafqud_project/screens/Authentication/sign_in.dart';
-import 'package:mafqud_project/shared/loading.dart';
 import '../services/auth.dart';
-import 'chat/cubit/chat_cubit.dart';
 
-class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
-
-  @override
-  State<MainScreen> createState() => _MainScreenState();
-}
-
-class _MainScreenState extends State<MainScreen> {
+class MainScreen extends StatelessWidget {
   final Duration duration = const Duration(milliseconds: 800);
-  bool isLoading = false;
+
+  const MainScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => isLoading
-      ? Loading()
-      : Scaffold(
-          appBar: AppBar(
-            title: const Text('Welcome'),
-            backgroundColor: Colors.blue[900],
-          ),
-          backgroundColor: const Color.fromARGB(255, 239, 239, 239),
-          body: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              ///
-              FadeInUp(
-                duration: duration,
-                delay: const Duration(milliseconds: 2000),
-                child: Container(
-                  margin: const EdgeInsets.only(
-                    top: 50,
-                    left: 5,
-                    right: 5,
-                  ),
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height / 2,
-                  child: Lottie.asset("assets/wl.json", animate: true),
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Welcome'),
+        backgroundColor: Colors.blue[900],
+      ),
+      backgroundColor: const Color.fromARGB(255, 239, 239, 239),
+      body: Container(
+        margin: const EdgeInsets.all(8),
+        width: size.width,
+        height: size.height,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            ///
+            FadeInUp(
+              duration: duration,
+              delay: const Duration(milliseconds: 2000),
+              child: Container(
+                margin: const EdgeInsets.only(
+                  top: 50,
+                  left: 5,
+                  right: 5,
                 ),
+                width: size.width,
+                height: size.height / 2,
+                child: Lottie.asset("assets/wl.json", animate: true),
               ),
+            ),
 
-              /// TITLE
-              FadeInUp(
-                duration: duration,
-                delay: const Duration(milliseconds: 1600),
-                child: const Text(
-                  "Mafqud",
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold),
-                ),
+            /// TITLE
+            FadeInUp(
+              duration: duration,
+              delay: const Duration(milliseconds: 1600),
+              child: const Text(
+                "Mafqud",
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold),
               ),
+            ),
 
-              ///
-              const SizedBox(
-                height: 10,
+            ///
+            const SizedBox(
+              height: 10,
+            ),
+
+            /// SUBTITLE
+            FadeInUp(
+              duration: duration,
+              delay: const Duration(milliseconds: 1000),
+              child: const Text(
+                "Find and retrieve your lost items easier than before! ",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    height: 1.2,
+                    color: Colors.black,
+                    fontSize: 17,
+                    fontWeight: FontWeight.w300),
               ),
+            ),
 
-              /// SUBTITLE
-              FadeInUp(
-                duration: duration,
-                delay: const Duration(milliseconds: 1000),
-                child: const Text(
-                  "Find and retrieve your lost items easier than before! ",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      height: 1.2,
-                      color: Colors.black,
-                      fontSize: 17,
-                      fontWeight: FontWeight.w300),
-                ),
-              ),
+            Expanded(child: Container()),
 
-              Expanded(child: Container()),
-
-              /// Email BTN
-              FadeInUp(
-                duration: duration,
-                delay: const Duration(milliseconds: 200),
-                child: SizedBox(
-                  child: ElevatedButton.icon(
-                      onPressed: () {
-                        Navigator.of(context).pushReplacementNamed("Auth");
-                      },
-                      icon: const Icon(
-                        Icons.email,
-                        color: Colors.white,
-                        size: 30.0,
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        shadowColor: Colors.grey,
-                        padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-                      ),
-                      label: const Text("Continue with email")),
-                ),
-              ),
-
-              const SizedBox(
-                height: 15,
-              ),
-
-              /// Google BTN
-              FadeInUp(
-                  duration: duration,
-                  delay: const Duration(milliseconds: 200),
-                  child: ElevatedButton.icon(
-                    label: const Text("Continue with Google"),
-                    icon: const ImageIcon(AssetImage("assets/googleIcon.png")),
-                    onPressed: () async {
-                      setState(() {
-                        isLoading = true;
-                      });
-                      UserCredential response =
-                          await AuthService().signInWithGoogle(context);
-                      setState(() {
-                        isLoading = false;
-                      });
-                      Navigator.of(context).pushReplacementNamed("Posts");
+            /// Email BTN
+            FadeInUp(
+              duration: duration,
+              delay: const Duration(milliseconds: 200),
+              child: SizedBox(
+                width: 150,
+                child: ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.of(context).pushReplacementNamed("Auth");
                     },
+                    icon: const Icon(
+                      Icons.email,
+                      color: Colors.white,
+                      size: 30.0,
+                    ),
                     style: ElevatedButton.styleFrom(
                       shadowColor: Colors.grey,
                       padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
                     ),
-                  )),
-
-              const SizedBox(
-                height: 40,
+                    label: const Text("Continue with email")),
               ),
-            ],
-          ),
-        );
+            ),
+
+            ///
+            const SizedBox(
+              height: 15,
+            ),
+
+            /// Google BTN
+            FadeInUp(
+                duration: duration,
+                delay: const Duration(milliseconds: 200),
+                child: ElevatedButton.icon(
+                  label: const Text("Continue with Google"),
+                  icon: const ImageIcon(AssetImage("assets/googleIcon.png")),
+                  onPressed: () async {
+                    UserCredential response =
+                        await AuthService().signInWithGoogle();
+                    if (response != null) {
+                      Navigator.of(context).pushReplacementNamed("Home");
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    shadowColor: Colors.grey,
+                    padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+                  ),
+                )),
+
+            ///
+            const SizedBox(
+              height: 40,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 class SButton extends StatelessWidget {

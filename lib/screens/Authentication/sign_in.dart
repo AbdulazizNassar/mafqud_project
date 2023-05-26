@@ -6,7 +6,6 @@ import 'package:mafqud_project/shared/size_config.dart';
 import 'package:mafqud_project/services/auth.dart';
 import 'package:regexed_validator/regexed_validator.dart';
 import '../../services/firebase_exceptions.dart';
-import '../chat/cubit/chat_cubit.dart';
 
 class SignIn extends StatefulWidget {
   @override
@@ -17,7 +16,6 @@ class _SignInState extends State<SignIn> {
   final GlobalKey<FormState> _formState = GlobalKey<FormState>();
 
   var email, password;
-  var _passwordVisible = true;
 
   signInWithEmailAndPassword() async {
     var formData = _formState.currentState;
@@ -25,10 +23,8 @@ class _SignInState extends State<SignIn> {
       formData.save();
       UserCredential response =
           await AuthService().signInWithEmailAndPassword(email, password);
-      uId = response.user!.uid;
-      ChatCubit.get(context).getUserData();
       if (response != null) {
-        Navigator.of(context).pushReplacementNamed("Posts");
+        Navigator.of(context).pushReplacementNamed("Home");
       }
     }
   }
@@ -69,8 +65,8 @@ class _SignInState extends State<SignIn> {
                         child: Column(
                           children: <Widget>[
                             TextFormField(
-                              onChanged: (val) {
-                                email = val;
+                              onSaved: (val) {
+                                email = val!;
                               },
                               validator: (val) {
                                 if (!validator.email(val!)) {
@@ -78,9 +74,24 @@ class _SignInState extends State<SignIn> {
                                 }
                                 return null;
                               },
-                              decoration: textFormFieldStyle(
-                                'Email',
-                                Icons.email_outlined,
+                              decoration: InputDecoration(
+                                labelText: 'Email',
+                                labelStyle:
+                                    const TextStyle(color: primaryColor),
+                                prefixIcon: Icon(
+                                  Icons.mail,
+                                  size: SizeConfig.defaultSize * 2,
+                                  color: primaryColor,
+                                ),
+                                filled: true,
+                                enabledBorder: UnderlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide.none,
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide:
+                                        const BorderSide(color: primaryColor)),
                               ),
                             ),
                             SizedBox(
@@ -90,28 +101,29 @@ class _SignInState extends State<SignIn> {
                               onSaved: (val) {
                                 password = val!;
                               },
-                              decoration: textFormFieldStyle(
-                                'Password',
-                                Icons.key_outlined,
-                                IconButton(
-                                  icon: Icon(
-                                      _passwordVisible
-                                          ? Icons.visibility_outlined
-                                          : Icons.visibility_off_outlined,
-                                      color: Colors.blueAccent),
-                                  onPressed: () {
-                                    setState(
-                                      () {
-                                        _passwordVisible = !_passwordVisible;
-                                      },
-                                    );
-                                  },
+                              decoration: InputDecoration(
+                                labelText: 'Password',
+                                labelStyle:
+                                    const TextStyle(color: primaryColor),
+                                prefixIcon: Icon(
+                                  Icons.lock,
+                                  size: SizeConfig.defaultSize * 2,
+                                  color: primaryColor,
                                 ),
+                                filled: true,
+                                enabledBorder: UnderlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide.none,
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide:
+                                        const BorderSide(color: primaryColor)),
                               ),
                               validator: (val) => val!.isEmpty
                                   ? "password cannot be empty"
                                   : null,
-                              obscureText: _passwordVisible,
+                              obscureText: true,
                             ),
                             Align(
                               alignment: Alignment.centerRight,
@@ -123,16 +135,9 @@ class _SignInState extends State<SignIn> {
                                 onTap: () async {
                                   AuthStatus status = await AuthService()
                                       .resetPassword(email: email);
-                                  if (status.name == "unknown" ||
-                                      status.name == "invalidEmail") {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        snackBarError("Erorr",
-                                            "Email is not registered try creating an account"));
-                                  } else {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        snackBarSuccess("Success",
-                                            "Check your email to reset password"));
-                                  }
+                                  setState(() {
+                                    confirmationAlert(context, status.name);
+                                  });
                                 },
                               ),
                             ),
@@ -158,24 +163,20 @@ class _SignInState extends State<SignIn> {
                                     }
                                   }),
                             ),
-                            // ButtonTheme(
-                            //   height: SizeConfig.defaultSize * 5,
-                            //   minWidth: MediaQuery.of(context).size.width,
-                            //   child: ElevatedButton(
-                            //     child: const Text(
-                            //       'Sign in with Google',
-                            //       style: TextStyle(
-                            //           fontSize: 22, color: Colors.white),
-                            //     ),
-                            //     onPressed: () async {
-                            //       UserCredential response = await AuthService()
-                            //           .signInWithGoogle(context);
-                            //       print("=----------------");
-                            //       Navigator.of(context)
-                            //           .pushReplacementNamed("Posts");
-                            //     },
-                            //   ),
-                            // ),
+                            ButtonTheme(
+                              height: SizeConfig.defaultSize * 5,
+                              minWidth: MediaQuery.of(context).size.width,
+                              child: ElevatedButton(
+                                child: const Text(
+                                  'Sign in with Google',
+                                  style: TextStyle(
+                                      fontSize: 22, color: Colors.white),
+                                ),
+                                onPressed: () async {
+                                  await AuthService().signInWithGoogle();
+                                },
+                              ),
+                            ),
                             SizedBox(
                               height: SizeConfig.defaultSize * 2,
                             ),
@@ -204,18 +205,6 @@ class _SignInState extends State<SignIn> {
                       ),
                     ),
                   ),
-                  Positioned(
-                    top: 5,
-                    child: IconButton(
-                      onPressed: () {
-                        Navigator.of(context)
-                            .pushReplacementNamed("MainScreen");
-                      },
-                      icon: const Icon(Icons.arrow_back_outlined),
-                      color: Colors.red,
-                      iconSize: 30,
-                    ),
-                  ),
                   Center(
                     child: Container(
                       margin: EdgeInsets.only(top: SizeConfig.defaultSize * 1),
@@ -233,18 +222,13 @@ class _SignInState extends State<SignIn> {
                           ),
                         ],
                       ),
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: const [
-                            Text(
-                              'Sign In',
-                              style: TextStyle(
-                                  color: primaryColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18),
-                            ),
-                          ],
+                      child: const Center(
+                        child: Text(
+                          'Sign In',
+                          style: TextStyle(
+                              color: primaryColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18),
                         ),
                       ),
                     ),

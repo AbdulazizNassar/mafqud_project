@@ -6,29 +6,26 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_api_headers/google_api_headers.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:mafqud_project/screens/posts/posts.dart';
 import 'package:mafqud_project/services/auth.dart';
 import 'package:mafqud_project/shared/AlertBox.dart';
 import 'package:mafqud_project/shared/loading.dart';
 
 class MapScreen extends StatefulWidget {
-  MapScreen(
+  const MapScreen(
       {super.key,
       this.long,
       this.lat,
       this.title,
       this.description,
       this.category,
-      required this.paths,
-      this.status,
-      this.reward});
+      this.imageUrl,
+      this.status});
   final title;
   final description;
   final category;
-  final paths;
+  final imageUrl;
   final status;
-  final reward;
   final lat;
   final long;
   @override
@@ -37,12 +34,8 @@ class MapScreen extends StatefulWidget {
 
 LatLng? selectedLocation;
 savePostToFirebase(
-    var title, description, category, imageUrl, String? status, reward) async {
+    var title, description, category, imageUrl, String? status) async {
   var userID = AuthService().currentUser!.uid;
-  List<String> imagePath = [];
-
-  print("===5555==========");
-
   await FirebaseFirestore.instance.collection("Posts").add({
     "title": title,
     "description": description,
@@ -53,7 +46,6 @@ savePostToFirebase(
     "Date": DateTime.now(),
     "Lat": selectedLocation!.latitude,
     "Lng": selectedLocation!.longitude,
-    'reward': reward,
   });
 }
 
@@ -80,7 +72,7 @@ class _MapScreenState extends State<MapScreen> {
       ? Loading()
       : Scaffold(
           appBar: AppBar(
-            title: const Text("Select Location 2/3"),
+            title: const Text("Select Location 2/2"),
             centerTitle: true,
             backgroundColor: Colors.blue.shade900,
             leading: IconButton(
@@ -100,21 +92,14 @@ class _MapScreenState extends State<MapScreen> {
                       setState(() {
                         isLoading = true;
                       });
-                      await savePostToFirebase(
-                          widget.title,
-                          widget.description,
-                          widget.category,
-                          widget.paths,
-                          widget.status,
-                          widget.reward);
+                      await savePostToFirebase(widget.title, widget.description,
+                          widget.category, widget.imageUrl, widget.status);
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(snackBarSuccess("success", "message"));
                       setState(() {
                         isLoading = false;
                       });
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          snackBarSuccess(
-                              "success", "Post created successfully"));
-
-                      Navigator.of(context).pushReplacementNamed("Posts");
+                      Navigator.of(context).pushReplacementNamed("Home");
                     }
                   },
                   icon: const Icon(Icons.done))
