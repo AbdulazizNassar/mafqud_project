@@ -16,6 +16,7 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
   final GlobalKey<FormState> _formState = GlobalKey<FormState>();
   var email, password, idNum, PhoneNum, name;
+  bool _passwordVisible = true;
 
   signup() async {
     var formData = _formState.currentState;
@@ -100,35 +101,17 @@ class _RegisterState extends State<Register> {
 
                             //Email Field
                             TextFormField(
-                              onSaved: (val) {
-                                email = val!;
-                              },
-                              validator: (val) {
-                                if (!validator.email(val!)) {
-                                  return "Please enter a valid email";
-                                }
-                                return null;
-                              },
-                              decoration: InputDecoration(
-                                labelText: 'Email',
-                                labelStyle:
-                                    const TextStyle(color: primaryColor),
-                                prefixIcon: Icon(
-                                  Icons.mail,
-                                  size: SizeConfig.defaultSize * 2,
-                                  color: primaryColor,
-                                ),
-                                filled: true,
-                                enabledBorder: UnderlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide.none,
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide:
-                                        const BorderSide(color: primaryColor)),
-                              ),
-                            ),
+                                onSaved: (val) {
+                                  email = val!;
+                                },
+                                validator: (val) {
+                                  if (!validator.email(val!)) {
+                                    return "Please enter a valid email";
+                                  }
+                                  return null;
+                                },
+                                decoration:
+                                    textFormFieldStyle('Email', Icons.email)),
                             SizedBox(
                               height: SizeConfig.defaultSize * 2,
                             ),
@@ -138,28 +121,28 @@ class _RegisterState extends State<Register> {
                               onSaved: (val) {
                                 password = val!;
                               },
-                              obscureText: true,
+                              obscureText: _passwordVisible,
                               validator: (val) => val!.length < 6
                                   ? "Password must be at least 6 characters long"
                                   : null,
-                              decoration: InputDecoration(
-                                labelText: 'Password',
-                                labelStyle:
-                                    const TextStyle(color: primaryColor),
-                                prefixIcon: Icon(
-                                  Icons.lock,
-                                  size: SizeConfig.defaultSize * 2,
-                                  color: primaryColor,
+                              decoration: textFormFieldStyle(
+                                "Password",
+                                Icons.key_outlined,
+                                IconButton(
+                                  icon: Icon(
+                                    _passwordVisible
+                                        ? Icons.visibility_outlined
+                                        : Icons.visibility_off_outlined,
+                                    color: Colors.blueAccent,
+                                  ),
+                                  onPressed: () {
+                                    setState(
+                                      () {
+                                        _passwordVisible = !_passwordVisible;
+                                      },
+                                    );
+                                  },
                                 ),
-                                filled: true,
-                                enabledBorder: UnderlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide.none,
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide:
-                                        const BorderSide(color: primaryColor)),
                               ),
                             ),
                             SizedBox(

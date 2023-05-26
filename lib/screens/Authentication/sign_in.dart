@@ -94,9 +94,11 @@ class _SignInState extends State<SignIn> {
                                 'Password',
                                 Icons.key_outlined,
                                 IconButton(
-                                  icon: Icon(_passwordVisible
-                                      ? Icons.visibility_outlined
-                                      : Icons.visibility_off_outlined),
+                                  icon: Icon(
+                                      _passwordVisible
+                                          ? Icons.visibility_outlined
+                                          : Icons.visibility_off_outlined,
+                                      color: Colors.blueAccent),
                                   onPressed: () {
                                     setState(
                                       () {
