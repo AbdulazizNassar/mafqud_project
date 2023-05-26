@@ -3,8 +3,6 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 imgUpload(file) async {
-  print('${file?.path}');
-
   if (file == null) return 'Please choose image';
   //Import dart:core
   String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();

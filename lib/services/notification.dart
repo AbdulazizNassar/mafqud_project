@@ -45,7 +45,8 @@ void requestPermission() async {
   }
 }
 
-void sendPushMessage(String title, String body, String token) async {
+void sendPushMessage(String title, String body, String token,
+    {String ? uidReceiver , String ? nameReceiver}) async {
   try {
     await http.post(
       Uri.parse('https://fcm.googleapis.com/fcm/send'),
@@ -77,6 +78,9 @@ void sendPushMessage(String title, String body, String token) async {
       "title": title,
       'subtitle': body,
       "date": DateTime.now(),
+      'uidReceiver': uidReceiver,
+      'nameReceiver': nameReceiver,
+      'status': "new"
     });
   } catch (e) {
     print("error push notificatiot");

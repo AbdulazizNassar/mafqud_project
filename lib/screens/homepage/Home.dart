@@ -33,6 +33,12 @@ class _HomeState extends State<Home> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    getToken();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
@@ -41,8 +47,8 @@ class _HomeState extends State<Home> {
           centerTitle: true,
         ),
         drawer: const NavMenu(),
-        body: Padding(
-          padding: const EdgeInsets.all(10),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Form(
             key: _formKey,
             child: Column(
@@ -119,7 +125,6 @@ class _HomeState extends State<Home> {
                   child: TextButton(
                     onPressed: () {
                       searchPosts();
-                      // Navigator.of(context).pushNamed("Posts");
                     },
                     child: const Text(
                       "Search",

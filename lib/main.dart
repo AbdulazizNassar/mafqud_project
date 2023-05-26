@@ -1,7 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:mafqud_project/screens/posts/DetailPage.dart';
+import 'package:mafqud_project/screens/chat/cubit/chat_cubit.dart';
 import 'package:mafqud_project/screens/posts/history.dart';
+import 'package:mafqud_project/services/sharedPreference.dart';
+import 'package:provider/provider.dart';
 import 'Screens/homepage/Home.dart';
 import 'screens/Authentication/register.dart';
 import 'screens/Authentication/sign_in.dart';
@@ -18,6 +21,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await CacheHelper.init();
   runApp(MyApp());
 }
 
@@ -39,9 +43,13 @@ class MyApp extends StatelessWidget {
         "Register": (context) => Register(),
         "Home": (context) => const Home(),
         "Posts": (context) => Posts(),
-        "AddPost": (context) => const AddPosts(),
+        "AddPost": (context) => AddPosts(
+              paths: '',
+            ),
         "History": (context) => const History(),
-        "GoogleMap": (context) => const MapScreen(),
+        "GoogleMap": (context) => MapScreen(
+              paths: '',
+            ),
         "MapPosts": (context) => const MapPosts(),
         "ProductDetailPage": (context) => const ProductDetailPage(),
       },

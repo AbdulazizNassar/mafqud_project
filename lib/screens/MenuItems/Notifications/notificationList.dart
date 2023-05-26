@@ -1,11 +1,19 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:mafqud_project/screens/Notifications/constant.dart';
+import 'package:mafqud_project/models/userModel.dart';
+import 'package:mafqud_project/screens/MenuItems/Notifications/constant.dart';
 import 'package:flutter/material.dart';
-import 'package:mafqud_project/screens/Notifications/notificationTiles.dart';
-import 'package:mafqud_project/services/auth.dart';
+import 'package:mafqud_project/screens/MenuItems/Notifications/notificationTiles.dart';
+import 'package:mafqud_project/screens/chat/chat_notification.dart';
+import 'package:mafqud_project/screens/chat/cubit/chat_state.dart';
 import 'package:mafqud_project/shared/loading.dart';
+import '../../chat/chat_details_list.dart';
+import '../../chat/chat_list.dart';
+import '../../chat/cubit/chat_cubit.dart';
 
 class NotificationList extends StatefulWidget {
   NotificationList({Key? key}) : super(key: key);
@@ -15,8 +23,9 @@ class NotificationList extends StatefulWidget {
 }
 
 class _NotificationListState extends State<NotificationList> {
-  Query<Map<String, dynamic>> notificationsRef =
+  CollectionReference notificationsRef =
       FirebaseFirestore.instance.collection('notifications');
+  UserModel? model;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -30,6 +39,24 @@ class _NotificationListState extends State<NotificationList> {
         body: displayNotification(),
       ),
     );
+  }
+
+  FutureBuilder<QuerySnapshot<Object?>> displayNotification() {
+    return FutureBuilder<QuerySnapshot>(
+        future: notificationsRef
+            .where("uid", isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+            .get(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Loading();
+          } else {
+            if (snapshot.data!.docs.isEmpty) {
+              return noNotification;
+            } else {
+              return listBuilder(snapshot.data!.docs);
+            }
+          }
+        });
   }
 
   ListView listBuilder(List<QueryDocumentSnapshot<Object?>> snapshot) {
@@ -61,8 +88,19 @@ class _NotificationListState extends State<NotificationList> {
                   )
                 ]),
             child: InkWell(
-              onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const Scaffold())),
+              onTap: () async {
+                await Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => ChatNotification(
+                              senderUid: snapshot[i]['uid'],
+                              receiverUid: snapshot[i]['uidReceiver'],
+                              receiverName: snapshot[i]['nameReceiver'],
+                            )));
+                await notificationsRef
+                    .doc(snapshot[i].id)
+                    .update({'status': "old"});
+              },
               child: NotificationTiles(
                 notification: snapshot[i],
                 enable: true,
@@ -75,24 +113,6 @@ class _NotificationListState extends State<NotificationList> {
         );
       },
     );
-  }
-
-  FutureBuilder<QuerySnapshot<Object?>> displayNotification() {
-    return FutureBuilder<QuerySnapshot>(
-        future: notificationsRef
-            .where("uid", isEqualTo: FirebaseAuth.instance.currentUser?.uid)
-            .get(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Loading();
-          } else {
-            if (snapshot.data!.docs.isEmpty) {
-              return noNotification;
-            } else {
-              return listBuilder(snapshot.data!.docs);
-            }
-          }
-        });
   }
 
   deleteNotification(String id) async {
