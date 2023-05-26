@@ -1,10 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mafqud_project/models/currentUser.dart';
-import 'package:mafqud_project/models/userModel.dart';
 import '../screens/chat/cubit/chat_cubit.dart';
 import 'firebase_exceptions.dart';
 
@@ -54,16 +52,19 @@ class AuthService {
   registerWithEmailAndPassword(String name, String email, String password,
       String ID, String phoneNum) async {
     try {
-      final dynamic credential = await _auth.createUserWithEmailAndPassword(
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
       createUserModel(name, email, ID, phoneNum);
-      return credential;
     } on FirebaseAuthException catch (e) {
-      return e.code;
+      if (e.code == 'weak-password') {
+        print('The password provided is too weak.');
+      } else if (e.code == 'email-already-in-use') {
+        print('The account already exists for that email.');
+      }
     } catch (e) {
-      return e;
+      print(e);
     }
   }
 
@@ -84,7 +85,6 @@ class AuthService {
         .where("email", isEqualTo: googleUser!.email);
     if (c.count() == 0) {
       try {
-        print("============");
         await _firestore.collection("users").doc(currentUser!.uid).set({
           'name': googleUser.displayName,
           'email': googleUser.email,
@@ -96,10 +96,7 @@ class AuthService {
           'numOfRating': 1,
         });
         ChatCubit.get(context).getUserData();
-      } catch (e) {
-        print("+===================");
-        print(e.toString());
-      }
+      } catch (e) {}
     }
 
     // Once signed in, return the UserCredential

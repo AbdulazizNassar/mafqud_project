@@ -27,9 +27,7 @@ class _SignInState extends State<SignIn> {
           await AuthService().signInWithEmailAndPassword(email, password);
       uId = response.user!.uid;
       ChatCubit.get(context).getUserData();
-      if (response != null) {
-        Navigator.of(context).pushReplacementNamed("Posts");
-      }
+      Navigator.of(context).pushReplacementNamed("Posts");
     }
   }
 

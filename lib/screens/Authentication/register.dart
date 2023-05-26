@@ -5,7 +5,6 @@ import 'package:mafqud_project/shared/size_config.dart';
 import 'package:mafqud_project/shared/constants.dart';
 import 'package:regexed_validator/regexed_validator.dart';
 
-import '../../shared/AlertBox.dart';
 import '../chat/cubit/chat_cubit.dart';
 
 class Register extends StatefulWidget {
@@ -22,14 +21,10 @@ class _RegisterState extends State<Register> {
     var formData = _formState.currentState;
     if (formData!.validate()) {
       formData.save();
-      UserCredential response = await AuthService()
+      UserCredential? response = await AuthService()
           .registerWithEmailAndPassword(name, email, password, idNum, PhoneNum);
-      uId = response.user!.uid;
-      print(uId);
-      ChatCubit.get(context).getUserData();
-      if (response != null) {
-        Navigator.of(context).pushReplacementNamed("Posts");
-      }
+      uId = response?.user?.uid;
+      Navigator.of(context).pushReplacementNamed("Posts");
     }
   }
 
@@ -228,9 +223,8 @@ class _RegisterState extends State<Register> {
                                     try {
                                       await signup();
                                     } catch (e) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(snackBarError("Error",
-                                              "Account already registered"));
+                                      print("++++++++===============");
+                                      print(e);
                                     }
                                   }),
                             ),

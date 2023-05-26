@@ -1,17 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:mafqud_project/services/auth.dart';
 import 'package:mafqud_project/services/googleMap/googleMapsShowPosts.dart';
 import 'package:mafqud_project/services/notification.dart';
 import 'package:mafqud_project/shared/NavMenu.dart';
 import 'package:mafqud_project/shared/constants.dart';
 import '../../shared/AlertBox.dart';
 import '../../shared/PostCards.dart';
+
 import '../../shared/loading.dart';
 import 'package:mafqud_project/screens/posts/selectImage.dart';
 
 class Posts extends StatefulWidget {
-  String? searchValue;
+  final String? searchValue;
   Posts({Key? key, this.searchValue})
       : super(
           key: key,
@@ -46,6 +46,7 @@ class _PostsState extends State<Posts> {
 
   @override
   void initState() {
+    super.initState();
     getToken();
   }
 
@@ -293,6 +294,7 @@ class _PostsState extends State<Posts> {
             setState(() {
               searchString = value!;
             });
+            return null;
           },
           decoration: searchBar(),
           style: const TextStyle(color: Colors.black),

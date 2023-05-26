@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mafqud_project/models/userModel.dart';
-import 'package:mafqud_project/models/userModel.dart';
 import 'package:mafqud_project/services/notification.dart';
 import 'package:mafqud_project/shared/constants.dart';
 import '../../../models/messageModel.dart';
