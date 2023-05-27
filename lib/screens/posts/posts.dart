@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:mafqud_project/services/googleMap/googleMapsShowPosts.dart';
 import 'package:mafqud_project/services/notification.dart';
 import 'package:mafqud_project/shared/NavMenu.dart';
@@ -24,6 +25,8 @@ class Posts extends StatefulWidget {
 enum CategoryItem { Animals, Personalitems, Electronics }
 
 class _PostsState extends State<Posts> {
+  double lat = 0.0;
+  double long = 0.0;
   Query<Map<String, dynamic>> postsRef =
       FirebaseFirestore.instance.collection('Posts').orderBy('Date');
 
@@ -44,10 +47,25 @@ class _PostsState extends State<Posts> {
     }
   }
 
+  Future<Position> getUserCurrentLocation() async {
+    await Geolocator.requestPermission()
+        .then((value) {})
+        .onError((error, stackTrace) async {
+      await Geolocator.requestPermission();
+    });
+    return await Geolocator.getCurrentPosition();
+  }
+
   @override
   void initState() {
     super.initState();
     getToken();
+    setState(() {
+      getUserCurrentLocation().then((value) {
+        lat = value.latitude;
+        long = value.longitude;
+      });
+    });
   }
 
   @override
@@ -89,7 +107,10 @@ class _PostsState extends State<Posts> {
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const MapPosts()));
+                              builder: (context) => MapPosts(
+                                    lat: lat,
+                                    long: long,
+                                  )));
                     },
                   ),
                   showSearchBar(context),

@@ -38,8 +38,6 @@ savePostToFirebase(
   var userID = AuthService().currentUser!.uid;
   List<String> imagePath = [];
 
-  print("===5555==========");
-
   await FirebaseFirestore.instance.collection("Posts").add({
     "title": title,
     "description": description,
