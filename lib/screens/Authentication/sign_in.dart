@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mafqud_project/screens/posts/posts.dart';
 import 'package:mafqud_project/shared/AlertBox.dart';
 import 'package:mafqud_project/shared/constants.dart';
 import 'package:mafqud_project/shared/size_config.dart';
@@ -27,7 +28,8 @@ class _SignInState extends State<SignIn> {
           await AuthService().signInWithEmailAndPassword(email, password);
       uId = response.user!.uid;
       // ChatCubit.get(context).getUserData();
-      Navigator.of(context).pushReplacementNamed("Posts");
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const Posts()));
     }
   }
 
@@ -156,24 +158,6 @@ class _SignInState extends State<SignIn> {
                                     }
                                   }),
                             ),
-                            // ButtonTheme(
-                            //   height: SizeConfig.defaultSize * 5,
-                            //   minWidth: MediaQuery.of(context).size.width,
-                            //   child: ElevatedButton(
-                            //     child: const Text(
-                            //       'Sign in with Google',
-                            //       style: TextStyle(
-                            //           fontSize: 22, color: Colors.white),
-                            //     ),
-                            //     onPressed: () async {
-                            //       UserCredential response = await AuthService()
-                            //           .signInWithGoogle(context);
-                            //       print("=----------------");
-                            //       Navigator.of(context)
-                            //           .pushReplacementNamed("Posts");
-                            //     },
-                            //   ),
-                            // ),
                             SizedBox(
                               height: SizeConfig.defaultSize * 2,
                             ),
