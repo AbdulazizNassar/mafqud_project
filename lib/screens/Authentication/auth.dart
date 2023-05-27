@@ -3,6 +3,8 @@ import 'package:mafqud_project/screens/Authentication/sign_in.dart';
 import 'package:mafqud_project/screens/Authentication/register.dart';
 
 class Auth extends StatefulWidget {
+  const Auth({super.key});
+
   @override
   _AuthState createState() => _AuthState();
 }
