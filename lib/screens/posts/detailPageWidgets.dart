@@ -157,7 +157,7 @@ buildAuthorInfoWidget(dynamic data) {
           size: 35,
         ),
         Text(
-          "${data!['rating'] / data!['numOfRating']}",
+          "${(data!['rating'] / data!['numOfRating'] as double).round()}",
           style: textStyle,
         ),
         const SizedBox(
