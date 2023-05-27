@@ -2,10 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:animate_do/animate_do.dart';
-import 'package:mafqud_project/screens/Authentication/sign_in.dart';
 import 'package:mafqud_project/shared/loading.dart';
 import '../services/auth.dart';
-import 'chat/cubit/chat_cubit.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -118,8 +116,7 @@ class _MainScreenState extends State<MainScreen> {
                       setState(() {
                         isLoading = true;
                       });
-                      UserCredential response =
-                          await AuthService().signInWithGoogle(context);
+                      await AuthService().signInWithGoogle(context);
                       setState(() {
                         isLoading = false;
                       });

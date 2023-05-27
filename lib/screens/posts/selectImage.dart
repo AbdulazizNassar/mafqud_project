@@ -57,8 +57,8 @@ class _addImagesState extends State<addImages> {
                   child: Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(10),
-                    child: Row(
-                      children: const [
+                    child: const Row(
+                      children: [
                         Icon(
                           Icons.photo_outlined,
                           size: 30,
@@ -87,8 +87,8 @@ class _addImagesState extends State<addImages> {
                   child: Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(10),
-                    child: Row(
-                      children: const [
+                    child: const Row(
+                      children: [
                         Icon(
                           Icons.camera,
                           size: 30,
@@ -126,9 +126,9 @@ class _addImagesState extends State<addImages> {
                         List<String> paths = [];
 
                         if (file != null) {
-                          images.forEach((element) async {
+                          for (var element in images) {
                             paths.add(await imgUpload(element));
-                          });
+                          }
                           setState(() {
                             isLoading = false;
                           });

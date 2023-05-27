@@ -5,9 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:google_api_headers/google_api_headers.dart';
-import 'package:mafqud_project/services/showPostDetails.dart';
 import 'package:mafqud_project/shared/AlertBox.dart';
-import '../../shared/DateTime.dart';
 import '../../shared/loading.dart';
 
 class MapPosts extends StatefulWidget {
@@ -20,7 +18,7 @@ class MapPosts extends StatefulWidget {
 }
 
 //a set to store and display markers on the map
-Set<Marker> _markers = Set();
+Set<Marker> _markers = {};
 
 class _MapPostsState extends State<MapPosts> {
   @override

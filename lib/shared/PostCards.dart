@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:mafqud_project/shared/DateTime.dart';
 
 import '../services/showPostDetails.dart';

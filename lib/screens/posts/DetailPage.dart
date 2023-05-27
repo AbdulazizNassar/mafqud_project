@@ -276,10 +276,10 @@ class _ProductDetailPageState extends State<ProductDetailPage>
               style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue.shade900),
               onPressed: () {},
-              child: Center(
+              child: const Center(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const <Widget>[
+                  children: <Widget>[
                     Icon(
                       Icons.star_border,
                       color: Colors.white,
@@ -313,10 +313,10 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                               senderName: ChatCubit.get(context).username,
                             )));
               },
-              child: Center(
+              child: const Center(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const <Widget>[
+                  children: <Widget>[
                     Icon(
                       Icons.message_rounded,
                       color: Colors.white,
