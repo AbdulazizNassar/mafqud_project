@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:mafqud_project/screens/Authentication/sign_in.dart';
 import 'package:mafqud_project/shared/loading.dart';
 import '../services/auth.dart';
 
@@ -86,7 +87,8 @@ class _MainScreenState extends State<MainScreen> {
                 child: SizedBox(
                   child: ElevatedButton.icon(
                       onPressed: () {
-                        Navigator.of(context).pushReplacementNamed("Auth");
+                        Navigator.pushReplacement(context,
+                            MaterialPageRoute(builder: (context) => SignIn()));
                       },
                       icon: const Icon(
                         Icons.email,

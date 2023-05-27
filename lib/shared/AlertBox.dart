@@ -86,11 +86,6 @@ signOutConfirm(context) {
     ),
     buttons: [
       DialogButton(
-          child: const Text("Cancel"),
-          onPressed: () {
-            Navigator.pop(context);
-          }),
-      DialogButton(
           child: const Text("Sign out"),
           onPressed: () async {
             Navigator.of(context).pop();
