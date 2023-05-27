@@ -86,6 +86,7 @@ class _HomeState extends State<Home> {
                     setState(() {
                       searchString = value!;
                     });
+                    return null;
                   },
                   decoration: const InputDecoration(
                       labelText: 'Search', suffixIcon: Icon(Icons.search)),

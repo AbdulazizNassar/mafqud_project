@@ -1,9 +1,7 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mafqud_project/models/userModel.dart';
 
 import '../../models/messageModel.dart';
 import '../../shared/DateTime.dart';
@@ -57,7 +55,7 @@ class ChatNotification extends StatelessWidget {
                         Row(
                           children: [
                             Text(
-                              '${receiverName}',
+                              '$receiverName',
                               style: const TextStyle(height: 1.2, fontSize: 16),
                             ),
                           ],

@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
@@ -7,15 +6,12 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:mafqud_project/models/messageModel.dart';
 import 'package:mafqud_project/models/userModel.dart';
 import 'package:mafqud_project/services/auth.dart';
-import 'package:mafqud_project/services/notification.dart';
 import 'package:mafqud_project/screens/MenuItems/Notifications/constant.dart';
 import 'package:mafqud_project/shared/loading.dart';
 import '../../shared/DateTime.dart';
 import '../../shared/NavMenu.dart';
 import '../../shared/constants.dart';
-import 'chat_details.dart';
 import 'chat_details_list.dart';
-import 'chat_list.dart';
 import 'cubit/chat_cubit.dart';
 import 'cubit/chat_state.dart';
 
@@ -211,7 +207,7 @@ class NewWidget extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(),
+                const Row(),
                 Text(
                   'Today',
                   style: Theme.of(context).textTheme.caption!.copyWith(

@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mafqud_project/models/currentUser.dart';
 import 'package:mafqud_project/screens/posts/editPost.dart';
 
 import '../../services/auth.dart';
@@ -58,7 +56,7 @@ class ListPosts extends StatelessWidget {
   final posts;
   final docID;
 
-  ListPosts({this.posts, this.docID});
+  const ListPosts({this.posts, this.docID});
 
   @override
   Widget build(BuildContext context) {

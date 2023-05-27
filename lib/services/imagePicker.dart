@@ -1,5 +1,4 @@
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 imgUpload(file) async {
@@ -21,7 +20,7 @@ imgUpload(file) async {
   //Handle errors/success
   try {
     //Store the file
-    await referenceImageToUpload.putFile(File(file!.path));
+    referenceImageToUpload.putFile(File(file!.path));
     //Success: get the download URL
     return await referenceImageToUpload.getDownloadURL();
   } catch (error) {

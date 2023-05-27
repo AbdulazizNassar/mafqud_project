@@ -1,13 +1,10 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
-import 'package:mafqud_project/shared/DateTime.dart';
 import 'package:mafqud_project/shared/PostCards.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 import '../screens/MainScreen.dart';
 import '../services/auth.dart';
-import '../services/showPostDetails.dart';
 
 snackBarError(String title, String message) {
   return SnackBar(

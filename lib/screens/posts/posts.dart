@@ -12,7 +12,7 @@ import 'package:mafqud_project/screens/posts/selectImage.dart';
 
 class Posts extends StatefulWidget {
   final String? searchValue;
-  Posts({Key? key, this.searchValue})
+  const Posts({Key? key, this.searchValue})
       : super(
           key: key,
         );
@@ -65,170 +65,178 @@ class _PostsState extends State<Posts> {
   );
   bool highLightedColor = false;
   Widget postsMaterialApp(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: customSearchBar,
-          titleSpacing: -25,
-          backgroundColor: Colors.blue[900],
-          bottom: TabBar(
-              indicator: BoxDecoration(
-                borderRadius: BorderRadius.circular(25),
-              ),
-              tabs: [
-                tabView(Colors.green, "Found"),
-                tabView(Colors.red, "Lost")
-              ]),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.map_outlined),
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const MapPosts()));
-              },
-            ),
-            showSearchBar(context),
-          ],
-        ),
-        drawer: const NavMenu(),
-        body: searchFlag
-            ? TabBarView(
-                children: [
-                  displayPosts("Found", searchString, ''),
-                  displayPosts("Lost", searchString, '')
-                ],
-              )
-            : categoryFlag
-                ? TabBarView(
-                    children: [
-                      displayPosts(
-                          "Found", "", selectedMenu.toString().substring(13)),
-                      displayPosts(
-                          "Lost", "", selectedMenu.toString().substring(13)),
-                    ],
-                  )
-                : TabBarView(
-                    children: [
-                      displayPosts("Found", "", ''),
-                      displayPosts("Lost", "", ''),
-                    ],
-                  ),
-        floatingActionButton: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              FloatingActionButton(
-                backgroundColor: Colors.blue[900],
+    return MaterialApp(
+      home: DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          appBar: AppBar(
+            centerTitle: true,
+            title: customSearchBar,
+            titleSpacing: -25,
+            backgroundColor: Colors.blue[900],
+            bottom: TabBar(
+                indicator: BoxDecoration(
+                  borderRadius: BorderRadius.circular(25),
+                ),
+                tabs: [
+                  tabView(Colors.green, "Found"),
+                  tabView(Colors.red, "Lost")
+                ]),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.map_outlined),
                 onPressed: () {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const addImages()));
+                          builder: (context) => const MapPosts()));
                 },
-                child: const Icon(Icons.add),
               ),
-              const SizedBox(
-                height: 15,
-              ),
-              Theme(
-                data: themeData(context, highLightedColor),
-                child: Positioned(
-                  child: SizedBox(
-                    width: 150,
-                    child: FloatingActionButton(
-                      shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(50))),
-                      onPressed: () {},
-                      backgroundColor: Colors.blue.shade900,
-                      child: PopupMenuButton<CategoryItem>(
-                        initialValue: selectedMenu,
-                        onOpened: () {
-                          if (categoryFlag) {
+              showSearchBar(context),
+            ],
+          ),
+          drawer: const NavMenu(),
+          body: searchFlag
+              ? TabBarView(
+                  children: [
+                    displayPosts("Found", searchString, ''),
+                    displayPosts("Lost", searchString, '')
+                  ],
+                )
+              : categoryFlag
+                  ? TabBarView(
+                      children: [
+                        displayPosts(
+                            "Found", "", selectedMenu.toString().substring(13)),
+                        displayPosts(
+                            "Lost", "", selectedMenu.toString().substring(13)),
+                      ],
+                    )
+                  : TabBarView(
+                      children: [
+                        displayPosts("Found", "", ''),
+                        displayPosts("Lost", "", ''),
+                      ],
+                    ),
+          floatingActionButton: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                FloatingActionButton(
+                  heroTag: "btn1",
+                  backgroundColor: Colors.blue[900],
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const addImages()));
+                  },
+                  child: const Icon(Icons.add),
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                Theme(
+                  data: themeData(context, highLightedColor),
+                  child: Positioned(
+                    child: SizedBox(
+                      height: 50,
+                      width: 150,
+                      child: FloatingActionButton(
+                        heroTag: "btn2",
+                        shape: const RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(50))),
+                        onPressed: () {},
+                        backgroundColor: Colors.blue.shade900,
+                        child: PopupMenuButton<CategoryItem>(
+                          initialValue: selectedMenu,
+                          onOpened: () {
+                            if (categoryFlag) {
+                              setState(() {
+                                categoryFlag = false;
+                                highLightedColor = false;
+                                categoryTitle = 'Filter';
+                              });
+                            }
+                          },
+                          onCanceled: () {
                             setState(() {
-                              categoryFlag = false;
                               highLightedColor = false;
-                              categoryTitle = 'Filter';
-                            });
-                          }
-                        },
-                        onCanceled: () {
-                          setState(() {
-                            highLightedColor = false;
-                            categoryFlag = false;
-                            categoryTitle = "Filter";
-                          });
-                        },
-                        onSelected: (CategoryItem item) {
-                          if (categoryFlag) {
-                            setState(() {
                               categoryFlag = false;
-                              highLightedColor = false;
                               categoryTitle = "Filter";
                             });
-                          } else {
-                            setState(() {
-                              highLightedColor = true;
-                              categoryFlag = true;
-                              categoryTitle = item.name;
-                            });
-                          }
-                          selectedMenu = item;
-                        },
-                        itemBuilder: (BuildContext context) =>
-                            <PopupMenuEntry<CategoryItem>>[
-                          PopupMenuItem(
-                            value: CategoryItem.Animals,
-                            child: ListTile(
-                              leading: const Icon(
-                                Icons.pets_outlined,
-                                color: Colors.white,
+                          },
+                          onSelected: (CategoryItem item) {
+                            if (categoryFlag) {
+                              setState(() {
+                                categoryFlag = false;
+                                highLightedColor = false;
+                                categoryTitle = "Filter";
+                              });
+                            } else {
+                              setState(() {
+                                highLightedColor = true;
+                                categoryFlag = true;
+                                categoryTitle = item.name;
+                              });
+                            }
+                            selectedMenu = item;
+                          },
+                          itemBuilder: (BuildContext context) =>
+                              <PopupMenuEntry<CategoryItem>>[
+                            PopupMenuItem(
+                              value: CategoryItem.Animals,
+                              child: ListTile(
+                                leading: const Icon(
+                                  Icons.pets_outlined,
+                                  color: Colors.white,
+                                ),
+                                title: Text("Animals",
+                                    style: popupMenuStyle(context)),
                               ),
-                              title: Text("Animals",
-                                  style: popupMenuStyle(context)),
                             ),
-                          ),
-                          PopupMenuItem(
-                            value: CategoryItem.Electronics,
-                            child: ListTile(
-                              leading: const Icon(
-                                Icons.phone_outlined,
-                                color: Colors.white,
+                            PopupMenuItem(
+                              value: CategoryItem.Electronics,
+                              child: ListTile(
+                                leading: const Icon(
+                                  Icons.phone_outlined,
+                                  color: Colors.white,
+                                ),
+                                title: Text("Electronics",
+                                    style: popupMenuStyle(context)),
                               ),
-                              title: Text("Electronics",
-                                  style: popupMenuStyle(context)),
                             ),
-                          ),
-                          PopupMenuItem(
-                            value: CategoryItem.Personalitems,
-                            child: ListTile(
-                              leading: const Icon(
-                                Icons.person_search_outlined,
-                                color: Colors.white,
+                            PopupMenuItem(
+                              value: CategoryItem.Personalitems,
+                              child: ListTile(
+                                leading: const Icon(
+                                  Icons.person_search_outlined,
+                                  color: Colors.white,
+                                ),
+                                title: Text("Personal Items",
+                                    style: popupMenuStyle(context)),
                               ),
-                              title: Text("Personal Items",
-                                  style: popupMenuStyle(context)),
                             ),
-                          ),
-                        ],
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            categoryFlag
-                                ? const Icon(Icons.close_outlined,
-                                    color: Colors.red)
-                                : filterIcon,
-                            Text(categoryTitle)
                           ],
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              categoryFlag
+                                  ? const Icon(Icons.close_outlined,
+                                      color: Colors.red)
+                                  : filterIcon,
+                              Text(categoryTitle)
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ]),
+              ]),
+        ),
       ),
     );
   }
@@ -237,7 +245,7 @@ class _PostsState extends State<Posts> {
     return Container(
       decoration:
           BoxDecoration(borderRadius: BorderRadius.circular(25), color: color),
-      width: double.infinity,
+      width: 150,
       child: Tab(
         child: Center(
           child: Row(

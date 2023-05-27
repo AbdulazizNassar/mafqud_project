@@ -1,4 +1,3 @@
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
@@ -6,14 +5,12 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_api_headers/google_api_headers.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:mafqud_project/screens/posts/posts.dart';
 import 'package:mafqud_project/services/auth.dart';
 import 'package:mafqud_project/shared/AlertBox.dart';
 import 'package:mafqud_project/shared/loading.dart';
 
 class MapScreen extends StatefulWidget {
-  MapScreen(
+  const MapScreen(
       {super.key,
       this.long,
       this.lat,
@@ -58,7 +55,7 @@ savePostToFirebase(
 }
 
 class _MapScreenState extends State<MapScreen> {
-  Set<Marker> _markers = Set();
+  final Set<Marker> _markers = {};
   final String googleApikey = "AIzaSyCj2A3BXC5GYHBlbyjIJlJPr8AWLHKCRv8";
   GoogleMapController? mapController; //contrller for Google map
   CameraPosition? cameraPosition;

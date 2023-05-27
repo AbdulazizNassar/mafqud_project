@@ -4,8 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mafqud_project/screens/MenuItems/support.dart';
 import '../../shared/NavMenu.dart';
-import '../MainScreen.dart';
-import '../chat/cubit/chat_cubit.dart';
 import 'edit_profile.dart';
 
 class ProfileScreen extends StatefulWidget {

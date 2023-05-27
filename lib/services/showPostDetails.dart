@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:mafqud_project/shared/AlertBox.dart';
 
-import '../screens/posts/DetailPage.dart';
 import '../screens/posts/Details.dart';
 
 showPostDetailsPage({required posts, required context, required images}) async {

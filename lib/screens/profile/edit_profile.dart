@@ -1,12 +1,10 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'dart:developer';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mafqud_project/screens/chat/cubit/chat_cubit.dart';
 import 'package:mafqud_project/screens/profile/profile.dart';
@@ -74,16 +72,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     print(file!.path);
                     await imgUpload(file);
                     Navigator.pop(context);
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (_) => ProfileScreen()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => const ProfileScreen()));
                     showToast(
                         text: 'image updated', state: ToastStates.success);
                   },
                   child: Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(10),
-                    child: Row(
-                      children: const [
+                    child: const Row(
+                      children: [
                         Icon(
                           Icons.photo_outlined,
                           size: 30,
@@ -105,16 +105,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     print(file!.path);
                     await imgUpload(file);
                     Navigator.pop(context);
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (_) => ProfileScreen()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => const ProfileScreen()));
                     showToast(
                         text: 'image updated', state: ToastStates.success);
                   },
                   child: Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(10),
-                    child: Row(
-                      children: const [
+                    child: const Row(
+                      children: [
                         Icon(
                           Icons.camera,
                           size: 30,
@@ -155,7 +157,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     //Handle errors/success
     try {
       //Store the file
-      await referenceImageToUpload.putFile(File(file!.path));
+      referenceImageToUpload.putFile(File(file!.path));
       //Success: get the download URL
       _image = await referenceImageToUpload.getDownloadURL();
       FirebaseFirestore.instance
@@ -167,6 +169,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     } catch (error) {}
   }
 
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       // for hiding keyboard

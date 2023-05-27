@@ -231,10 +231,10 @@ class _SignInState extends State<SignIn> {
                           ),
                         ],
                       ),
-                      child: Center(
+                      child: const Center(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: const [
+                          children: [
                             Text(
                               'Sign In',
                               style: TextStyle(

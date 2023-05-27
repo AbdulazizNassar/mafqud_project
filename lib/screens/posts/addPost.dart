@@ -1,25 +1,14 @@
 import 'dart:io';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:path/path.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:mafqud_project/services/auth.dart';
 import 'package:mafqud_project/shared/Lists.dart';
-import 'package:mafqud_project/shared/NavMenu.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:mafqud_project/services/googleMap/googleMapsAddPosts.dart';
 import '../../shared/constants.dart';
-import '../../shared/size_config.dart';
-import 'package:mafqud_project/services/googleMap/googleMapsAddPosts.dart';
 
 class AddPosts extends StatefulWidget {
-  AddPosts({Key? key, required this.paths}) : super(key: key);
+  const AddPosts({Key? key, required this.paths}) : super(key: key);
   final paths;
 
   @override
@@ -108,8 +97,8 @@ class _AddPostsState extends State<AddPosts> {
               const SizedBox(
                 height: 20,
               ),
-              Row(
-                children: const [
+              const Row(
+                children: [
                   Text(
                     "Title",
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
@@ -124,6 +113,7 @@ class _AddPostsState extends State<AddPosts> {
                   if (val!.isEmpty) {
                     return "Title is required";
                   }
+                  return null;
                 },
                 maxLines: 1,
                 maxLength: 30,
@@ -142,8 +132,8 @@ class _AddPostsState extends State<AddPosts> {
                   ),
                 ),
               ),
-              Row(
-                children: const [
+              const Row(
+                children: [
                   Text(
                     "Description",
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
@@ -158,6 +148,7 @@ class _AddPostsState extends State<AddPosts> {
                   if (val!.isEmpty) {
                     return "Description is required";
                   }
+                  return null;
                 },
                 maxLines: 4,
                 maxLength: 250,
@@ -176,8 +167,8 @@ class _AddPostsState extends State<AddPosts> {
                   ),
                 ),
               ),
-              Row(
-                children: const [
+              const Row(
+                children: [
                   Text(
                     "Category",
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
@@ -223,6 +214,7 @@ class _AddPostsState extends State<AddPosts> {
                   if (value == null) {
                     return 'Please select category.';
                   }
+                  return null;
                 },
                 onChanged: (value) {
                   //Do something when changing the item if you want.
@@ -231,8 +223,8 @@ class _AddPostsState extends State<AddPosts> {
               const SizedBox(
                 height: 7,
               ),
-              Row(
-                children: const [
+              const Row(
+                children: [
                   Text(
                     "Reward",
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
@@ -250,6 +242,7 @@ class _AddPostsState extends State<AddPosts> {
                   if (!val.isNum && !val.isNotEmpty) {
                     return "Enter Reward Value";
                   }
+                  return null;
                 },
                 maxLines: 1,
                 onSaved: (val) {
@@ -268,8 +261,8 @@ class _AddPostsState extends State<AddPosts> {
                 ),
               ),
               const SizedBox(height: 15),
-              Row(
-                children: const [
+              const Row(
+                children: [
                   Text(
                     "Post type",
                     style: textStyle,
