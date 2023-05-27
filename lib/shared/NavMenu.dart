@@ -45,6 +45,7 @@ class _NavMenuState extends State<NavMenu> {
     });
   }
 
+  @override
   Widget build(BuildContext context) {
     return isLoading
         ? Loading()
@@ -181,14 +182,14 @@ Widget buildMenuItems(BuildContext context) => Container(
             leading: const Icon(Icons.home_outlined),
             title: const Text("Home"),
             onTap: () => Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => Posts())),
+                .push(MaterialPageRoute(builder: (context) => const Posts())),
           ),
           ListTile(
             leading: notificationIcon,
             title: const Text("Notifications"),
             onTap: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => NotificationList()));
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const NotificationList()));
             },
           ),
           ListTile(

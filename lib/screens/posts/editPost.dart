@@ -47,7 +47,7 @@ class _EditPostState extends State<EditPost> {
           "image": imageUrl.toString(),
           "Date": DateTime.now(),
         });
-        Navigator.of(context as BuildContext).popAndPushNamed('History');
+        Navigator.of(context).popAndPushNamed('History');
       } else {
         setState(() {
           msg = "Please choose image";
@@ -84,8 +84,8 @@ class _EditPostState extends State<EditPost> {
                   child: Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(10),
-                    child: Row(
-                      children: const [
+                    child: const Row(
+                      children: [
                         Icon(
                           Icons.photo_outlined,
                           size: 30,
@@ -111,8 +111,8 @@ class _EditPostState extends State<EditPost> {
                   child: Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(10),
-                    child: Row(
-                      children: const [
+                    child: const Row(
+                      children: [
                         Icon(
                           Icons.camera,
                           size: 30,
@@ -170,8 +170,8 @@ class _EditPostState extends State<EditPost> {
               const SizedBox(
                 height: 20,
               ),
-              Row(
-                children: const [
+              const Row(
+                children: [
                   Text(
                     "Title",
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
@@ -183,9 +183,10 @@ class _EditPostState extends State<EditPost> {
               ),
               TextFormField(
                 validator: (val) {
-                  if (val!.length == 0) {
+                  if (val!.isEmpty) {
                     return "Title is required";
                   }
+                  return null;
                 },
                 initialValue: widget.posts['title'],
                 maxLines: 1,
@@ -205,8 +206,8 @@ class _EditPostState extends State<EditPost> {
                   ),
                 ),
               ),
-              Row(
-                children: const [
+              const Row(
+                children: [
                   Text(
                     "Description",
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
@@ -218,9 +219,10 @@ class _EditPostState extends State<EditPost> {
               ),
               TextFormField(
                 validator: (val) {
-                  if (val!.length == 0) {
+                  if (val!.isEmpty) {
                     return "Description is required";
                   }
+                  return null;
                 },
                 initialValue: widget.posts['description'],
                 maxLines: 4,
@@ -240,8 +242,8 @@ class _EditPostState extends State<EditPost> {
                   ),
                 ),
               ),
-              Row(
-                children: const [
+              const Row(
+                children: [
                   Text(
                     "Category",
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
@@ -291,14 +293,15 @@ class _EditPostState extends State<EditPost> {
                   if (value == null) {
                     return 'Please select category.';
                   }
+                  return null;
                 },
                 onChanged: (value) {
                   //Do something when changing the item if you want.
                 },
               ),
               const SizedBox(height: 25),
-              Row(
-                children: const [
+              const Row(
+                children: [
                   Text(
                     "Post type",
                     style: textStyle,

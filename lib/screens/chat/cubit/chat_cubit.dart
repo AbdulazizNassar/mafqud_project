@@ -1,4 +1,3 @@
-import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mafqud_project/models/userModel.dart';
@@ -22,8 +21,6 @@ class ChatCubit extends Cubit<ChatState> {
     users = [];
     emit(GetUserLoadingState());
     FirebaseFirestore.instance.collection('users').doc(uId).get().then((value) {
-      print("==============");
-      print(value.data());
       userData = UserModel.fromJson(value.data()!);
       username = value.data()!['name'];
       emit(GetUserSuccessState());
@@ -153,9 +150,9 @@ class ChatCubit extends Cubit<ChatState> {
         .listen((event) {
       messages = [];
 
-      event.docs.forEach((element) {
+      for (var element in event.docs) {
         messages.add(ChatMessageModel.fromJson(element.data()));
-      });
+      }
       emit(GetMessagesSuccessState());
     });
   }

@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:mafqud_project/shared/AlertBox.dart';
 import 'package:mafqud_project/shared/NavMenu.dart';
 import 'package:mafqud_project/shared/constants.dart';
@@ -21,6 +20,7 @@ class _supportState extends State<support> {
   bool isLoading = false;
   var title, desc, category, type;
   String msg = '';
+  @override
   Widget build(BuildContext context) => isLoading
       ? Loading()
       : Scaffold(
@@ -50,6 +50,7 @@ class _supportState extends State<support> {
                           if (value!.isEmpty) {
                             return 'Title cannot be empty';
                           }
+                          return null;
                         },
                         maxLength: 30,
                         maxLines: 1,
@@ -59,6 +60,7 @@ class _supportState extends State<support> {
                           if (val!.isEmpty) {
                             return "Description is required";
                           }
+                          return null;
                         },
                         maxLines: 4,
                         maxLength: 250,

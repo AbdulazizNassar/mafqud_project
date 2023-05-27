@@ -4,7 +4,6 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:mafqud_project/services/auth.dart';
 import 'package:mafqud_project/shared/NavMenu.dart';
 import 'package:mafqud_project/shared/loading.dart';
-import 'package:mafqud_project/shared/size_config.dart';
 
 class Rating extends StatefulWidget {
   const Rating({super.key});
