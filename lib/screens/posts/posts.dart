@@ -138,98 +138,95 @@ class _PostsState extends State<Posts> {
                 ),
                 Theme(
                   data: themeData(context, highLightedColor),
-                  child: Positioned(
-                    child: SizedBox(
-                      height: 50,
-                      width: 150,
-                      child: FloatingActionButton(
-                        heroTag: "btn2",
-                        shape: const RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(50))),
-                        onPressed: () {},
-                        backgroundColor: Colors.blue.shade900,
-                        child: PopupMenuButton<CategoryItem>(
-                          initialValue: selectedMenu,
-                          onOpened: () {
-                            if (categoryFlag) {
-                              setState(() {
-                                categoryFlag = false;
-                                highLightedColor = false;
-                                categoryTitle = 'Filter';
-                              });
-                            }
-                          },
-                          onCanceled: () {
+                  child: SizedBox(
+                    height: 50,
+                    width: 150,
+                    child: FloatingActionButton(
+                      heroTag: "btn2",
+                      shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(50))),
+                      onPressed: () {},
+                      backgroundColor: Colors.blue.shade900,
+                      child: PopupMenuButton<CategoryItem>(
+                        initialValue: selectedMenu,
+                        onOpened: () {
+                          if (categoryFlag) {
                             setState(() {
-                              highLightedColor = false;
                               categoryFlag = false;
+                              highLightedColor = false;
+                              categoryTitle = 'Filter';
+                            });
+                          }
+                        },
+                        onCanceled: () {
+                          setState(() {
+                            highLightedColor = false;
+                            categoryFlag = false;
+                            categoryTitle = "Filter";
+                          });
+                        },
+                        onSelected: (CategoryItem item) {
+                          if (categoryFlag) {
+                            setState(() {
+                              categoryFlag = false;
+                              highLightedColor = false;
                               categoryTitle = "Filter";
                             });
-                          },
-                          onSelected: (CategoryItem item) {
-                            if (categoryFlag) {
-                              setState(() {
-                                categoryFlag = false;
-                                highLightedColor = false;
-                                categoryTitle = "Filter";
-                              });
-                            } else {
-                              setState(() {
-                                highLightedColor = true;
-                                categoryFlag = true;
-                                categoryTitle = item.name;
-                              });
-                            }
-                            selectedMenu = item;
-                          },
-                          itemBuilder: (BuildContext context) =>
-                              <PopupMenuEntry<CategoryItem>>[
-                            PopupMenuItem(
-                              value: CategoryItem.Animals,
-                              child: ListTile(
-                                leading: const Icon(
-                                  Icons.pets_outlined,
-                                  color: Colors.white,
-                                ),
-                                title: Text("Animals",
-                                    style: popupMenuStyle(context)),
+                          } else {
+                            setState(() {
+                              highLightedColor = true;
+                              categoryFlag = true;
+                              categoryTitle = item.name;
+                            });
+                          }
+                          selectedMenu = item;
+                        },
+                        itemBuilder: (BuildContext context) =>
+                            <PopupMenuEntry<CategoryItem>>[
+                          PopupMenuItem(
+                            value: CategoryItem.Animals,
+                            child: ListTile(
+                              leading: const Icon(
+                                Icons.pets_outlined,
+                                color: Colors.white,
                               ),
+                              title: Text("Animals",
+                                  style: popupMenuStyle(context)),
                             ),
-                            PopupMenuItem(
-                              value: CategoryItem.Electronics,
-                              child: ListTile(
-                                leading: const Icon(
-                                  Icons.phone_outlined,
-                                  color: Colors.white,
-                                ),
-                                title: Text("Electronics",
-                                    style: popupMenuStyle(context)),
-                              ),
-                            ),
-                            PopupMenuItem(
-                              value: CategoryItem.Personalitems,
-                              child: ListTile(
-                                leading: const Icon(
-                                  Icons.person_search_outlined,
-                                  color: Colors.white,
-                                ),
-                                title: Text("Personal Items",
-                                    style: popupMenuStyle(context)),
-                              ),
-                            ),
-                          ],
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              categoryFlag
-                                  ? const Icon(Icons.close_outlined,
-                                      color: Colors.red)
-                                  : filterIcon,
-                              Text(categoryTitle)
-                            ],
                           ),
+                          PopupMenuItem(
+                            value: CategoryItem.Electronics,
+                            child: ListTile(
+                              leading: const Icon(
+                                Icons.phone_outlined,
+                                color: Colors.white,
+                              ),
+                              title: Text("Electronics",
+                                  style: popupMenuStyle(context)),
+                            ),
+                          ),
+                          PopupMenuItem(
+                            value: CategoryItem.Personalitems,
+                            child: ListTile(
+                              leading: const Icon(
+                                Icons.person_search_outlined,
+                                color: Colors.white,
+                              ),
+                              title: Text("Personal Items",
+                                  style: popupMenuStyle(context)),
+                            ),
+                          ),
+                        ],
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            categoryFlag
+                                ? const Icon(Icons.close_outlined,
+                                    color: Colors.red)
+                                : filterIcon,
+                            Text(categoryTitle)
+                          ],
                         ),
                       ),
                     ),

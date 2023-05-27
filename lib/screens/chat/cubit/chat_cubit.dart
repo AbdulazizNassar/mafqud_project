@@ -21,8 +21,6 @@ class ChatCubit extends Cubit<ChatState> {
     users = [];
     emit(GetUserLoadingState());
     FirebaseFirestore.instance.collection('users').doc(uId).get().then((value) {
-      print("==============");
-      print(value.data());
       userData = UserModel.fromJson(value.data()!);
       username = value.data()!['name'];
       emit(GetUserSuccessState());

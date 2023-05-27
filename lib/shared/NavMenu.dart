@@ -188,8 +188,8 @@ Widget buildMenuItems(BuildContext context) => Container(
             leading: notificationIcon,
             title: const Text("Notifications"),
             onTap: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const NotificationList()));
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const NotificationList()));
             },
           ),
           ListTile(
