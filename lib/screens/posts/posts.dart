@@ -86,7 +86,7 @@ class _PostsState extends State<Posts> {
                   IconButton(
                     icon: const Icon(Icons.map_outlined),
                     onPressed: () {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                               builder: (context) => const MapPosts()));
@@ -307,6 +307,17 @@ class _PostsState extends State<Posts> {
 
   InputDecoration searchBar() {
     return InputDecoration(
+      suffixIcon: IconButton(
+        icon: const Icon(
+          Icons.close_outlined,
+          color: Colors.red,
+        ),
+        onPressed: () {
+          setState(() {
+            _controller.clear();
+          });
+        },
+      ),
       prefixIcon: IconButton(
         icon: const Icon(
           Icons.search,
