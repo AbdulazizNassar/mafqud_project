@@ -13,11 +13,11 @@ import 'package:mafqud_project/screens/posts/selectImage.dart';
 
 class Posts extends StatefulWidget {
   final String? searchValue;
-  const Posts({Key? key, this.searchValue})
+  const Posts({Key? key, this.searchValue, this.navKey})
       : super(
           key: key,
         );
-
+  final navKey;
   @override
   State<Posts> createState() => _PostsState();
 }
@@ -104,12 +104,13 @@ class _PostsState extends State<Posts> {
                   IconButton(
                     icon: const Icon(Icons.map_outlined),
                     onPressed: () {
-                      Navigator.pushReplacement(
+                      Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => MapPosts(
                                     lat: lat,
                                     long: long,
+                                    navKey: widget.navKey,
                                   )));
                     },
                   ),

@@ -23,10 +23,13 @@ void main() async {
   runApp(MyApp());
 }
 
+GlobalKey<NavigatorState> navKey = GlobalKey();
+
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navKey,
       debugShowCheckedModeBanner: false,
       title: 'Mafqud',
       theme: ThemeData(
@@ -40,7 +43,9 @@ class MyApp extends StatelessWidget {
         "SignIn": (context) => SignIn(),
         "Register": (context) => Register(),
         "Home": (context) => const Home(),
-        "Posts": (context) => const Posts(),
+        "Posts": (context) => Posts(
+              navKey: navKey,
+            ),
         "AddPost": (context) => const AddPosts(
               paths: '',
             ),

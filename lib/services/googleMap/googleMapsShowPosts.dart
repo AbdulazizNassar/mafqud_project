@@ -7,15 +7,17 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:google_api_headers/google_api_headers.dart';
+import 'package:mafqud_project/main.dart';
 import 'package:mafqud_project/shared/AlertBox.dart';
 import '../../screens/posts/posts.dart';
 import '../../shared/PostCards.dart';
 import '../../shared/loading.dart';
 
 class MapPosts extends StatefulWidget {
-  const MapPosts({super.key, this.lat, this.long});
+  const MapPosts({super.key, this.lat, this.long, this.navKey});
   final lat;
   final long;
+  final navKey;
   @override
   State<MapPosts> createState() => _MapPostsState();
 }
@@ -24,7 +26,6 @@ class MapPosts extends StatefulWidget {
 Set<Marker> _markers = {};
 
 class _MapPostsState extends State<MapPosts> {
-  late NavigatorState _navigator;
   @override
   final String googleApikey = "AIzaSyCj2A3BXC5GYHBlbyjIJlJPr8AWLHKCRv8";
   GoogleMapController? mapController; //contrller for Google map
@@ -33,25 +34,13 @@ class _MapPostsState extends State<MapPosts> {
   @override
   void initState() {
     super.initState();
-    Timer.periodic(Duration(seconds: 60), (Timer t) {
-      if (!mounted) {
-        t.cancel();
-      }
-    });
-    didChangeDependencies();
     PostMapBuilder();
-  }
-
-  @override
-  void didChangeDependencies() {
-    _navigator = Navigator.of(context);
-    super.didChangeDependencies();
   }
 
   @override
   void dispose() {
     super.dispose();
-    _navigator.pushNamed("Posts");
+    Navigator.of(context).pop();
   }
 
   // ignore: non_constant_identifier_names
@@ -67,11 +56,13 @@ class _MapPostsState extends State<MapPosts> {
                     position: LatLng(post["Lat"], post["Lng"]),
                     onTap: () {
                       try {
-                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(snackBarPostDetails(post, context));
+                        final _context = widget.navKey.currentContext;
+                        if (_context != null) {
+                          ScaffoldMessenger.of(_context).hideCurrentSnackBar();
+
+                          snackBarPostDetails(post, _context);
+                        }
                       } catch (e) {
-                        print('eeeeeeeeeeeeee');
                         print(e);
                       }
                     },
@@ -114,16 +105,17 @@ class _MapPostsState extends State<MapPosts> {
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back_ios_new_outlined),
                 onPressed: () {
-                  didChangeDependencies();
-                  dispose();
+                  try {
+                    dispose();
+                  } catch (_) {}
                 },
               ),
               actions: [
                 IconButton(
                     onPressed: () {
-                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                      ScaffoldMessenger.of(context).dispose;
-                      dispose();
+                      try {
+                        dispose();
+                      } catch (_) {}
                     },
                     icon: const Icon(Icons.list_sharp)),
               ],
@@ -132,10 +124,8 @@ class _MapPostsState extends State<MapPosts> {
               GoogleMap(
                 onTap: (_) {
                   ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                  ScaffoldMessenger.of(context).dispose;
-                  dispose();
                 },
-                myLocationEnabled: true,
+                myLocationEnabled: false,
                 //Map widget from google_maps_flutter package
                 zoomGesturesEnabled: true, //enable Zoom in, out on map
                 initialCameraPosition: CameraPosition(
