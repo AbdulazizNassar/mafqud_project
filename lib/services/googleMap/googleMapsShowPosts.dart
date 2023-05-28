@@ -105,7 +105,13 @@ class _MapPostsState extends State<MapPosts> {
                 icon: const Icon(Icons.arrow_back_ios_new_outlined),
                 onPressed: () {
                   try {
+                    setState(() {
+                      isLoading = true;
+                    });
                     dispose();
+                    setState(() {
+                      isLoading = false;
+                    });
                   } catch (_) {}
                 },
               ),
@@ -113,7 +119,13 @@ class _MapPostsState extends State<MapPosts> {
                 IconButton(
                     onPressed: () {
                       try {
+                        setState(() {
+                          isLoading = true;
+                        });
                         dispose();
+                        setState(() {
+                          isLoading = false;
+                        });
                       } catch (_) {}
                     },
                     icon: const Icon(Icons.list_sharp)),
