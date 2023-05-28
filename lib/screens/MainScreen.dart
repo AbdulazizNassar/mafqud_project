@@ -29,7 +29,6 @@ class _MainScreenState extends State<MainScreen> {
           body: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              ///
               FadeInUp(
                 duration: duration,
                 delay: const Duration(milliseconds: 2000),

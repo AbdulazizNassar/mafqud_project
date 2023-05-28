@@ -25,7 +25,5 @@ imgUpload(file) async {
     return await referenceImageToUpload.getDownloadURL();
   } catch (error) {
     //Some error occurred
-    print("error");
-    print(error);
   }
 }
