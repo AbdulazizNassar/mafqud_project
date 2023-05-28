@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
       home: const MainScreen(),
       routes: {
         "MainScreen": (context) => const MainScreen(),
-        "Auth": (context) => Auth(),
+        "Auth": (context) => const Auth(),
         "SignIn": (context) => SignIn(),
         "Register": (context) => Register(),
         "Home": (context) => const Home(),

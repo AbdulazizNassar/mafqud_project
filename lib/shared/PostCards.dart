@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:mafqud_project/shared/DateTime.dart';
+import 'package:provider/provider.dart';
 
 import '../services/showPostDetails.dart';
 
@@ -11,6 +13,13 @@ class PostCards extends StatelessWidget {
   });
   final posts;
   dynamic image;
+  Widget checkUrl(String url) {
+    try {
+      return CachedNetworkImage(imageUrl: url);
+    } catch (e) {
+      return const Icon(Icons.image);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,11 +33,9 @@ class PostCards extends StatelessWidget {
         child: Row(
           children: [
             Expanded(
-                flex: 3,
-                child: Image.network(
-                  posts["image"][0],
-                  fit: BoxFit.cover,
-                )),
+              flex: 3,
+              child: checkUrl(posts['image'][0]),
+            ),
             Expanded(
                 flex: 10,
                 child: ListTile(

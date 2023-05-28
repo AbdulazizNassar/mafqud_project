@@ -125,10 +125,12 @@ class _addImagesState extends State<addImages> {
                         });
                         List<String> paths = [];
 
-                        if (file != null) {
+                        if (images.isNotEmpty) {
                           for (var element in images) {
+                            print(await imgUpload(element));
                             paths.add(await imgUpload(element));
                           }
+
                           setState(() {
                             isLoading = false;
                           });

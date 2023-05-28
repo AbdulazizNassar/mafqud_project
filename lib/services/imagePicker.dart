@@ -20,10 +20,12 @@ imgUpload(file) async {
   //Handle errors/success
   try {
     //Store the file
-    referenceImageToUpload.putFile(File(file!.path));
+    await referenceImageToUpload.putFile(File(file!.path));
     //Success: get the download URL
     return await referenceImageToUpload.getDownloadURL();
   } catch (error) {
     //Some error occurred
+    print("error");
+    print(error);
   }
 }
