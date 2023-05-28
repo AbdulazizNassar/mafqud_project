@@ -46,6 +46,9 @@ class _MapPostsState extends State<MapPosts> {
   // ignore: non_constant_identifier_names
   PostMapBuilder() async {
     if (mounted) {
+      setState(() {
+        isLoading = true;
+      });
       await FirebaseFirestore.instance
           .collection("Posts")
           .get()
@@ -69,6 +72,9 @@ class _MapPostsState extends State<MapPosts> {
                   ));
                 });
               }));
+      setState(() {
+        isLoading = false;
+      });
     } else {
       return;
     }
@@ -88,13 +94,6 @@ class _MapPostsState extends State<MapPosts> {
   bool isLoading = false;
   @override
   Widget build(BuildContext context) {
-    Future.delayed(Duration.zero, () async {
-      if (mounted) {
-        await PostMapBuilder();
-      } else {
-        return;
-      }
-    });
     return isLoading
         ? Loading()
         : Scaffold(
@@ -125,7 +124,6 @@ class _MapPostsState extends State<MapPosts> {
                 onTap: (_) {
                   ScaffoldMessenger.of(context).hideCurrentSnackBar();
                 },
-                myLocationEnabled: false,
                 //Map widget from google_maps_flutter package
                 zoomGesturesEnabled: true, //enable Zoom in, out on map
                 initialCameraPosition: CameraPosition(
