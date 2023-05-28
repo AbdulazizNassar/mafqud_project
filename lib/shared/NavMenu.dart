@@ -129,7 +129,7 @@ buildHeader(BuildContext context) => isLoading
         ),
       );
 
-// BlocConsumer<ChatCubit, ChatState> newMethod() {
+//       BlocConsumer<ChatCubit, ChatState> newMethod() {
 //   return BlocConsumer<ChatCubit, ChatState>(
 //       listener: (context, state) {},
 //       builder: (context, state) {

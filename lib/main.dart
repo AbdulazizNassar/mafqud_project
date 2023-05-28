@@ -14,16 +14,17 @@ import 'services/firebase_options.dart';
 import 'package:mafqud_project/services/googleMap/googleMapsAddPosts.dart';
 import 'package:mafqud_project/services/googleMap/googleMapsShowPosts.dart';
 
+late GlobalKey<NavigatorState> navKey;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await CacheHelper.init();
+  navKey = GlobalKey();
+
   runApp(MyApp());
 }
-
-GlobalKey<NavigatorState> navKey = GlobalKey();
 
 class MyApp extends StatelessWidget {
   @override
@@ -36,12 +37,14 @@ class MyApp extends StatelessWidget {
         appBarTheme: const AppBarTheme(color: Colors.blue, elevation: 2),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: const MainScreen(),
+      home: MainScreen(
+        navKey: navKey,
+      ),
       routes: {
         "MainScreen": (context) => const MainScreen(),
         "Auth": (context) => const Auth(),
-        "SignIn": (context) => SignIn(),
-        "Register": (context) => Register(),
+        "SignIn": (context) => const SignIn(),
+        "Register": (context) => const Register(),
         "Home": (context) => const Home(),
         "Posts": (context) => Posts(
               navKey: navKey,

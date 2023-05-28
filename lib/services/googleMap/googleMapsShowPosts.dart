@@ -40,7 +40,10 @@ class _MapPostsState extends State<MapPosts> {
   @override
   void dispose() {
     super.dispose();
-    Navigator.of(context).pop();
+    widget.navKey.currentState!.pushReplacement(MaterialPageRoute(
+        builder: (context) => Posts(
+              navKey: navKey,
+            )));
   }
 
   // ignore: non_constant_identifier_names

@@ -2,13 +2,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:mafqud_project/main.dart';
 import 'package:mafqud_project/screens/Authentication/sign_in.dart';
 import 'package:mafqud_project/shared/loading.dart';
 import '../services/auth.dart';
+import 'posts/posts.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
-
+  const MainScreen({super.key, this.navKey});
+  final navKey;
   @override
   State<MainScreen> createState() => _MainScreenState();
 }
@@ -86,8 +88,10 @@ class _MainScreenState extends State<MainScreen> {
                 child: SizedBox(
                   child: ElevatedButton.icon(
                       onPressed: () {
-                        Navigator.pushReplacement(context,
-                            MaterialPageRoute(builder: (context) => SignIn()));
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SignIn(navKey: navKey)));
                       },
                       icon: const Icon(
                         Icons.email,
@@ -121,7 +125,11 @@ class _MainScreenState extends State<MainScreen> {
                       setState(() {
                         isLoading = false;
                       });
-                      Navigator.of(context).pushReplacementNamed("Posts");
+                      widget.navKey.currentState
+                          .pushReplacement(MaterialPageRoute(
+                              builder: (context) => Posts(
+                                    navKey: widget.navKey,
+                                  )));
                     },
                     style: ElevatedButton.styleFrom(
                       shadowColor: Colors.grey,

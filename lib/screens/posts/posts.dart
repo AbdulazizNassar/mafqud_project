@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:mafqud_project/main.dart';
 import 'package:mafqud_project/services/googleMap/googleMapsShowPosts.dart';
 import 'package:mafqud_project/services/notification.dart';
 import 'package:mafqud_project/shared/NavMenu.dart';
 import 'package:mafqud_project/shared/constants.dart';
 import '../../shared/AlertBox.dart';
 import '../../shared/PostCards.dart';
-
 import '../../shared/loading.dart';
 import 'package:mafqud_project/screens/posts/selectImage.dart';
 
@@ -104,9 +104,8 @@ class _PostsState extends State<Posts> {
                   IconButton(
                     icon: const Icon(Icons.map_outlined),
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
+                      widget.navKey.currentState!
+                          .pushReplacement(MaterialPageRoute(
                               builder: (context) => MapPosts(
                                     lat: lat,
                                     long: long,

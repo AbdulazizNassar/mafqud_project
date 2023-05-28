@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mafqud_project/main.dart';
 import 'package:mafqud_project/screens/posts/posts.dart';
 import 'package:mafqud_project/shared/AlertBox.dart';
 import 'package:mafqud_project/shared/constants.dart';
@@ -10,6 +11,8 @@ import '../../services/firebase_exceptions.dart';
 import '../chat/cubit/chat_cubit.dart';
 
 class SignIn extends StatefulWidget {
+  const SignIn({super.key, this.navKey});
+  final navKey;
   @override
   _SignInState createState() => _SignInState();
 }
@@ -28,8 +31,10 @@ class _SignInState extends State<SignIn> {
           await AuthService().signInWithEmailAndPassword(email, password);
       uId = response.user!.uid;
       // ChatCubit.get(context).getUserData();
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const Posts()));
+      widget.navKey.currentState.pushReplacement(MaterialPageRoute(
+          builder: (context) => Posts(
+                navKey: navKey,
+              )));
     }
   }
 

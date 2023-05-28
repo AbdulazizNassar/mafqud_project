@@ -1,11 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mafqud_project/screens/Authentication/sign_in.dart';
 import 'package:mafqud_project/services/auth.dart';
 import 'package:mafqud_project/shared/size_config.dart';
 import 'package:mafqud_project/shared/constants.dart';
 import 'package:regexed_validator/regexed_validator.dart';
 
+import '../posts/posts.dart';
+
 class Register extends StatefulWidget {
+  const Register({super.key, this.navKey});
+  final navKey;
   @override
   _RegisterState createState() => _RegisterState();
 }
@@ -22,7 +27,10 @@ class _RegisterState extends State<Register> {
       UserCredential? response = await AuthService()
           .registerWithEmailAndPassword(name, email, password, idNum, PhoneNum);
       uId = response?.user?.uid;
-      Navigator.of(context).pushReplacementNamed("Posts");
+      widget.navKey.currentState.pushReplacement(MaterialPageRoute(
+          builder: (context) => Posts(
+                navKey: widget.navKey,
+              )));
     }
   }
 
@@ -238,7 +246,11 @@ class _RegisterState extends State<Register> {
                                 ),
                                 GestureDetector(
                                   onTap: () {
-                                    Navigator.of(context).pushNamed("SignIn");
+                                    widget.navKey.currentState
+                                        .push(MaterialPageRoute(
+                                            builder: (context) => SignIn(
+                                                  navKey: widget.navKey,
+                                                )));
                                   },
                                   child: const Text(
                                     'Sign In',
