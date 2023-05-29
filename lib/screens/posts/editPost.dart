@@ -151,7 +151,7 @@ class _EditPostState extends State<EditPost> {
         actions: [
           IconButton(
               onPressed: () async {
-                deletePost(context);
+                await deletePost(context);
               },
               icon: const Icon(
                 Icons.delete_forever_outlined,

@@ -1,5 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
+
+import 'package:flutter/material.dart';
 
 imgUpload(file) async {
   if (file == null) return 'Please choose image';
@@ -25,5 +28,13 @@ imgUpload(file) async {
     return await referenceImageToUpload.getDownloadURL();
   } catch (error) {
     //Some error occurred
+  }
+}
+
+Widget checkUrl(String url) {
+  try {
+    return CachedNetworkImage(imageUrl: url);
+  } catch (e) {
+    return const Icon(Icons.image);
   }
 }

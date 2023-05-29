@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mafqud_project/screens/chat/cubit/chat_cubit.dart';
 import 'package:mafqud_project/screens/profile/profile.dart';
+import '../../services/imagePicker.dart';
 import '../../shared/AlertBox.dart';
 import '../../shared/showToast.dart';
 
@@ -19,6 +20,7 @@ class EditProfileScreen extends StatefulWidget {
   final String? email;
   late final String? image;
   final String? phone;
+  final String? ID;
   final String? uid;
 
   EditProfileScreen({
@@ -28,6 +30,7 @@ class EditProfileScreen extends StatefulWidget {
     this.email,
     this.image,
     super.key,
+    this.ID,
   });
 
   @override
@@ -39,14 +42,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   String? _image;
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
-  TextEditingController phoneController = TextEditingController();
 
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController idController = TextEditingController();
   @override
   void initState() {
     nameController = TextEditingController(text: widget.name);
     emailController = TextEditingController(text: widget.email);
     phoneController = TextEditingController(text: widget.phone);
-    // TODO: implement initState
+    idController = TextEditingController(text: widget.ID);
+    phoneController = TextEditingController(text: widget.phone);
     super.initState();
   }
 
@@ -69,15 +74,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 InkWell(
                   onTap: () async {
                     file = await picker.pickImage(source: ImageSource.gallery);
-                    print(file!.path);
                     await imgUpload(file);
                     Navigator.pop(context);
                     Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (_) => const ProfileScreen()));
-                    showToast(
-                        text: 'image updated', state: ToastStates.success);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        snackBarSuccess("Successful", "Information updated "));
                   },
                   child: Container(
                     width: double.infinity,
@@ -102,13 +106,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 InkWell(
                   onTap: () async {
                     file = await picker.pickImage(source: ImageSource.camera);
-                    print(file!.path);
                     await imgUpload(file);
-                    Navigator.pop(context);
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) => const ProfileScreen()));
+                    setState(() {
+                      widget.image = file!.path;
+                    });
                     showToast(
                         text: 'image updated', state: ToastStates.success);
                   },
@@ -136,37 +137,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
           );
         });
-  }
-
-  imgUpload(file) async {
-    if (file == null) return 'Please choose image';
-    //Import dart:core
-    String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
-
-    /*Step 2: Upload to Firebase storage*/
-    //Install firebase_storage
-    //Import the library
-
-    //Get a reference to storage root
-    Reference referenceRoot = FirebaseStorage.instance.ref();
-    Reference referenceDirImages = referenceRoot.child('/profile_pictures');
-
-    //Create a reference for the image to be stored
-    Reference referenceImageToUpload = referenceDirImages.child(file.name);
-
-    //Handle errors/success
-    try {
-      //Store the file
-      referenceImageToUpload.putFile(File(file!.path));
-      //Success: get the download URL
-      _image = await referenceImageToUpload.getDownloadURL();
-      FirebaseFirestore.instance
-          .collection('users')
-          .doc(widget.uid)
-          .update({'image': _image}).catchError((e) {
-        print(e.toString());
-      });
-    } catch (error) {}
   }
 
   @override
@@ -293,6 +263,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       hintText: '+966 XXXXXXXXXX',
                       label: const Text('phone')),
                 ),
+                SizedBox(height: MediaQuery.of(context).size.height * .02),
+                TextFormField(
+                  controller: idController,
+                  validator: (val) =>
+                      val != null && val.isNotEmpty ? null : 'Required Field',
+                  decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.card_giftcard,
+                          color: Color.fromRGBO(59, 92, 222, 1.0)),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                      hintText: '',
+                      label: const Text('ID')),
+                ),
                 // for adding some space
                 SizedBox(height: MediaQuery.of(context).size.height * .05),
                 // update profile button
@@ -314,6 +297,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             'name': nameController.text,
                             'email': emailController.text,
                             'phoneNum': phoneController.text,
+                            'ID': idController.text
                           })
                           .then((value) => {
                                 ChatCubit.get(context).getUserData(),

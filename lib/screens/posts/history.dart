@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:mafqud_project/screens/posts/editPost.dart';
 
 import '../../services/auth.dart';
+import '../../services/imagePicker.dart';
 import '../../shared/DateTime.dart';
 import '../../shared/NavMenu.dart';
 
@@ -74,11 +75,9 @@ class ListPosts extends StatelessWidget {
         child: Row(
           children: [
             Expanded(
-                flex: 3,
-                child: Image.network(
-                  posts['image'],
-                  fit: BoxFit.cover,
-                )),
+              flex: 3,
+              child: checkUrl(posts['image'][0]),
+            ),
             Expanded(
                 flex: 9,
                 child: ListTile(

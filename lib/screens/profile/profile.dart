@@ -19,6 +19,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String? myEmail;
   String? myPassword;
   String? myPhoneNum;
+  String? ID;
   String? myImage;
   String? uid;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -96,6 +97,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                     phone: myPhoneNum,
                                                     uid: uid,
                                                     image: myImage,
+                                                    ID: ID,
                                                   )));
                                     },
                                   )),
@@ -250,6 +252,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         myImage = ds.get('image') as String;
         name = ds.get('name') as String;
         myPhoneNum = ds.get('phoneNum') as String;
+        ID = ds.get('ID') as String;
       }).catchError((e) {
         if (kDebugMode) {
           print(e);

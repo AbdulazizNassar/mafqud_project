@@ -15,6 +15,34 @@ class support extends StatefulWidget {
 }
 
 class _supportState extends State<support> {
+  void uploadForm() async {
+    setState(() {
+      isLoading = true;
+    });
+    CollectionReference support =
+        FirebaseFirestore.instance.collection("support");
+    var userID = AuthService().currentUser!.uid;
+    var data = _formKey.currentState;
+    if (data!.validate() && type != null) {
+      data.save();
+      await support.add({
+        "title": title,
+        "description": desc,
+        "userID": userID,
+        "type": type,
+        "Date": DateTime.now(),
+      });
+      confirmationAlert(context, "Message sent successfully");
+    } else {
+      setState(() {
+        msg = "Please choose type of message";
+      });
+    }
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   @override
   final _formKey = GlobalKey<FormState>();
   bool isLoading = false;
@@ -125,32 +153,7 @@ class _supportState extends State<support> {
                     ),
                     ElevatedButton(
                       onPressed: () async {
-                        setState(() {
-                          isLoading = true;
-                        });
-                        CollectionReference support =
-                            FirebaseFirestore.instance.collection("support");
-                        var userID = AuthService().currentUser!.uid;
-                        var data = _formKey.currentState;
-                        if (data!.validate() && type != null) {
-                          data.save();
-                          await support.add({
-                            "title": title,
-                            "description": desc,
-                            "userID": userID,
-                            "type": type,
-                            "Date": DateTime.now(),
-                          });
-                          confirmationAlert(
-                              context, "Message sent successfully");
-                        } else {
-                          setState(() {
-                            msg = "Please choose type of message";
-                          });
-                        }
-                        setState(() {
-                          isLoading = false;
-                        });
+                        uploadForm();
                       },
                       child: const Text(
                         "submit",

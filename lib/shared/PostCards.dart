@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mafqud_project/shared/DateTime.dart';
 import 'package:provider/provider.dart';
 
+import '../services/imagePicker.dart';
 import '../services/showPostDetails.dart';
 
 class PostCards extends StatelessWidget {
@@ -13,13 +14,6 @@ class PostCards extends StatelessWidget {
   });
   final posts;
   dynamic image;
-  Widget checkUrl(String url) {
-    try {
-      return CachedNetworkImage(imageUrl: url);
-    } catch (e) {
-      return const Icon(Icons.image);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {

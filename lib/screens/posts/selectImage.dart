@@ -52,7 +52,13 @@ class _addImagesState extends State<addImages> {
                 ),
                 InkWell(
                   onTap: () async {
-                    file = await picker.pickImage(source: ImageSource.gallery);
+                    file = await ImagePicker()
+                        .pickImage(source: ImageSource.gallery);
+
+                    setState(() {
+                      images.add(file);
+                      isloaded = true;
+                    });
                   },
                   child: Container(
                     width: double.infinity,
@@ -127,13 +133,9 @@ class _addImagesState extends State<addImages> {
 
                         if (images.isNotEmpty) {
                           for (var element in images) {
-                            print(await imgUpload(element));
                             paths.add(await imgUpload(element));
                           }
 
-                          setState(() {
-                            isLoading = false;
-                          });
                           // ignore: use_build_context_synchronously
                           Navigator.push(
                               context,
@@ -142,6 +144,9 @@ class _addImagesState extends State<addImages> {
                                         paths: paths,
                                       )));
                         } else {
+                          setState(() {
+                            isLoading = false;
+                          });
                           setState(() {
                             msg = 'You must upload at least 1 image ';
                           });
