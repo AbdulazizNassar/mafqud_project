@@ -88,10 +88,8 @@ class _MainScreenState extends State<MainScreen> {
                 child: SizedBox(
                   child: ElevatedButton.icon(
                       onPressed: () {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => SignIn(navKey: navKey)));
+                        navKey.currentState!.push(MaterialPageRoute(
+                            builder: (context) => SignIn(navKey: navKey)));
                       },
                       icon: const Icon(
                         Icons.email,
