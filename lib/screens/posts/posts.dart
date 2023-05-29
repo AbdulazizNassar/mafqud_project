@@ -116,7 +116,7 @@ class _PostsState extends State<Posts> {
                   showSearchBar(context),
                 ],
               ),
-              drawer: const NavMenu(),
+              drawer: NavMenu(navKey: widget.navKey),
               body: searchFlag
                   ? TabBarView(
                       children: [
@@ -150,7 +150,7 @@ class _PostsState extends State<Posts> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const addImages()));
+                                builder: (context) => addImages()));
                       },
                       child: const Icon(Icons.add),
                     ),

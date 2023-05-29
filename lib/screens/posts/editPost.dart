@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mafqud_project/main.dart';
 import 'package:mafqud_project/services/auth.dart';
 import 'package:mafqud_project/shared/Lists.dart';
 
@@ -29,7 +30,7 @@ class _EditPostState extends State<EditPost> {
   CollectionReference post = FirebaseFirestore.instance.collection("Posts");
   deletePost(context) async {
     await post.doc(widget.docID).delete();
-    Navigator.of(context).pushReplacementNamed("History");
+    navKey.currentState!.pushReplacementNamed("History");
   }
 
   updatePost(BuildContext context) async {
@@ -47,7 +48,7 @@ class _EditPostState extends State<EditPost> {
           "image": imageUrl.toString(),
           "Date": DateTime.now(),
         });
-        Navigator.of(context).popAndPushNamed('History');
+        navKey.currentState!.popAndPushNamed('History');
       } else {
         setState(() {
           msg = "Please choose image";
@@ -58,80 +59,6 @@ class _EditPostState extends State<EditPost> {
         msg = "Please choose type of the post";
       });
     }
-  }
-
-  showButtomSheet(BuildContext context) {
-    return showModalBottomSheet(
-        context: context,
-        builder: (context) {
-          return Container(
-            padding: const EdgeInsets.all(20),
-            height: 190,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  "Please Choose Image",
-                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                ),
-                InkWell(
-                  onTap: () async {
-                    ImagePicker picker = ImagePicker();
-                    XFile? file =
-                        await picker.pickImage(source: ImageSource.gallery);
-                    imgUpload(file);
-                  },
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(10),
-                    child: const Row(
-                      children: [
-                        Icon(
-                          Icons.photo_outlined,
-                          size: 30,
-                        ),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        Text(
-                          "From Gallery",
-                          style: TextStyle(fontSize: 20),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                InkWell(
-                  onTap: () async {
-                    ImagePicker picker = ImagePicker();
-                    XFile? file =
-                        await picker.pickImage(source: ImageSource.camera);
-                    imgUpload(file);
-                  },
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(10),
-                    child: const Row(
-                      children: [
-                        Icon(
-                          Icons.camera,
-                          size: 30,
-                        ),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        Text(
-                          "From Camera",
-                          style: TextStyle(fontSize: 20),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        });
   }
 
   @override
@@ -341,19 +268,19 @@ class _EditPostState extends State<EditPost> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        showButtomSheet(context);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue[900],
-                      ),
-                      child: const Text("Change Image"),
-                    ),
+                    // ElevatedButton(
+                    //   onPressed: () {
+                    //     showButtomSheet(context);
+                    //   },
+                    //   style: ElevatedButton.styleFrom(
+                    //     backgroundColor: Colors.blue[900],
+                    //   ),
+                    //   child: const Text("Change Image"),
+                    // ),
                     const SizedBox(width: 20),
                     ElevatedButton(
                       onPressed: () {
-                        showButtomSheet(context);
+                        // showButtomSheet(context);
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue[900],

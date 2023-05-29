@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mafqud_project/main.dart';
 import 'package:mafqud_project/screens/MenuItems/Notifications/constant.dart';
 import 'package:mafqud_project/screens/chat/chat_list.dart';
 import 'package:mafqud_project/screens/chat/cubit/chat_cubit.dart';
@@ -18,8 +19,8 @@ CollectionReference _userCollection =
     FirebaseFirestore.instance.collection('users');
 
 class NavMenu extends StatefulWidget {
-  const NavMenu({super.key});
-
+  const NavMenu({super.key, this.navKey});
+  final navKey;
   @override
   State<NavMenu> createState() => _NavMenuState();
 }
@@ -195,8 +196,8 @@ Widget buildMenuItems(BuildContext context) => Container(
           ListTile(
             leading: const Icon(Icons.history_outlined),
             title: const Text("History"),
-            onTap: () => Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => const History())),
+            onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => History(navKey: navKey))),
           ),
           ListTile(
             leading: const Icon(Icons.message_outlined),

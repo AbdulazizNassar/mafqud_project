@@ -22,8 +22,8 @@ import '../../shared/size_config.dart';
 import 'package:mafqud_project/services/googleMap/googleMapsAddPosts.dart';
 
 class addImages extends StatefulWidget {
-  const addImages({super.key});
-
+  addImages({super.key, this.posts});
+  final posts;
   @override
   State<addImages> createState() => _addImagesState();
 }
@@ -169,53 +169,7 @@ class _addImagesState extends State<addImages> {
                             "No Images uploaded\n Maximum 3 images",
                             style: TextStyle(fontSize: 25),
                           ))
-                        : ListView.separated(
-                            separatorBuilder: (context, index) => const Divider(
-                              color: Colors.black,
-                              thickness: 20,
-                            ),
-                            itemCount: images.length,
-                            scrollDirection: Axis.vertical,
-                            itemBuilder: (BuildContext context, int index) {
-                              return GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    images.removeAt(index);
-                                  });
-                                },
-                                child: Stack(
-                                  children: <Widget>[
-                                    Container(
-                                      decoration: const BoxDecoration(
-                                          color: Colors.black),
-                                      alignment: Alignment.center,
-                                      width: MediaQuery.of(context).size.width,
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.25,
-                                      child: Image.file(
-                                        File(images[index]!.path),
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.25,
-                                        fit: BoxFit.fill,
-                                      ),
-                                    ),
-                                    const Align(
-                                      alignment: Alignment.bottomLeft,
-                                      child: Icon(
-                                        Icons.close,
-                                        color: Colors.red,
-                                        size: 40,
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
+                        : ListViewImage(widget.posts),
                   ),
                   ElevatedButton(
                     onPressed: () {
@@ -241,6 +195,52 @@ class _addImagesState extends State<addImages> {
                   ),
                 ],
               )));
+
+  ListView ListViewImage(posts) {
+    return ListView.separated(
+      separatorBuilder: (context, index) => const Divider(
+        color: Colors.black,
+        thickness: 20,
+      ),
+      itemCount: images.length,
+      scrollDirection: Axis.vertical,
+      itemBuilder: (BuildContext context, int index) {
+        return GestureDetector(
+          onTap: () {
+            setState(() {
+              images.removeAt(index);
+            });
+          },
+          child: Stack(
+            children: <Widget>[
+              Container(
+                decoration: const BoxDecoration(color: Colors.black),
+                alignment: Alignment.center,
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height * 0.25,
+                child: Image.file(
+                  posts['image']
+                      ? File(images[index]!.path)
+                      : File(posts["image"]),
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height * 0.25,
+                  fit: BoxFit.fill,
+                ),
+              ),
+              const Align(
+                alignment: Alignment.bottomLeft,
+                child: Icon(
+                  Icons.close,
+                  color: Colors.red,
+                  size: 40,
+                ),
+              )
+            ],
+          ),
+        );
+      },
+    );
+  }
 
   Column newMethod(BuildContext context) {
     return Column(

@@ -125,11 +125,10 @@ class _MainScreenState extends State<MainScreen> {
                       setState(() {
                         isLoading = false;
                       });
-                      widget.navKey.currentState!
-                          .pushReplacement(MaterialPageRoute(
-                              builder: (context) => Posts(
-                                    navKey: widget.navKey,
-                                  )));
+                      navKey.currentState!.pushReplacement(MaterialPageRoute(
+                          builder: (context) => Posts(
+                                navKey: widget.navKey,
+                              )));
                     },
                     style: ElevatedButton.styleFrom(
                       shadowColor: Colors.grey,

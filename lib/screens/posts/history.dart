@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mafqud_project/main.dart';
 import 'package:mafqud_project/screens/posts/editPost.dart';
+import 'package:mafqud_project/screens/posts/selectImage.dart';
 
 import '../../services/auth.dart';
 import '../../services/imagePicker.dart';
@@ -9,8 +11,8 @@ import '../../shared/DateTime.dart';
 import '../../shared/NavMenu.dart';
 
 class History extends StatefulWidget {
-  const History({Key? key}) : super(key: key);
-
+  const History({Key? key, this.navKey}) : super(key: key);
+  final navKey;
   @override
   State<History> createState() => _HistoryState();
 }
@@ -63,13 +65,13 @@ class ListPosts extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => EditPost(
-                      posts: posts,
-                      docID: docID,
-                    )));
+        // navKey.currentState!.push(MaterialPageRoute(
+        //     builder: (context) => EditPost(
+        //           posts: posts,
+        //           docID: docID,
+        //         )));
+        navKey.currentState!.push(
+            MaterialPageRoute(builder: (context) => addImages(posts: posts)));
       },
       child: Card(
         child: Row(
