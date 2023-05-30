@@ -83,12 +83,13 @@ class ChatCubit extends Cubit<ChatState> {
       dateTime: dateTime,
       text: text,
     );
-    DocumentSnapshot snap = await FirebaseFirestore.instance
+    DocumentSnapshot<Map<String, dynamic>> snap = await FirebaseFirestore
+        .instance
         .collection("userToken")
-        .doc(receiverId)
+        .doc(receiverUid)
         .get();
-    String token = snap['token'];
-    sendPushMessage("You've got a new message ", 'from $sendername', token,
+    sendPushMessage(
+        "You've got a new message ", 'from $receivername', snap['token'],
         uidReceiver: receiverId, nameReceiver: receivername);
     FirebaseFirestore.instance
         .collection('users')

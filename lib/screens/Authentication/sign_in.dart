@@ -176,7 +176,7 @@ class _SignInState extends State<SignIn> {
                                 ),
                                 GestureDetector(
                                   onTap: () {
-                                    Navigator.of(context).pushNamed("Register");
+                                    navKey.currentState!.pushNamed("Register");
                                   },
                                   child: const Text(
                                     'Sign Up',
@@ -221,7 +221,7 @@ class _SignInState extends State<SignIn> {
                           ),
                         ],
                       ),
-                      child:  Center(
+                      child: Center(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [

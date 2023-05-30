@@ -52,12 +52,13 @@ class AuthService {
   registerWithEmailAndPassword(String name, String email, String password,
       String ID, String phoneNum) async {
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      UserCredential response =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
       createUserModel(name, email, ID, phoneNum);
-
+      return response;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         print('The password provided is too weak.');
