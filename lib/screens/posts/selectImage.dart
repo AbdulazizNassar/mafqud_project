@@ -53,6 +53,10 @@ class _addImagesState extends State<addImages> {
                 InkWell(
                   onTap: () async {
                     file = await picker.pickImage(source: ImageSource.gallery);
+                    setState(() {
+                      images.add(file);
+                      isloaded = true;
+                    });
                   },
                   child: Container(
                     width: double.infinity,
