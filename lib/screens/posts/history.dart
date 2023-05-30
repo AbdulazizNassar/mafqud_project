@@ -106,7 +106,7 @@ class ListPosts extends StatelessWidget {
             ),
             Text(
               readTimestamp(posts["Date"]),
-              style: const TextStyle(fontWeight: FontWeight.w100, fontSize: 15),
+              style: const TextStyle(fontWeight: FontWeight.w100, fontSize: 20),
             ),
             const Icon(
               Icons.edit,

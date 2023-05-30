@@ -109,7 +109,7 @@ class _MapScreenState extends State<MapScreen> {
                           snackBarSuccess(
                               "success", "Post created successfully"));
 
-                      Navigator.of(context).pushReplacementNamed("Posts");
+                      Navigator.of(context).popAndPushNamed("Posts");
                     }
                   },
                   icon: const Icon(Icons.done))
