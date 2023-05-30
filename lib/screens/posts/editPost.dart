@@ -32,11 +32,6 @@ class _EditPostState extends State<EditPost> {
   var selectedValue;
 
   final _formKey = GlobalKey<FormState>();
-  TextEditingController titleController = TextEditingController();
-  TextEditingController descriptionController = TextEditingController();
-  TextEditingController categoryController = TextEditingController();
-  TextEditingController rewardController = TextEditingController();
-  TextEditingController statusController = TextEditingController();
   CollectionReference post = FirebaseFirestore.instance.collection("Posts");
   deletePost(context) async {
     await post.doc(widget.docID).delete();
@@ -46,12 +41,6 @@ class _EditPostState extends State<EditPost> {
   @override
   void initState() {
     super.initState();
-    titleController = TextEditingController(text: widget.posts['title']);
-    descriptionController =
-        TextEditingController(text: widget.posts['description']);
-    categoryController = TextEditingController(text: widget.posts['category']);
-    rewardController = TextEditingController(text: widget.posts['reward']);
-    statusController = TextEditingController(text: widget.posts['status']);
     setState(() {
       status = widget.posts['status'];
       getUserCurrentLocation().then((value) {
@@ -74,7 +63,18 @@ class _EditPostState extends State<EditPost> {
     var data = _formKey.currentState;
     if (data!.validate()) {
       data.save();
-      print(description);
+      navKey.currentState!.pushReplacement(MaterialPageRoute(
+          builder: (context) => MapScreen(
+                title: title,
+                lat: widget.posts['Lat'],
+                long: widget.posts['Lng'],
+                description: description,
+                category: category,
+                paths: widget.images,
+                status: status,
+                reward: reward,
+                docID: widget.docID,
+              )));
     }
   }
 
@@ -120,7 +120,6 @@ class _EditPostState extends State<EditPost> {
                 height: 7,
               ),
               TextFormField(
-                controller: titleController,
                 validator: (val) {
                   if (val!.isEmpty) {
                     return "Title is required";
@@ -130,6 +129,16 @@ class _EditPostState extends State<EditPost> {
                 initialValue: widget.posts['title'],
                 maxLines: 1,
                 maxLength: 30,
+                onChanged: (val) {
+                  setState(() {
+                    title = val;
+                  });
+                },
+                onSaved: (val) {
+                  setState(() {
+                    title = val;
+                  });
+                },
                 decoration: InputDecoration(
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 20,
@@ -154,7 +163,6 @@ class _EditPostState extends State<EditPost> {
                 height: 7,
               ),
               TextFormField(
-                controller: descriptionController,
                 validator: (val) {
                   if (val!.isEmpty) {
                     return "Description is required";
@@ -164,6 +172,14 @@ class _EditPostState extends State<EditPost> {
                 initialValue: widget.posts['description'],
                 maxLines: 4,
                 maxLength: 250,
+                onChanged: (val) {
+                  setState(() {
+                    description = val;
+                  });
+                },
+                onSaved: (val) {
+                  description = val;
+                },
                 decoration: InputDecoration(
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 20,
