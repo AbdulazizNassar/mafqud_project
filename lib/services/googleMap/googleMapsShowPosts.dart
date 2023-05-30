@@ -52,6 +52,7 @@ class _MapPostsState extends State<MapPosts> {
       setState(() {
         isLoading = true;
       });
+
       await FirebaseFirestore.instance
           .collection("Posts")
           .get()
@@ -75,6 +76,7 @@ class _MapPostsState extends State<MapPosts> {
                   ));
                 });
               }));
+
       setState(() {
         isLoading = false;
       });
@@ -111,6 +113,7 @@ class _MapPostsState extends State<MapPosts> {
                     setState(() {
                       isLoading = true;
                     });
+
                     dispose();
                     setState(() {
                       isLoading = false;

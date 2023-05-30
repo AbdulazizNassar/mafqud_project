@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mafqud_project/main.dart';
 import 'package:mafqud_project/screens/posts/editPost.dart';
+import 'package:mafqud_project/screens/posts/selectImage.dart';
+import 'package:mafqud_project/shared/loading.dart';
 
 import '../../services/auth.dart';
 import '../../services/imagePicker.dart';
@@ -42,10 +45,17 @@ class _HistoryState extends State<History> {
                       docID: snapshot.data?.docs[i].id,
                     );
                   });
+            } else if (!snapshot.hasData) {
+              return const Center(
+                child: Text(
+                  "No Posts Found",
+                  style: TextStyle(color: Colors.red),
+                ),
+              );
             } else if (snapshot.hasError) {
               return const Text("Error");
             } else if (snapshot.connectionState == ConnectionState.waiting) {
-              const Text("loading");
+              Loading();
             }
             return const Text(".");
           }),
@@ -63,13 +73,8 @@ class ListPosts extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => EditPost(
-                      posts: posts,
-                      docID: docID,
-                    )));
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => addImages(posts: posts, docID: docID)));
       },
       child: Card(
         child: Row(

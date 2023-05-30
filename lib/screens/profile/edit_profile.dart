@@ -86,7 +86,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   child: Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(10),
-                    child: Row(
+                    child: const Row(
                       children: [
                         Icon(
                           Icons.photo_outlined,
@@ -116,7 +116,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   child: Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(10),
-                    child:  Row(
+                    child: const Row(
                       children: [
                         Icon(
                           Icons.camera,

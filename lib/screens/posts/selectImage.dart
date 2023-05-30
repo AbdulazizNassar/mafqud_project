@@ -4,7 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:mafqud_project/main.dart';
 import 'package:mafqud_project/screens/posts/addPost.dart';
+import 'package:mafqud_project/screens/posts/editPost.dart';
 import 'package:mafqud_project/shared/loading.dart';
 import 'package:path/path.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -22,8 +24,9 @@ import '../../shared/size_config.dart';
 import 'package:mafqud_project/services/googleMap/googleMapsAddPosts.dart';
 
 class addImages extends StatefulWidget {
-  const addImages({super.key});
-
+  const addImages({super.key, this.posts, this.docID});
+  final posts;
+  final docID;
   @override
   State<addImages> createState() => _addImagesState();
 }
@@ -34,6 +37,19 @@ class _addImagesState extends State<addImages> {
   bool isloaded = false;
   List<XFile?> images = [];
   String msg = '';
+  List<String> list = [];
+
+  loadImage() {
+    for (var i = 0; i < 3; i++) {
+      try {
+        if (widget.posts["image"][i] != null) {
+          list.add(widget.posts["image"][i]);
+        }
+      } catch (e) {
+        print(e);
+      }
+    }
+  }
 
   showBottomSheet(BuildContext context) {
     final ImagePicker picker = ImagePicker();
@@ -54,11 +70,17 @@ class _addImagesState extends State<addImages> {
                   onTap: () async {
                     file = await ImagePicker()
                         .pickImage(source: ImageSource.gallery);
-
-                    setState(() {
-                      images.add(file);
-                      isloaded = true;
-                    });
+                    if (widget.posts != null) {
+                      list.add(await imgUpload(file));
+                      setState(() {
+                        isloaded = true;
+                      });
+                    } else {
+                      setState(() {
+                        images.add(file);
+                        isloaded = true;
+                      });
+                    }
                   },
                   child: Container(
                     width: double.infinity,
@@ -84,11 +106,17 @@ class _addImagesState extends State<addImages> {
                   onTap: () async {
                     file = await ImagePicker()
                         .pickImage(source: ImageSource.camera);
-
-                    setState(() {
-                      images.add(file);
-                      isloaded = true;
-                    });
+                    if (widget.posts != null) {
+                      list.add(await imgUpload(file));
+                      setState(() {
+                        isloaded = true;
+                      });
+                    } else {
+                      setState(() {
+                        images.add(file);
+                        isloaded = true;
+                      });
+                    }
                   },
                   child: Container(
                     width: double.infinity,
@@ -116,6 +144,15 @@ class _addImagesState extends State<addImages> {
         });
   }
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    try {
+      loadImage();
+    } catch (e) {}
+  }
+
   bool isLoading = false;
   @override
   Widget build(BuildContext context) => isLoading
@@ -136,13 +173,17 @@ class _addImagesState extends State<addImages> {
                             paths.add(await imgUpload(element));
                           }
 
-                          // ignore: use_build_context_synchronously
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => AddPosts(
-                                        paths: paths,
-                                      )));
+                          navKey.currentState!.push(MaterialPageRoute(
+                              builder: (context) => AddPosts(
+                                    paths: paths,
+                                  )));
+                        } else if (list.isNotEmpty) {
+                          navKey.currentState!.push(MaterialPageRoute(
+                              builder: (context) => EditPost(
+                                    images: list,
+                                    posts: widget.posts,
+                                    docID: widget.docID,
+                                  )));
                         } else {
                           setState(() {
                             isLoading = false;
@@ -168,45 +209,69 @@ class _addImagesState extends State<addImages> {
                         color: Colors.black,
                         thickness: 10,
                       ),
-                      itemCount: images.isEmpty ? 3 : images.length,
+                      itemCount: list.isNotEmpty
+                          ? list.length
+                          : images.isNotEmpty
+                              ? images.length
+                              : 3,
                       scrollDirection: Axis.vertical,
                       itemBuilder: (BuildContext context, int index) {
                         return GestureDetector(
                           onTap: () {
                             setState(() {
-                              images.removeAt(index);
+                              try {
+                                if (images.isNotEmpty) {
+                                  images.removeAt(index);
+                                } else if (list.isNotEmpty) {
+                                  list.removeAt(index);
+                                }
+                              } catch (e) {}
                             });
                           },
                           child: Stack(
                             children: <Widget>[
-                              images.isEmpty
-                                  ? Container(
-                                      alignment: Alignment.center,
-                                      width: MediaQuery.of(context).size.width,
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.25,
-                                      child: const Center(
+                              images.isEmpty && list.isEmpty
+                                  ? imageContainer(
+                                      context,
+                                      index,
+                                      const Center(
                                           child: Icon(
                                         Icons.image_outlined,
                                         size: 100,
                                       )))
-                                  : Container(
-                                      alignment: Alignment.center,
-                                      width: MediaQuery.of(context).size.width,
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.25,
-                                      child: Image.file(
-                                        File(images[index]!.path),
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        height:
-                                            MediaQuery.of(context).size.height *
+                                  : list.isNotEmpty
+                                      ? imageContainer(
+                                          context,
+                                          index,
+                                          Image.network(
+                                            list[index],
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.50,
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
                                                 0.25,
-                                        fit: BoxFit.fill,
-                                      ),
-                                    ),
+                                            fit: BoxFit.fill,
+                                          ),
+                                        )
+                                      : imageContainer(
+                                          context,
+                                          index,
+                                          Image.file(
+                                            File(images[index]!.path),
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.50,
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.25,
+                                            fit: BoxFit.fill,
+                                          ),
+                                        ),
                               const Align(
                                 alignment: Alignment.bottomLeft,
                                 child: Icon(
@@ -223,7 +288,7 @@ class _addImagesState extends State<addImages> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      if (images.length < 3) {
+                      if (images.length < 3 && list.length < 3) {
                         showBottomSheet(context);
                       } else {
                         setState(() {
@@ -246,15 +311,11 @@ class _addImagesState extends State<addImages> {
                 ],
               )));
 
-  Column newMethod(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        SizedBox(
-          height: MediaQuery.of(context).size.height * 0.25,
-        ),
-      ],
-    );
+  Container imageContainer(BuildContext context, int index, Widget? child) {
+    return Container(
+        alignment: Alignment.center,
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height * 0.25,
+        child: child);
   }
 }

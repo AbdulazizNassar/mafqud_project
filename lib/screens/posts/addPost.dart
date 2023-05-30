@@ -31,7 +31,7 @@ class _AddPostsState extends State<AddPosts> {
   final _formKey = GlobalKey<FormState>();
   CollectionReference posts = FirebaseFirestore.instance.collection("Posts");
 
-  createPost(BuildContext context) async {
+  createPost(BuildContext context) {
     var data = _formKey.currentState;
     if (data!.validate() && status != null) {
       data.save();
@@ -131,7 +131,7 @@ class _AddPostsState extends State<AddPosts> {
                   ),
                 ),
               ),
-              Row(
+              const Row(
                 children: [
                   Text(
                     "Description",
@@ -166,7 +166,7 @@ class _AddPostsState extends State<AddPosts> {
                   ),
                 ),
               ),
-              Row(
+              const Row(
                 children: [
                   Text(
                     "Category",
@@ -222,7 +222,7 @@ class _AddPostsState extends State<AddPosts> {
               const SizedBox(
                 height: 7,
               ),
-              Row(
+              const Row(
                 children: [
                   Text(
                     "Reward",
@@ -260,7 +260,7 @@ class _AddPostsState extends State<AddPosts> {
                 ),
               ),
               const SizedBox(height: 15),
-              Row(
+              const Row(
                 children: [
                   Text(
                     "Post type",

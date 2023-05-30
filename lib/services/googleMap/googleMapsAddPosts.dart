@@ -10,6 +10,8 @@ import 'package:mafqud_project/services/auth.dart';
 import 'package:mafqud_project/shared/AlertBox.dart';
 import 'package:mafqud_project/shared/loading.dart';
 
+import '../../screens/posts/posts.dart';
+
 class MapScreen extends StatefulWidget {
   const MapScreen(
       {super.key,
@@ -20,7 +22,8 @@ class MapScreen extends StatefulWidget {
       this.category,
       required this.paths,
       this.status,
-      this.reward});
+      this.reward,
+      this.docID});
   final title;
   final description;
   final category;
@@ -29,31 +32,57 @@ class MapScreen extends StatefulWidget {
   final reward;
   final lat;
   final long;
+  final docID;
   @override
   State<MapScreen> createState() => _MapScreenState();
 }
 
 LatLng? selectedLocation;
-savePostToFirebase(
-    var title, description, category, imageUrl, String? status, reward) async {
+savePostToFirebase(var title, description, category, imageUrl, String? status,
+    reward, docID) async {
   var userID = AuthService().currentUser!.uid;
   List<String> imagePath = [];
-
-  await FirebaseFirestore.instance.collection("Posts").add({
-    "title": title,
-    "description": description,
-    "category": category,
-    "userID": userID,
-    "status": status,
-    "image": imageUrl,
-    "Date": DateTime.now(),
-    "Lat": selectedLocation!.latitude,
-    "Lng": selectedLocation!.longitude,
-    'reward': reward,
-  });
+  if (docID != null) {
+    await FirebaseFirestore.instance.collection("Posts").doc(docID).update({
+      "title": title,
+      "description": description,
+      "category": category,
+      "userID": userID,
+      "status": status,
+      "image": imageUrl,
+      "Date": DateTime.now(),
+      "Lat": selectedLocation!.latitude,
+      "Lng": selectedLocation!.longitude,
+      'reward': reward,
+    });
+  } else {
+    await FirebaseFirestore.instance.collection("Posts").add({
+      "title": title,
+      "description": description,
+      "category": category,
+      "userID": userID,
+      "status": status,
+      "image": imageUrl,
+      "Date": DateTime.now(),
+      "Lat": selectedLocation!.latitude,
+      "Lng": selectedLocation!.longitude,
+      'reward': reward,
+    });
+  }
 }
 
 class _MapScreenState extends State<MapScreen> {
+  loadMarker() {
+    if (widget.lat != null) {
+      setState(() {
+        _markers.add(Marker(
+          markerId: const MarkerId('1'),
+          position: LatLng(widget.lat, widget.long),
+        ));
+      });
+    }
+  }
+
   final Set<Marker> _markers = {};
   final String googleApikey = "AIzaSyCj2A3BXC5GYHBlbyjIJlJPr8AWLHKCRv8";
   GoogleMapController? mapController; //contrller for Google map
@@ -71,6 +100,13 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   bool isLoading = false;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    loadMarker();
+  }
+
   @override
   Widget build(BuildContext context) => isLoading
       ? Loading()
@@ -102,7 +138,10 @@ class _MapScreenState extends State<MapScreen> {
                           widget.category,
                           widget.paths,
                           widget.status,
-                          widget.reward);
+                          widget.reward,
+                          widget.docID);
+                      navKey.currentState!.push(MaterialPageRoute(
+                          builder: (context) => const Posts()));
                       setState(() {
                         isLoading = false;
                       });
@@ -121,6 +160,7 @@ class _MapScreenState extends State<MapScreen> {
               myLocationEnabled: true,
               onTap: (LatLng newpos) {
                 setState(() {
+                  _markers.clear();
                   _markers.add(Marker(
                     markerId: const MarkerId('selectedLocation'),
                     position: LatLng(newpos.latitude, newpos.longitude),
