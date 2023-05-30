@@ -49,18 +49,18 @@ class PostCards extends StatelessWidget {
                           children: [
                             const Icon(
                               Icons.timer_outlined,
-                              size: 19,
+                              size: 30,
                             ),
                             Container(
                               padding: const EdgeInsets.only(top: 5),
                               child: Text(
                                 readTimestamp(posts["Date"]),
-
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 15),
                               ),
                             ),
                           ],
-                        ),
-                        Text("Reward: "+ posts["reward"], style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                        )
                       ]),
                 )),
 
