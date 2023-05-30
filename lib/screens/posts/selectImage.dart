@@ -63,7 +63,7 @@ class _addImagesState extends State<addImages> {
                   child: Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(10),
-                    child:  Row(
+                    child: const Row(
                       children: [
                         Icon(
                           Icons.photo_outlined,
@@ -93,7 +93,7 @@ class _addImagesState extends State<addImages> {
                   child: Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(10),
-                    child:  Row(
+                    child: const Row(
                       children: [
                         Icon(
                           Icons.camera,
@@ -163,31 +163,35 @@ class _addImagesState extends State<addImages> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Expanded(
-                    child: images.isEmpty
-                        ? const Center(
-                            child: Text(
-                            "No Images uploaded\n Maximum 3 images",
-                            style: TextStyle(fontSize: 25),
-                          ))
-                        : ListView.separated(
-                            separatorBuilder: (context, index) => const Divider(
-                              color: Colors.black,
-                              thickness: 20,
-                            ),
-                            itemCount: images.length,
-                            scrollDirection: Axis.vertical,
-                            itemBuilder: (BuildContext context, int index) {
-                              return GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    images.removeAt(index);
-                                  });
-                                },
-                                child: Stack(
-                                  children: <Widget>[
-                                    Container(
-                                      decoration: const BoxDecoration(
-                                          color: Colors.black),
+                    child: ListView.separated(
+                      separatorBuilder: (context, index) => const Divider(
+                        color: Colors.black,
+                        thickness: 10,
+                      ),
+                      itemCount: images.isEmpty ? 3 : images.length,
+                      scrollDirection: Axis.vertical,
+                      itemBuilder: (BuildContext context, int index) {
+                        return GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              images.removeAt(index);
+                            });
+                          },
+                          child: Stack(
+                            children: <Widget>[
+                              images.isEmpty
+                                  ? Container(
+                                      alignment: Alignment.center,
+                                      width: MediaQuery.of(context).size.width,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.25,
+                                      child: const Center(
+                                          child: Icon(
+                                        Icons.image_outlined,
+                                        size: 100,
+                                      )))
+                                  : Container(
                                       alignment: Alignment.center,
                                       width: MediaQuery.of(context).size.width,
                                       height:
@@ -203,19 +207,19 @@ class _addImagesState extends State<addImages> {
                                         fit: BoxFit.fill,
                                       ),
                                     ),
-                                    const Align(
-                                      alignment: Alignment.bottomLeft,
-                                      child: Icon(
-                                        Icons.close,
-                                        color: Colors.red,
-                                        size: 40,
-                                      ),
-                                    )
-                                  ],
+                              const Align(
+                                alignment: Alignment.bottomLeft,
+                                child: Icon(
+                                  Icons.close,
+                                  color: Colors.red,
+                                  size: 40,
                                 ),
-                              );
-                            },
+                              )
+                            ],
                           ),
+                        );
+                      },
+                    ),
                   ),
                   ElevatedButton(
                     onPressed: () {

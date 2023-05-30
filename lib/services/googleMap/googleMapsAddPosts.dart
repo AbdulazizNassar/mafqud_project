@@ -5,6 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_api_headers/google_api_headers.dart';
+import 'package:mafqud_project/main.dart';
 import 'package:mafqud_project/services/auth.dart';
 import 'package:mafqud_project/shared/AlertBox.dart';
 import 'package:mafqud_project/shared/loading.dart';
@@ -109,7 +110,7 @@ class _MapScreenState extends State<MapScreen> {
                           snackBarSuccess(
                               "success", "Post created successfully"));
 
-                      Navigator.of(context).pushReplacementNamed("Posts");
+                      navKey.currentState!.pushReplacementNamed("Posts");
                     }
                   },
                   icon: const Icon(Icons.done))

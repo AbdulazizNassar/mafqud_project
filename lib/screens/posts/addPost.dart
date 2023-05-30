@@ -3,6 +3,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:mafqud_project/main.dart';
 import 'package:mafqud_project/shared/Lists.dart';
 import 'package:mafqud_project/services/googleMap/googleMapsAddPosts.dart';
 import '../../shared/constants.dart';
@@ -34,19 +35,17 @@ class _AddPostsState extends State<AddPosts> {
     var data = _formKey.currentState;
     if (data!.validate() && status != null) {
       data.save();
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => MapScreen(
-                    paths: widget.paths,
-                    lat: lat,
-                    long: long,
-                    title: title,
-                    description: description,
-                    category: category,
-                    status: status,
-                    reward: reward.toString().isEmpty ? '0' : reward,
-                  )));
+      navKey.currentState!.push(MaterialPageRoute(
+          builder: (context) => MapScreen(
+                paths: widget.paths,
+                lat: lat,
+                long: long,
+                title: title,
+                description: description,
+                category: category,
+                status: status,
+                reward: reward.toString().isEmpty ? '0' : reward,
+              )));
     } else {
       setState(() {
         msg = "Please choose type of the post";
@@ -97,7 +96,7 @@ class _AddPostsState extends State<AddPosts> {
               const SizedBox(
                 height: 20,
               ),
-               Row(
+              const Row(
                 children: [
                   Text(
                     "Title",
@@ -132,7 +131,7 @@ class _AddPostsState extends State<AddPosts> {
                   ),
                 ),
               ),
-               Row(
+              Row(
                 children: [
                   Text(
                     "Description",
@@ -167,7 +166,7 @@ class _AddPostsState extends State<AddPosts> {
                   ),
                 ),
               ),
-               Row(
+              Row(
                 children: [
                   Text(
                     "Category",
@@ -223,7 +222,7 @@ class _AddPostsState extends State<AddPosts> {
               const SizedBox(
                 height: 7,
               ),
-               Row(
+              Row(
                 children: [
                   Text(
                     "Reward",
@@ -261,7 +260,7 @@ class _AddPostsState extends State<AddPosts> {
                 ),
               ),
               const SizedBox(height: 15),
-               Row(
+              Row(
                 children: [
                   Text(
                     "Post type",
