@@ -139,8 +139,11 @@ class _MapPostsState extends State<MapPosts> {
                 onTap: (_) {
                   ScaffoldMessenger.of(context).hideCurrentSnackBar();
                 },
+
                 //Map widget from google_maps_flutter package
                 zoomGesturesEnabled: true, //enable Zoom in, out on map
+                myLocationEnabled: true,
+                myLocationButtonEnabled: false,
                 initialCameraPosition: CameraPosition(
                   //innital position in map
                   target: LatLng(widget.lat, widget.long), //initial position
