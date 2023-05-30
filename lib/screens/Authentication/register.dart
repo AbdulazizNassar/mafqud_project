@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mafqud_project/main.dart';
 import 'package:mafqud_project/screens/Authentication/sign_in.dart';
 import 'package:mafqud_project/services/auth.dart';
 import 'package:mafqud_project/shared/size_config.dart';
@@ -28,9 +29,8 @@ class _RegisterState extends State<Register> {
       UserCredential? response = await AuthService()
           .registerWithEmailAndPassword(name, email, password, idNum, PhoneNum);
       uId = response!.user!.uid;
-     ChatCubit.get(context).getUserData();
-     // ToDo:
-     widget.navKey.currentState.pushReplacement(MaterialPageRoute(
+      ChatCubit.get(context).getUserData();
+      navKey.currentState!.pushReplacement(MaterialPageRoute(
           builder: (context) => Posts(
                 navKey: widget.navKey,
               )));
@@ -231,10 +231,7 @@ class _RegisterState extends State<Register> {
                                   onPressed: () async {
                                     try {
                                       await signup();
-                                    } catch (e) {
-                                      print("++++++++===============");
-                                      print(e);
-                                    }
+                                    } catch (e) {}
                                   }),
                             ),
                             SizedBox(
@@ -249,11 +246,10 @@ class _RegisterState extends State<Register> {
                                 ),
                                 GestureDetector(
                                   onTap: () {
-                                    widget.navKey.currentState
-                                        .push(MaterialPageRoute(
-                                            builder: (context) => SignIn(
-                                                  navKey: widget.navKey,
-                                                )));
+                                    navKey.currentState!.push(MaterialPageRoute(
+                                        builder: (context) => SignIn(
+                                              navKey: widget.navKey,
+                                            )));
                                   },
                                   child: const Text(
                                     'Sign In',
