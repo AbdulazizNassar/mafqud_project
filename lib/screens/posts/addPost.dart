@@ -97,7 +97,7 @@ class _AddPostsState extends State<AddPosts> {
               const SizedBox(
                 height: 20,
               ),
-              const Row(
+               Row(
                 children: [
                   Text(
                     "Title",
@@ -132,7 +132,7 @@ class _AddPostsState extends State<AddPosts> {
                   ),
                 ),
               ),
-              const Row(
+               Row(
                 children: [
                   Text(
                     "Description",
@@ -167,7 +167,7 @@ class _AddPostsState extends State<AddPosts> {
                   ),
                 ),
               ),
-              const Row(
+               Row(
                 children: [
                   Text(
                     "Category",
@@ -223,7 +223,7 @@ class _AddPostsState extends State<AddPosts> {
               const SizedBox(
                 height: 7,
               ),
-              const Row(
+               Row(
                 children: [
                   Text(
                     "Reward",
@@ -261,7 +261,7 @@ class _AddPostsState extends State<AddPosts> {
                 ),
               ),
               const SizedBox(height: 15),
-              const Row(
+               Row(
                 children: [
                   Text(
                     "Post type",

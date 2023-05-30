@@ -1,5 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mafqud_project/screens/chat/cubit/chat_cubit.dart';
 import 'package:mafqud_project/screens/posts/DetailPage.dart';
 import 'package:mafqud_project/screens/posts/history.dart';
 import 'package:mafqud_project/services/sharedPreference.dart';
@@ -29,36 +31,41 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      navigatorKey: navKey,
-      debugShowCheckedModeBanner: false,
-      title: 'Mafqud',
-      theme: ThemeData(
-        appBarTheme: const AppBarTheme(color: Colors.blue, elevation: 2),
-        visualDensity: VisualDensity.adaptivePlatformDensity,
+    return MultiBlocProvider(
+      providers :[
+        BlocProvider(create:( BuildContext context )=> ChatCubit())
+      ],
+      child: MaterialApp(
+        navigatorKey: navKey,
+        debugShowCheckedModeBanner: false,
+        title: 'Mafqud',
+        theme: ThemeData(
+          appBarTheme: const AppBarTheme(color: Colors.blue, elevation: 2),
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+        home: MainScreen(
+          navKey: navKey,
+        ),
+        routes: {
+          "MainScreen": (context) => const MainScreen(),
+          "Auth": (context) => const Auth(),
+          "SignIn": (context) => const SignIn(),
+          "Register": (context) => const Register(),
+          "Home": (context) => const Home(),
+          "Posts": (context) => Posts(
+                navKey: navKey,
+              ),
+          "AddPost": (context) => const AddPosts(
+                paths: '',
+              ),
+          "History": (context) => const History(),
+          "GoogleMap": (context) => const MapScreen(
+                paths: '',
+              ),
+          "MapPosts": (context) => const MapPosts(),
+          "ProductDetailPage": (context) => const ProductDetailPage(),
+        },
       ),
-      home: MainScreen(
-        navKey: navKey,
-      ),
-      routes: {
-        "MainScreen": (context) => const MainScreen(),
-        "Auth": (context) => const Auth(),
-        "SignIn": (context) => const SignIn(),
-        "Register": (context) => const Register(),
-        "Home": (context) => const Home(),
-        "Posts": (context) => Posts(
-              navKey: navKey,
-            ),
-        "AddPost": (context) => const AddPosts(
-              paths: '',
-            ),
-        "History": (context) => const History(),
-        "GoogleMap": (context) => const MapScreen(
-              paths: '',
-            ),
-        "MapPosts": (context) => const MapPosts(),
-        "ProductDetailPage": (context) => const ProductDetailPage(),
-      },
     );
   }
 }

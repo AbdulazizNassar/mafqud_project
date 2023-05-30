@@ -63,7 +63,7 @@ class _addImagesState extends State<addImages> {
                   child: Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(10),
-                    child: const Row(
+                    child:  Row(
                       children: [
                         Icon(
                           Icons.photo_outlined,
@@ -93,7 +93,7 @@ class _addImagesState extends State<addImages> {
                   child: Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(10),
-                    child: const Row(
+                    child:  Row(
                       children: [
                         Icon(
                           Icons.camera,

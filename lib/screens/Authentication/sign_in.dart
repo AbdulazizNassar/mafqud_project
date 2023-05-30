@@ -30,7 +30,8 @@ class _SignInState extends State<SignIn> {
       UserCredential response =
           await AuthService().signInWithEmailAndPassword(email, password);
       uId = response.user!.uid;
-      // ChatCubit.get(context).getUserData();
+      print(uId);
+      ChatCubit.get(context).getUserData();
       widget.navKey.currentState.pushReplacement(MaterialPageRoute(
           builder: (context) => Posts(
                 navKey: navKey,
@@ -220,7 +221,7 @@ class _SignInState extends State<SignIn> {
                           ),
                         ],
                       ),
-                      child: const Center(
+                      child:  Center(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [

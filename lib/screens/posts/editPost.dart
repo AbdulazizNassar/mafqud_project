@@ -84,7 +84,7 @@ class _EditPostState extends State<EditPost> {
                   child: Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(10),
-                    child: const Row(
+                    child: Row(
                       children: [
                         Icon(
                           Icons.photo_outlined,
@@ -111,7 +111,7 @@ class _EditPostState extends State<EditPost> {
                   child: Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(10),
-                    child: const Row(
+                    child:  Row(
                       children: [
                         Icon(
                           Icons.camera,
@@ -170,7 +170,7 @@ class _EditPostState extends State<EditPost> {
               const SizedBox(
                 height: 20,
               ),
-              const Row(
+               Row(
                 children: [
                   Text(
                     "Title",
@@ -206,7 +206,7 @@ class _EditPostState extends State<EditPost> {
                   ),
                 ),
               ),
-              const Row(
+               Row(
                 children: [
                   Text(
                     "Description",
@@ -242,7 +242,7 @@ class _EditPostState extends State<EditPost> {
                   ),
                 ),
               ),
-              const Row(
+               Row(
                 children: [
                   Text(
                     "Category",
@@ -300,7 +300,7 @@ class _EditPostState extends State<EditPost> {
                 },
               ),
               const SizedBox(height: 25),
-              const Row(
+               Row(
                 children: [
                   Text(
                     "Post type",

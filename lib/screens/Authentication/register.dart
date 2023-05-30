@@ -6,6 +6,7 @@ import 'package:mafqud_project/shared/size_config.dart';
 import 'package:mafqud_project/shared/constants.dart';
 import 'package:regexed_validator/regexed_validator.dart';
 
+import '../chat/cubit/chat_cubit.dart';
 import '../posts/posts.dart';
 
 class Register extends StatefulWidget {
@@ -26,8 +27,10 @@ class _RegisterState extends State<Register> {
       formData.save();
       UserCredential? response = await AuthService()
           .registerWithEmailAndPassword(name, email, password, idNum, PhoneNum);
-      uId = response?.user?.uid;
-      widget.navKey.currentState.pushReplacement(MaterialPageRoute(
+      uId = response!.user!.uid;
+     ChatCubit.get(context).getUserData();
+     // ToDo:
+     widget.navKey.currentState.pushReplacement(MaterialPageRoute(
           builder: (context) => Posts(
                 navKey: widget.navKey,
               )));

@@ -86,7 +86,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   child: Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(10),
-                    child: const Row(
+                    child: Row(
                       children: [
                         Icon(
                           Icons.photo_outlined,
@@ -116,7 +116,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   child: Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(10),
-                    child: const Row(
+                    child:  Row(
                       children: [
                         Icon(
                           Icons.camera,
@@ -297,7 +297,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             'name': nameController.text,
                             'email': emailController.text,
                             'phoneNum': phoneController.text,
-                            'ID': idController.text
+                            'ID': int.parse(idController.text),
                           })
                           .then((value) => {
                                 ChatCubit.get(context).getUserData(),

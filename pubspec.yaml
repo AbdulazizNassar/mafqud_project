@@ -31,7 +31,7 @@ environment:
 dependencies:
   animate_do: any
   awesome_snackbar_content: ^0.1.2
-  bloc: null
+  bloc:
   cached_network_image: ^3.2.3
   cloud_firestore: ^4.3.1
   conditional_builder_null_safety: null
@@ -43,7 +43,7 @@ dependencies:
   firebase_storage: ^11.0.16
   flutter:
     sdk: flutter
-  flutter_bloc: null
+  flutter_bloc:
   flutter_google_places: ^0.3.0
   flutter_lints: ^2.0.1
   flutter_polyline_points: ^1.0.0
@@ -60,7 +60,7 @@ dependencies:
   google_sign_in: ^6.0.2
   http: ^0.13.5
   image_picker: ^0.8.3
-  intl: ^0.18.0
+  intl: ^0.17.0
   location: ^4.4.0
   lottie: any
   provider: ^6.0.5

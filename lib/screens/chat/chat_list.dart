@@ -207,7 +207,7 @@ class NewWidget extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Row(),
+                 Row(),
                 Text(
                   'Today',
                   style: Theme.of(context).textTheme.caption!.copyWith(
