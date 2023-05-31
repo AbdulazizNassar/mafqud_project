@@ -3,14 +3,14 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mafqud_project/models/userModel.dart';
+import 'package:mafqud_project/services/auth.dart';
 
 import '../../models/messageModel.dart';
 import '../../shared/DateTime.dart';
 import 'cubit/chat_cubit.dart';
 import 'cubit/chat_state.dart';
 
-class ChatDetailsList extends StatelessWidget {
-  // final Map<String, dynamic>? userData;
+class ChatDetailsList extends StatefulWidget {
   final String? senderUid;
   final String? receiverUid;
   final UserModel? model;
@@ -22,19 +22,34 @@ class ChatDetailsList extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
+  @override
+  State<ChatDetailsList> createState() => _ChatDetailsListState();
+}
+
+IconData checkIcon = Icons.check;
+
+class _ChatDetailsListState extends State<ChatDetailsList> {
   var textController = TextEditingController();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (AuthService().currentUser!.uid == widget.receiverUid) {
+      setState(() {
+        checkIcon = Icons.done_all;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Builder(builder: (BuildContext context) {
-      ChatCubit.get(context)
-          .getMessage(receiverId: receiverUid!, senderUid: senderUid!);
+      ChatCubit.get(context).getMessage(
+          receiverId: widget.receiverUid!, senderUid: widget.senderUid!);
 
       return BlocConsumer<ChatCubit, ChatState>(
         listener: (context, state) {
-          if (state is SendMessageErrorState) {
-            print(state.error);
-          }
+          if (state is SendMessageErrorState) {}
         },
         builder: (context, state) {
           return Scaffold(
@@ -56,17 +71,10 @@ class ChatDetailsList extends StatelessWidget {
                         Row(
                           children: [
                             Text(
-                              '${model!.name}',
+                              '${widget.model!.name}',
                               style: const TextStyle(height: 1.2, fontSize: 16),
                             ),
                           ],
-                        ),
-                        Text(
-                          'Active',
-                          style:
-                              Theme.of(context).textTheme.bodySmall!.copyWith(
-                                    height: 1.2,
-                                  ),
                         ),
                       ],
                     ),
@@ -88,7 +96,7 @@ class ChatDetailsList extends StatelessWidget {
                           itemBuilder: (context, index) {
                             var messages =
                                 ChatCubit.get(context).messages[index];
-                            if (senderUid == messages.senderId) {
+                            if (widget.senderUid == messages.senderId) {
                               return buildSenderMessage(messages);
                             } else {
                               return buildReceiverMessage(messages);
@@ -131,12 +139,12 @@ class ChatDetailsList extends StatelessWidget {
                             child: MaterialButton(
                               onPressed: () {
                                 ChatCubit.get(context).sendMessage(
-                                  receiverId: receiverUid!,
+                                  receiverId: widget.receiverUid!,
                                   dateTime: Timestamp.fromDate(DateTime.now()),
                                   text: textController.text,
-                                  senderId: senderUid!,
-                                  receivername: model!.name!,
-                                  receiverUid: receiverUid!,
+                                  senderId: widget.senderUid!,
+                                  receivername: widget.model!.name!,
+                                  receiverUid: widget.receiverUid!,
                                   sendername: ChatCubit.get(context).username!,
                                 );
                                 textController.clear();
@@ -166,7 +174,7 @@ class ChatDetailsList extends StatelessWidget {
                             var messages =
                                 ChatCubit.get(context).messages[index];
 
-                            if (senderUid == messages.senderId) {
+                            if (widget.senderUid == messages.senderId) {
                               return buildSenderMessage(messages);
                             }
 
@@ -209,12 +217,12 @@ class ChatDetailsList extends StatelessWidget {
                             child: MaterialButton(
                               onPressed: () {
                                 ChatCubit.get(context).sendMessage(
-                                  receiverId: receiverUid!,
+                                  receiverId: widget.receiverUid!,
                                   dateTime: Timestamp.fromDate(DateTime.now()),
                                   text: textController.text,
-                                  senderId: senderUid!,
-                                  receivername: model!.name!,
-                                  receiverUid: receiverUid!,
+                                  senderId: widget.senderUid!,
+                                  receivername: widget.model!.name!,
+                                  receiverUid: widget.receiverUid!,
                                   sendername: ChatCubit.get(context).username!,
                                 );
 
@@ -240,48 +248,58 @@ class ChatDetailsList extends StatelessWidget {
       );
     });
   }
-
-  Widget buildSenderMessage(ChatMessageModel model) => Align(
-        alignment: AlignmentDirectional.centerEnd,
-        child: Container(
-          decoration: const BoxDecoration(
-            color: Colors.deepPurple,
-            borderRadius: BorderRadiusDirectional.only(
-              bottomStart: Radius.circular(10),
-              bottomEnd: Radius.circular(10),
-              topStart: Radius.circular(10),
-            ),
-          ),
-          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-          child: Column(
-            children: [
-              Text(
-                model.text!,
-                style: const TextStyle(color: Colors.white, fontSize: 18),
-              ),
-              Text(readTimestamp(model.dateTime),
-                  style: const TextStyle(color: Colors.white, fontSize: 12))
-            ],
-          ),
-        ),
-      );
-
-  Widget buildReceiverMessage(ChatMessageModel model) => Align(
-        alignment: AlignmentDirectional.centerStart,
-        child: Container(
-          decoration: const BoxDecoration(
-            color: Colors.blue,
-            borderRadius: BorderRadiusDirectional.only(
-              bottomEnd: Radius.circular(10),
-              bottomStart: Radius.circular(10),
-              topEnd: Radius.circular(10),
-            ),
-          ),
-          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-          child: Text(
-            model.text!,
-            style: const TextStyle(color: Colors.white, fontSize: 18),
-          ),
-        ),
-      );
 }
+
+Widget buildSenderMessage(ChatMessageModel model) => Align(
+      alignment: AlignmentDirectional.centerEnd,
+      child: Container(
+        decoration: const BoxDecoration(
+          color: Colors.deepPurple,
+          borderRadius: BorderRadiusDirectional.only(
+            bottomStart: Radius.circular(10),
+            bottomEnd: Radius.circular(10),
+            topStart: Radius.circular(10),
+          ),
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+        child: Column(
+          children: [
+            Text(
+              model.text!,
+              style: const TextStyle(color: Colors.white, fontSize: 18),
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(readTimestamp(model.dateTime),
+                    style: const TextStyle(color: Colors.white, fontSize: 12)),
+                Icon(
+                  checkIcon,
+                  color: Colors.white,
+                )
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+
+Widget buildReceiverMessage(ChatMessageModel model) => Align(
+      alignment: AlignmentDirectional.centerStart,
+      child: Container(
+        decoration: const BoxDecoration(
+          color: Colors.blue,
+          borderRadius: BorderRadiusDirectional.only(
+            bottomEnd: Radius.circular(10),
+            bottomStart: Radius.circular(10),
+            topEnd: Radius.circular(10),
+          ),
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+        child: Text(
+          model.text!,
+          style: const TextStyle(color: Colors.white, fontSize: 18),
+        ),
+      ),
+    );

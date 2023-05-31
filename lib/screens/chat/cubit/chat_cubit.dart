@@ -89,7 +89,7 @@ class ChatCubit extends Cubit<ChatState> {
         .doc(receiverUid)
         .get();
     sendPushMessage(
-        "You've got a new message ", 'from $receivername', snap['token'],
+        "You've got a new message ", 'from $sendername', snap['token'],
         uidReceiver: receiverId, nameReceiver: receivername);
     FirebaseFirestore.instance
         .collection('users')

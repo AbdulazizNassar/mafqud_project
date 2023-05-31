@@ -47,7 +47,8 @@ deleteChat(UserModel model) async {
   await myUsersRef.delete();
 }
 
-class _ChatListScreenState extends State<ChatListScreen> {
+class _ChatListScreenState extends State<ChatListScreen>
+    with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) => BlocConsumer<ChatCubit, ChatState>(
         listener: (context, state) {},
@@ -92,10 +93,8 @@ class _ChatListScreenState extends State<ChatListScreen> {
                                           setState(() {
                                             isLoading = true;
                                           });
-                                          setState(() {
-                                            deleteChat(ChatCubit.get(context)
-                                                .users![index]);
-                                          });
+                                          deleteChat(ChatCubit.get(context)
+                                              .users![index]);
                                           setState(() {
                                             isLoading = false;
                                           });
@@ -207,7 +206,7 @@ class NewWidget extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                 Row(),
+                Row(),
                 Text(
                   'Today',
                   style: Theme.of(context).textTheme.caption!.copyWith(

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:mafqud_project/main.dart';
 import 'package:mafqud_project/services/auth.dart';
 import 'package:mafqud_project/shared/constants.dart';
 import 'package:mafqud_project/shared/loading.dart';
@@ -315,19 +316,20 @@ class _DetailsState extends State<Details> with TickerProviderStateMixin {
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blue.shade900),
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => ChatDetailsScreen(
-                                      receiverUid: data['uid'],
-                                      senderUid: uId,
-                                      userData: data,
-                                      receiverName: data['name'],
-                                      senderName: AuthService()
-                                          .currentUser!
-                                          .displayName,
-                                    )));
+                      onPressed: () async {
+                        DocumentSnapshot<Map<String, dynamic>> currentUser =
+                            await FirebaseFirestore.instance
+                                .collection('users')
+                                .doc(AuthService().currentUser!.uid)
+                                .get();
+                        navKey.currentState!.push(MaterialPageRoute(
+                            builder: (_) => ChatDetailsScreen(
+                                  receiverUid: data['uid'],
+                                  senderUid: uId,
+                                  userData: data,
+                                  receiverName: data['name'],
+                                  senderName: currentUser['name'],
+                                )));
                       },
                       child: const Center(
                         child: Row(

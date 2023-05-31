@@ -130,16 +130,21 @@ class ChatDetailsScreen extends StatelessWidget {
                             color: Colors.deepPurple,
                             child: MaterialButton(
                               onPressed: () {
-                                ChatCubit.get(context).sendMessage(
-                                  receiverId: receiverUid!,
-                                  dateTime: Timestamp.fromDate(DateTime.now()),
-                                  text: textController.text,
-                                  senderId: senderUid!,
-                                  receivername: userData!['name'],
-                                  receiverUid: receiverUid!,
-                                  sendername: senderName!,
-                                );
-                                textController.clear();
+                                try {
+                                  ChatCubit.get(context).sendMessage(
+                                    receiverId: receiverUid!,
+                                    dateTime:
+                                        Timestamp.fromDate(DateTime.now()),
+                                    text: textController.text,
+                                    senderId: senderUid!,
+                                    receivername: userData!['name'],
+                                    receiverUid: receiverUid!,
+                                    sendername: senderName!,
+                                  );
+                                  textController.clear();
+                                } catch (e) {
+                                  print(e);
+                                }
                               },
                               minWidth: 1,
                               child: const Icon(

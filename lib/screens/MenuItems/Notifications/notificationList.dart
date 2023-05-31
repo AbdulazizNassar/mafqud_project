@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -8,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:mafqud_project/screens/MenuItems/Notifications/notificationTiles.dart';
 import 'package:mafqud_project/screens/chat/chat_notification.dart';
 import 'package:mafqud_project/shared/loading.dart';
+
+import '../../../services/auth.dart';
 
 class NotificationList extends StatefulWidget {
   const NotificationList({Key? key}) : super(key: key);
@@ -38,7 +39,7 @@ class _NotificationListState extends State<NotificationList> {
   FutureBuilder<QuerySnapshot<Object?>> displayNotification() {
     return FutureBuilder<QuerySnapshot>(
         future: notificationsRef
-            .where("uid", isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+            .where("uidReceiver", isEqualTo: AuthService().currentUser!.uid)
             .get(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
