@@ -24,6 +24,7 @@ class _MainScreenState extends State<MainScreen> {
       ? Loading()
       : Scaffold(
           appBar: AppBar(
+            automaticallyImplyLeading: false,
             title: const Text('Welcome'),
             backgroundColor: Colors.blue[900],
           ),
@@ -125,11 +126,10 @@ class _MainScreenState extends State<MainScreen> {
                       setState(() {
                         isLoading = false;
                       });
-                      widget.navKey.currentState!
-                          .pushReplacement(MaterialPageRoute(
-                              builder: (context) => Posts(
-                                    navKey: widget.navKey,
-                                  )));
+                      navKey.currentState!.pushReplacement(MaterialPageRoute(
+                          builder: (context) => Posts(
+                                navKey: widget.navKey,
+                              )));
                     },
                     style: ElevatedButton.styleFrom(
                       shadowColor: Colors.grey,

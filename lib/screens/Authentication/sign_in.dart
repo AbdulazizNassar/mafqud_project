@@ -127,18 +127,27 @@ class _SignInState extends State<SignIn> {
                                   style: TextStyle(color: Colors.grey),
                                 ),
                                 onTap: () async {
-                                  AuthStatus status = await AuthService()
-                                      .resetPassword(email: email);
-                                  if (status.name == "unknown" ||
-                                      status.name == "invalidEmail") {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        snackBarError("Erorr",
-                                            "Email is not registered try creating an account"));
-                                  } else {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        snackBarSuccess("Success",
-                                            "Check your email to reset password"));
-                                  }
+                                  try {
+                                    if (email != null) {
+                                      AuthStatus status = await AuthService()
+                                          .resetPassword(email: email);
+                                      if (status.name == "unknown" ||
+                                          status.name == "invalidEmail") {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(snackBarError("Erorr",
+                                                "Email is not registered try creating an account"));
+                                      } else {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(snackBarSuccess(
+                                                "Success",
+                                                "Check your email to reset password"));
+                                      }
+                                    } else {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(snackBarError("Error",
+                                              "Please enter an email first"));
+                                    }
+                                  } catch (e) {}
                                 },
                               ),
                             ),
