@@ -15,13 +15,6 @@ import '../../shared/showToast.dart';
 //profile screen -- to show signed in user info
 class EditProfileScreen extends StatefulWidget {
   // final ChatUser user;
-  final String? name;
-
-  final String? email;
-  late final String? image;
-  final String? phone;
-  final String? ID;
-  final String? uid;
 
   EditProfileScreen({
     this.name,
@@ -32,7 +25,13 @@ class EditProfileScreen extends StatefulWidget {
     super.key,
     this.ID,
   });
+  final String? name;
 
+  final String? email;
+  var image;
+  final String? phone;
+  final int? ID;
+  final String? uid;
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();
 }
@@ -50,7 +49,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     nameController = TextEditingController(text: widget.name);
     emailController = TextEditingController(text: widget.email);
     phoneController = TextEditingController(text: widget.phone);
-    idController = TextEditingController(text: widget.ID);
+    idController = TextEditingController(text: widget.ID.toString());
     phoneController = TextEditingController(text: widget.phone);
     super.initState();
   }
@@ -74,7 +73,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 InkWell(
                   onTap: () async {
                     file = await picker.pickImage(source: ImageSource.gallery);
-                    await imgUpload(file);
+                    file = await imgUpload(file);
                     Navigator.pop(context);
                     Navigator.push(
                         context,
@@ -106,10 +105,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 InkWell(
                   onTap: () async {
                     file = await picker.pickImage(source: ImageSource.camera);
-                    await imgUpload(file);
-                    setState(() {
-                      widget.image = file!.path;
-                    });
+                    widget.image = await imgUpload(file);
+                    setState(() {});
                     showToast(
                         text: 'image updated', state: ToastStates.success);
                   },
@@ -220,7 +217,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 TextFormField(
                   //initialValue: widget.email,
                   controller: emailController,
-                  // onSaved: (val) => APIs.me.email = val ?? '',
+                  // onsd: (val) => APIs.me.email = val ?? '',
                   validator: (val) =>
                       val != null && val.isNotEmpty ? null : 'Required Field',
                   decoration: InputDecoration(
@@ -298,6 +295,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             'email': emailController.text,
                             'phoneNum': phoneController.text,
                             'ID': int.parse(idController.text),
+                            "image": widget.image
                           })
                           .then((value) => {
                                 ChatCubit.get(context).getUserData(),
