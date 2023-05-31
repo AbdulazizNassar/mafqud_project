@@ -290,7 +290,7 @@ class _DetailsState extends State<Details> with TickerProviderStateMixin {
                       onPressed: () {
                         openDialog(data);
                       },
-                      child:  Center(
+                      child: const Center(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
@@ -328,7 +328,7 @@ class _DetailsState extends State<Details> with TickerProviderStateMixin {
                                           ChatCubit.get(context).username,
                                     )));
                       },
-                      child:  Center(
+                      child: const Center(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[

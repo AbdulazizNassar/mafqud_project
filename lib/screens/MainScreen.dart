@@ -6,6 +6,8 @@ import 'package:mafqud_project/main.dart';
 import 'package:mafqud_project/screens/Authentication/sign_in.dart';
 import 'package:mafqud_project/shared/loading.dart';
 import '../services/auth.dart';
+import '../shared/constants.dart';
+import 'chat/cubit/chat_cubit.dart';
 import 'posts/posts.dart';
 
 class MainScreen extends StatefulWidget {
@@ -122,7 +124,10 @@ class _MainScreenState extends State<MainScreen> {
                       setState(() {
                         isLoading = true;
                       });
-                      await AuthService().signInWithGoogle(context);
+                      UserCredential response =
+                          await AuthService().signInWithGoogle(context);
+                      uId = response.user!.uid;
+                      ChatCubit.get(context).getUserData();
                       setState(() {
                         isLoading = false;
                       });

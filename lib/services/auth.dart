@@ -90,7 +90,7 @@ class AuthService {
         'ID': 'none',
         'phoneNum': 'none',
         "uid": currentUser!.uid,
-        'image': ' ',
+        'image': '',
         'rating': 0.0,
         'numOfRating': 1,
       });
