@@ -198,7 +198,12 @@ class _PostsState extends State<Posts> {
                                 setState(() {
                                   highLightedColor = true;
                                   categoryFlag = true;
-                                  categoryTitle = item.name;
+                                  if (item.name == "Personalitems") {
+                                    categoryTitle =
+                                        "${item.name.substring(0, 8)} ${item.name.substring(8)}";
+                                  } else {
+                                    categoryTitle = item.name;
+                                  }
                                 });
                               }
                               selectedMenu = item;
@@ -435,6 +440,9 @@ class _PostsState extends State<Posts> {
 
   Iterable<QueryDocumentSnapshot<Object?>> searchByCategory(
       AsyncSnapshot<QuerySnapshot<Object?>> snapshot, String category) {
+    if (category == 'Personalitems') {
+      category = "${category.substring(0, 8)} ${category.substring(8)}";
+    }
     return snapshot.data!.docs.where((QueryDocumentSnapshot<Object?> element) =>
         element['category'].toString().contains(category));
   }
