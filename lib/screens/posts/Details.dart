@@ -324,8 +324,9 @@ class _DetailsState extends State<Details> with TickerProviderStateMixin {
                                       senderUid: uId,
                                       userData: data,
                                       receiverName: data['name'],
-                                      senderName:
-                                          ChatCubit.get(context).username,
+                                      senderName: AuthService()
+                                          .currentUser!
+                                          .displayName,
                                     )));
                       },
                       child: const Center(
