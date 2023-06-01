@@ -40,7 +40,7 @@ class _MapPostsState extends State<MapPosts> {
   @override
   void dispose() {
     super.dispose();
-    widget.navKey.currentState!.pushReplacement(MaterialPageRoute(
+    navKey.currentState!.pushReplacement(MaterialPageRoute(
         builder: (context) => Posts(
               navKey: navKey,
             )));

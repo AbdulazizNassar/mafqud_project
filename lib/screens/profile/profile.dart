@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mafqud_project/screens/MenuItems/support.dart';
 import '../../shared/NavMenu.dart';
+import '../Authentication/forgetPass.dart';
 import 'edit_profile.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -195,6 +196,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           )
                         ],
                       ),
+
                       // Container(
                       //   padding: const EdgeInsets.all(30),
                       //   child: Row(

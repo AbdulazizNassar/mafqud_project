@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -12,11 +11,11 @@ showToast({
         gravity: ToastGravity.BOTTOM,
         timeInSecForIosWeb: 5,
         backgroundColor: chooseToastColor(state),
-        textColor: Colors.white,
+        textColor: chooseToastColor(state),
         fontSize: 16.0);
 
 //enum (if there many choices)
-enum ToastStates {success, error, warning }
+enum ToastStates { success, error, warning }
 
 Color? chooseToastColor(ToastStates state) {
   Color color;

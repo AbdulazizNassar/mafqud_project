@@ -101,10 +101,7 @@ class _MainScreenState extends State<MainScreen> {
                         color: Colors.white,
                         size: 30.0,
                       ),
-                      style: ElevatedButton.styleFrom(
-                        shadowColor: Colors.grey,
-                        padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-                      ),
+                      style: btnStyle,
                       label: const Text("Continue with email")),
                 ),
               ),
@@ -118,29 +115,26 @@ class _MainScreenState extends State<MainScreen> {
                   duration: duration,
                   delay: const Duration(milliseconds: 200),
                   child: ElevatedButton.icon(
-                    label: const Text("Continue with Google"),
-                    icon: const ImageIcon(AssetImage("assets/googleIcon.png")),
-                    onPressed: () async {
-                      setState(() {
-                        isLoading = true;
-                      });
-                      UserCredential response =
-                          await AuthService().signInWithGoogle(context);
-                      uId = response.user!.uid;
-                      ChatCubit.get(context).getUserData();
-                      setState(() {
-                        isLoading = false;
-                      });
-                      navKey.currentState!.pushReplacement(MaterialPageRoute(
-                          builder: (context) => Posts(
-                                navKey: widget.navKey,
-                              )));
-                    },
-                    style: ElevatedButton.styleFrom(
-                      shadowColor: Colors.grey,
-                      padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-                    ),
-                  )),
+                      label: const Text("Continue with Google"),
+                      icon:
+                          const ImageIcon(AssetImage("assets/googleIcon.png")),
+                      onPressed: () async {
+                        setState(() {
+                          isLoading = true;
+                        });
+                        UserCredential response =
+                            await AuthService().signInWithGoogle(context);
+                        uId = response.user!.uid;
+                        ChatCubit.get(context).getUserData();
+                        setState(() {
+                          isLoading = false;
+                        });
+                        navKey.currentState!.pushReplacement(MaterialPageRoute(
+                            builder: (context) => Posts(
+                                  navKey: widget.navKey,
+                                )));
+                      },
+                      style: btnStyle)),
 
               const SizedBox(
                 height: 40,

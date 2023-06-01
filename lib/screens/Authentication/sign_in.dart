@@ -9,6 +9,7 @@ import 'package:mafqud_project/services/auth.dart';
 import 'package:regexed_validator/regexed_validator.dart';
 import '../../services/firebase_exceptions.dart';
 import '../chat/cubit/chat_cubit.dart';
+import 'forgetPass.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key, this.navKey});
@@ -120,35 +121,9 @@ class _SignInState extends State<SignIn> {
                             ),
                             Align(
                               alignment: Alignment.centerRight,
-                              child: InkWell(
-                                child: const Text(
-                                  'Forgot your password?',
-                                  style: TextStyle(color: Colors.grey),
-                                ),
-                                onTap: () async {
-                                  try {
-                                    if (email != null) {
-                                      AuthStatus status = await AuthService()
-                                          .resetPassword(email: email);
-                                      if (status.name == "unknown" ||
-                                          status.name == "invalidEmail") {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(snackBarError("Erorr",
-                                                "Email is not registered try creating an account"));
-                                      } else {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(snackBarSuccess(
-                                                "Success",
-                                                "Check your email to reset password"));
-                                      }
-                                    } else {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(snackBarError("Error",
-                                              "Please enter an email first"));
-                                    }
-                                  } catch (e) {}
-                                },
-                              ),
+                              child: AuthService().currentUser == null
+                                  ? const forgotPasswordPopUp()
+                                  : Text('data'),
                             ),
                             SizedBox(
                               height: SizeConfig.defaultSize * 2,

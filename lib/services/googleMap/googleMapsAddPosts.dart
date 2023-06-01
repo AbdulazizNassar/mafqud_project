@@ -112,7 +112,7 @@ class _MapScreenState extends State<MapScreen> {
       ? Loading()
       : Scaffold(
           appBar: AppBar(
-            title: const Text("Select Location 2/3"),
+            title: const Text("Select Location 3/3"),
             centerTitle: true,
             backgroundColor: Colors.blue.shade900,
             leading: IconButton(
@@ -122,7 +122,7 @@ class _MapScreenState extends State<MapScreen> {
               },
             ),
             actions: [
-              IconButton(
+              TextButton(
                   onPressed: () async {
                     if (selectedLocation == null) {
                       ScaffoldMessenger.of(context).showSnackBar(snackBarError(
@@ -152,7 +152,10 @@ class _MapScreenState extends State<MapScreen> {
                       navKey.currentState!.pushReplacementNamed("Posts");
                     }
                   },
-                  icon: const Icon(Icons.done))
+                  child: const Text(
+                    "Create",
+                    style: TextStyle(color: Colors.white),
+                  ))
             ],
           ),
           body: Stack(children: [

@@ -104,13 +104,12 @@ class _PostsState extends State<Posts> {
                   IconButton(
                     icon: const Icon(Icons.map_outlined),
                     onPressed: () {
-                      widget.navKey.currentState!
-                          .pushReplacement(MaterialPageRoute(
-                              builder: (context) => MapPosts(
-                                    lat: lat,
-                                    long: long,
-                                    navKey: widget.navKey,
-                                  )));
+                      navKey.currentState!.pushReplacement(MaterialPageRoute(
+                          builder: (context) => MapPosts(
+                                lat: lat,
+                                long: long,
+                                navKey: widget.navKey,
+                              )));
                     },
                   ),
                   showSearchBar(context),
