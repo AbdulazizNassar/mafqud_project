@@ -93,8 +93,8 @@ class _PostsState extends State<Posts> {
                 titleSpacing: -25,
                 backgroundColor: Colors.blue[900],
                 bottom: TabBar(
-                    indicator: BoxDecoration(
-                      borderRadius: BorderRadius.circular(25),
+                    indicator: const UnderlineTabIndicator(
+                      borderSide: BorderSide(color: Colors.white60, width: 50),
                     ),
                     tabs: [
                       tabView(Colors.green, "Found"),
@@ -262,11 +262,9 @@ class _PostsState extends State<Posts> {
             )));
   }
 
-  Container tabView(Color? color, String title) {
+  tabView(Color? color, String title) {
     return Container(
-      decoration:
-          BoxDecoration(borderRadius: BorderRadius.circular(25), color: color),
-      width: 150,
+      decoration: BoxDecoration(borderRadius: BorderRadius.zero, color: color),
       child: Tab(
         child: Center(
           child: Row(

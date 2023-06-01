@@ -119,12 +119,9 @@ class _SignInState extends State<SignIn> {
                                   : null,
                               obscureText: _passwordVisible,
                             ),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: AuthService().currentUser == null
-                                  ? const forgotPasswordPopUp()
-                                  : Text('data'),
-                            ),
+                            const Align(
+                                alignment: Alignment.centerRight,
+                                child: forgotPasswordPopUp()),
                             SizedBox(
                               height: SizeConfig.defaultSize * 2,
                             ),

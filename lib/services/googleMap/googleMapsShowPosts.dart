@@ -59,16 +59,19 @@ class _MapPostsState extends State<MapPosts> {
           .then((value) => value.docs.forEach((post) {
                 setState(() {
                   _markers.add(Marker(
+                    icon: post["status"] == 'Found'
+                        ? BitmapDescriptor.defaultMarkerWithHue(
+                            BitmapDescriptor.hueGreen)
+                        : BitmapDescriptor.defaultMarkerWithHue(
+                            BitmapDescriptor.hueRed),
                     markerId: MarkerId(post.id),
                     position: LatLng(post["Lat"], post["Lng"]),
                     onTap: () {
                       try {
-                        final _context = widget.navKey.currentContext;
-                        if (_context != null) {
-                          ScaffoldMessenger.of(_context).hideCurrentSnackBar();
+                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
-                          snackBarPostDetails(post, _context);
-                        }
+                        snackBarPostDetails(post, context);
+                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
                       } catch (e) {
                         print(e);
                       }
