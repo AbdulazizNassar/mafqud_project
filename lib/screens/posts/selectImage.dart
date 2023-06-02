@@ -193,7 +193,10 @@ class _addImagesState extends State<addImages> {
                           });
                         }
                       },
-                      icon: const Icon(Icons.check_box_outlined))
+                      icon: const Icon(
+                        Icons.keyboard_double_arrow_right,
+                        color: Colors.green,
+                      ))
                 ],
                 centerTitle: true,
                 title: const Text("Choose Image 1/3"),

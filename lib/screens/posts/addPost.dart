@@ -70,20 +70,30 @@ class _AddPostsState extends State<AddPosts> {
         long = value.longitude;
       });
     });
-    setState(() {
-      getUserCurrentLocation().then((value) {
-        lat = value.latitude;
-        long = value.longitude;
-      });
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Text("Add Post 2/3"),
         backgroundColor: Colors.blue[900],
+        leading: IconButton(
+            onPressed: () {
+              navKey.currentState!.popAndPushNamed("SelectImage");
+            },
+            icon: const Icon(Icons.arrow_back_ios_new_outlined)),
+        actions: [
+          IconButton(
+              onPressed: () {
+                createPost(context);
+              },
+              icon: const Icon(
+                Icons.keyboard_double_arrow_right,
+                color: Colors.green,
+              ))
+        ],
       ),
       body: Form(
         key: _formKey,
@@ -295,23 +305,6 @@ class _AddPostsState extends State<AddPosts> {
               Text(
                 msg,
                 style: const TextStyle(color: Colors.red),
-              ),
-              const SizedBox(height: 2),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      createPost(context);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.fromLTRB(60, 5, 60, 5),
-                      backgroundColor: Colors.blue[900],
-                    ),
-                    child: const Text('Select Location'),
-                  )
-                ],
               ),
             ],
           ),
