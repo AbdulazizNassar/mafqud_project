@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mafqud_project/models/userModel.dart';
 
+import '../../../models/messageModel.dart';
+
 
 
 @immutable
@@ -38,7 +40,10 @@ class SendMessageErrorState extends ChatState {
   SendMessageErrorState(this.error);
 }
 
-class GetMessagesSuccessState extends ChatState {}
+class GetMessagesSuccessState extends ChatState {
+ List <ChatMessageModel> ?  messageModel ;
+  GetMessagesSuccessState({this.messageModel});
+}
 
 
 class GetChatItemSuccessState extends ChatState {

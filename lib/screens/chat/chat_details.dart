@@ -244,7 +244,7 @@ class ChatDetailsScreen extends StatelessWidget {
         alignment: AlignmentDirectional.centerEnd,
         child: Container(
           decoration: const BoxDecoration(
-            color: Colors.deepPurple,
+            color: Colors.green,
             borderRadius: BorderRadiusDirectional.only(
               bottomStart: Radius.circular(10),
               bottomEnd: Radius.circular(10),
@@ -254,7 +254,7 @@ class ChatDetailsScreen extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
           child: Text(
             model.text!,
-            style: const TextStyle(color: Colors.white, fontSize: 18),
+            style: const TextStyle(color: Colors.white, fontSize: 22),
           ),
         ),
       );
@@ -262,9 +262,9 @@ class ChatDetailsScreen extends StatelessWidget {
   Widget buildReceiverMessage(ChatMessageModel model) => Align(
         alignment: AlignmentDirectional.centerStart,
         child: Container(
-          decoration: BoxDecoration(
-            color: Colors.grey[300],
-            borderRadius: const BorderRadiusDirectional.only(
+          decoration: const BoxDecoration(
+            color: Colors.blue,
+            borderRadius: BorderRadiusDirectional.only(
               bottomEnd: Radius.circular(10),
               bottomStart: Radius.circular(10),
               topEnd: Radius.circular(10),
@@ -273,7 +273,7 @@ class ChatDetailsScreen extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
           child: Text(
             model.text!,
-            style: const TextStyle(color: Colors.white, fontSize: 18),
+            style: const TextStyle(color: Colors.white, fontSize: 22),
           ),
         ),
       );

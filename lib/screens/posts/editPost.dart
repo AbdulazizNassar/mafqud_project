@@ -108,7 +108,7 @@ class _EditPostState extends State<EditPost> {
               const SizedBox(
                 height: 20,
               ),
-              const Row(
+               Row(
                 children: [
                   Text(
                     "Title",
@@ -151,7 +151,7 @@ class _EditPostState extends State<EditPost> {
                   ),
                 ),
               ),
-              const Row(
+               Row(
                 children: [
                   Text(
                     "Description",
@@ -192,7 +192,7 @@ class _EditPostState extends State<EditPost> {
                   ),
                 ),
               ),
-              const Row(
+               Row(
                 children: [
                   Text(
                     "Category",
@@ -254,7 +254,7 @@ class _EditPostState extends State<EditPost> {
                   //Do something when changing the item if you want.
                 },
               ),
-              const Row(
+               Row(
                 children: [
                   Text(
                     "Reward",
@@ -293,7 +293,7 @@ class _EditPostState extends State<EditPost> {
                 ),
               ),
               const SizedBox(height: 25),
-              const Row(
+               Row(
                 children: [
                   Text(
                     "Post type",

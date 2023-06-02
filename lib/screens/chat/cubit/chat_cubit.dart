@@ -156,7 +156,7 @@ class ChatCubit extends Cubit<ChatState> {
       for (var element in event.docs) {
         messages.add(ChatMessageModel.fromJson(element.data()));
       }
-      emit(GetMessagesSuccessState());
+      emit(GetMessagesSuccessState(messageModel: messages));
     });
   }
 }

@@ -244,7 +244,7 @@ class ChatNotification extends StatelessWidget {
     alignment: AlignmentDirectional.centerEnd,
     child: Container(
       decoration: const BoxDecoration(
-        color: Colors.deepPurple,
+        color: Colors.green,
         borderRadius: BorderRadiusDirectional.only(
           bottomStart: Radius.circular(10),
           bottomEnd: Radius.circular(10),
@@ -256,7 +256,7 @@ class ChatNotification extends StatelessWidget {
         children: [
           Text(
             model.text!,
-            style: const TextStyle(color: Colors.white, fontSize: 18),
+            style: const TextStyle(color: Colors.white, fontSize: 22),
           ),
           Text(readTimestamp(model.dateTime),
               style: const TextStyle(color: Colors.white, fontSize: 12))
@@ -279,7 +279,7 @@ class ChatNotification extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
       child: Text(
         model.text!,
-        style: const TextStyle(color: Colors.white, fontSize: 18),
+        style: const TextStyle(color: Colors.white, fontSize: 22),
       ),
     ),
   );
