@@ -26,7 +26,7 @@ class _HistoryState extends State<History> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("History"),
+        title: const Text("My Posts"),
         backgroundColor: Colors.blue[900],
       ),
       drawer: const NavMenu(),

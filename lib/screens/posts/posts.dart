@@ -60,12 +60,6 @@ class _PostsState extends State<Posts> {
   void initState() {
     super.initState();
     getToken();
-    setState(() {
-      getUserCurrentLocation().then((value) {
-        lat = value.latitude;
-        long = value.longitude;
-      });
-    });
   }
 
   @override
@@ -82,84 +76,109 @@ class _PostsState extends State<Posts> {
     color: Colors.white,
   );
   bool highLightedColor = false;
-  Widget postsMaterialApp(BuildContext context) {
-    return MaterialApp(
-        home: DefaultTabController(
-            length: 2,
-            child: Scaffold(
-              appBar: AppBar(
-                centerTitle: true,
-                title: customSearchBar,
-                titleSpacing: -25,
-                backgroundColor: Colors.blue[900],
-                bottom: TabBar(
-                    indicator: const UnderlineTabIndicator(
-                      borderSide: BorderSide(color: Colors.white60, width: 50),
-                    ),
-                    tabs: [
-                      tabView(Colors.green, "Found"),
-                      tabView(Colors.red, "Lost")
-                    ]),
-                actions: [
-                  IconButton(
-                    icon: const Icon(Icons.map_outlined),
-                    onPressed: () {
-                      navKey.currentState!.pushReplacement(MaterialPageRoute(
-                          builder: (context) => MapPosts(
-                                lat: lat,
-                                long: long,
-                                navKey: widget.navKey,
-                              )));
-                    },
-                  ),
-                  showSearchBar(context),
-                ],
-              ),
-              drawer: const NavMenu(),
-              body: searchFlag
-                  ? TabBarView(
-                      children: [
-                        displayPosts("Found", searchString, ''),
-                        displayPosts("Lost", searchString, '')
-                      ],
-                    )
-                  : categoryFlag
-                      ? TabBarView(
-                          children: [
-                            displayPosts("Found", "",
-                                selectedMenu.toString().substring(13)),
-                            displayPosts("Lost", "",
-                                selectedMenu.toString().substring(13)),
-                          ],
-                        )
-                      : TabBarView(
-                          children: [
-                            displayPosts("Found", "", ''),
-                            displayPosts("Lost", "", ''),
-                          ],
+  bool isLoading = false;
+  Widget postsMaterialApp(BuildContext context) => isLoading
+      ? Loading()
+      : MaterialApp(
+          home: DefaultTabController(
+              length: 2,
+              child: Scaffold(
+                appBar: AppBar(
+                  centerTitle: true,
+                  title: customSearchBar,
+                  titleSpacing: -25,
+                  backgroundColor: Colors.blue[900],
+                  bottom: TabBar(
+                      indicatorSize: TabBarIndicatorSize.tab,
+                      indicator: const UnderlineTabIndicator(
+                        borderSide: BorderSide(
+                          color: Colors.amber,
+                          width: 2,
                         ),
-              floatingActionButton: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    FloatingActionButton(
-                      heroTag: "btn1",
-                      backgroundColor: Colors.blue[900],
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const addImages()));
+                      ),
+                      tabs: [
+                        Container(
+                          color: Colors.green.shade600,
+                          width: MediaQuery.of(context).size.width / 2,
+                          child: tabView(Colors.green, "Found"),
+                        ),
+                        Container(
+                          color: Colors.red.shade600,
+                          width: MediaQuery.of(context).size.width / 2,
+                          child: tabView(Colors.red, "Lost"),
+                        ),
+                      ]),
+                  actions: [
+                    IconButton(
+                      icon: const Icon(Icons.map_outlined),
+                      onPressed: () async {
+                        setState(() {
+                          isLoading = true;
+                        });
+                        await getUserCurrentLocation().then((value) {
+                          setState(() {
+                            lat = value.latitude;
+                            long = value.longitude;
+                          });
+                        });
+                        setState(() {
+                          isLoading = false;
+                        });
+                        navKey.currentState!.pushReplacement(MaterialPageRoute(
+                            builder: (context) => MapPosts(
+                                  lat: lat,
+                                  long: long,
+                                  navKey: widget.navKey,
+                                )));
                       },
-                      child: const Icon(Icons.add),
                     ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    filterButton(context),
-                  ]),
-            )));
-  }
+                    showSearchBar(context),
+                  ],
+                ),
+                drawer: const NavMenu(),
+                body: searchFlag
+                    ? TabBarView(
+                        children: [
+                          displayPosts("Found", searchString, ''),
+                          displayPosts("Lost", searchString, '')
+                        ],
+                      )
+                    : categoryFlag
+                        ? TabBarView(
+                            children: [
+                              displayPosts("Found", "",
+                                  selectedMenu.toString().substring(13)),
+                              displayPosts("Lost", "",
+                                  selectedMenu.toString().substring(13)),
+                            ],
+                          )
+                        : TabBarView(
+                            children: [
+                              displayPosts("Found", "", ''),
+                              displayPosts("Lost", "", ''),
+                            ],
+                          ),
+                floatingActionButton: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      FloatingActionButton(
+                        heroTag: "btn1",
+                        backgroundColor: Colors.blue[900],
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const addImages()));
+                        },
+                        child: const Icon(Icons.add),
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      filterButton(context),
+                    ]),
+              )));
 
   Theme filterButton(BuildContext context) {
     return Theme(
@@ -262,21 +281,12 @@ class _PostsState extends State<Posts> {
   }
 
   tabView(Color? color, String title) {
-    return Container(
-      decoration: BoxDecoration(borderRadius: BorderRadius.zero, color: color),
-      child: Tab(
-        child: Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Text(
-                title,
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
+    return Tab(
+      child: Center(
+        child: Text(
+          title,
+          textAlign: TextAlign.center,
+          style: const TextStyle(color: Colors.white, fontSize: 25),
         ),
       ),
     );
