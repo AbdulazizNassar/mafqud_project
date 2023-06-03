@@ -82,10 +82,16 @@ class AuthService {
       accessToken: googleAuth?.accessToken,
       idToken: googleAuth?.idToken,
     );
-
+    dynamic x = await _firestore
+        .collection("users")
+        .where('email', isEqualTo: googleUser!.email)
+        .get();
     try {
-      await _firestore.collection("users").doc(currentUser!.uid).set({
-        'name': googleUser!.displayName,
+      await _firestore
+          .collection("users")
+          .doc(AuthService().currentUser!.uid)
+          .set({
+        'name': googleUser.displayName,
         'email': googleUser.email,
         'ID': 'none',
         'phoneNum': 'none',
