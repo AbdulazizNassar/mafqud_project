@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:mafqud_project/services/auth.dart';
 import 'package:mafqud_project/shared/constants.dart';
 import 'package:mafqud_project/shared/loading.dart';
 
@@ -276,7 +277,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
               style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue.shade900),
               onPressed: () {},
-              child:  Center(
+              child: const Center(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
@@ -310,10 +311,11 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                               senderUid: uId,
                               userData: data,
                               receiverName: data!['name'],
-                              senderName: ChatCubit.get(context).username,
+                              senderName:
+                                  AuthService().currentUser!.displayName,
                             )));
               },
-              child:  Center(
+              child: const Center(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[

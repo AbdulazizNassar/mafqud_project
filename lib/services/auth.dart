@@ -97,7 +97,7 @@ class AuthService {
           'rating': 0.0,
           'numOfRating': 1,
         });
-        // ChatCubit.get(context).getUserData();
+        ChatCubit.get(context).getUserData();
       } catch (e) {}
     }
 

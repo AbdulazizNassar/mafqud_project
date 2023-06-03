@@ -3,6 +3,7 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mafqud_project/models/userModel.dart';
+import 'package:mafqud_project/services/auth.dart';
 
 import '../../models/messageModel.dart';
 import 'cubit/chat_cubit.dart';
@@ -137,7 +138,9 @@ class ChatDetailsScreen extends StatelessWidget {
                                   senderId: senderUid!,
                                   receivername: userData!['name'],
                                   receiverUid: receiverUid!,
-                                  sendername: senderName!,
+                                  sendername: AuthService()
+                                      .currentUser!
+                                      .displayName as String,
                                 );
                                 textController.clear();
                               },
@@ -215,7 +218,8 @@ class ChatDetailsScreen extends StatelessWidget {
                                   senderId: senderUid!,
                                   receivername: userData!['name'],
                                   receiverUid: receiverUid!,
-                                  sendername: senderName!,
+                                  sendername:
+                                      AuthService().currentUser!.displayName!,
                                 );
                                 textController.clear();
                               },
