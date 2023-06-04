@@ -117,28 +117,27 @@ class _MainScreenState extends State<MainScreen> {
                   duration: duration,
                   delay: const Duration(milliseconds: 200),
                   child: ElevatedButton.icon(
-                    label: const Text("Continue with Google"),
-                    icon: const ImageIcon(AssetImage("assets/googleIcon.png")),
-                    onPressed: () async {
-                      setState(() {
-                        isLoading = true;
-                      });
-                      UserCredential? response =
-                          await AuthService().signInWithGoogle(context);
-                      uId = response.user!.uid;
-                      print("uId");
-                      print(uId);
-                      setState(() {
-                        isLoading = false;
-                      });
-                      navKey.currentState!.pushReplacement(MaterialPageRoute(
-                          builder: (context) => Posts(
-                                navKey: widget.navKey,
-                              )));
-                    },
-                    style:btnStyle
-                  )),
-
+                      label: const Text("Continue with Google"),
+                      icon:
+                          const ImageIcon(AssetImage("assets/googleIcon.png")),
+                      onPressed: () async {
+                        setState(() {
+                          isLoading = true;
+                        });
+                        UserCredential? response =
+                            await AuthService().signInWithGoogle(context);
+                        uId = response.user!.uid;
+                        print("uId");
+                        print(uId);
+                        setState(() {
+                          isLoading = false;
+                        });
+                        navKey.currentState!.pushReplacement(MaterialPageRoute(
+                            builder: (context) => Posts(
+                                  navKey: widget.navKey,
+                                )));
+                      },
+                      style: btnStyle)),
 
               const SizedBox(
                 height: 40,

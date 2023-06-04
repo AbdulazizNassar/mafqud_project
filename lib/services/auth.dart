@@ -82,7 +82,7 @@ class AuthService {
       accessToken: googleAuth?.accessToken,
       idToken: googleAuth?.idToken,
     );
-    Query<Map<String, dynamic>> c = FirebaseFirestore.instance
+    Query<Map<String, dynamic>> c = await FirebaseFirestore.instance
         .collection('users')
         .where("email", isEqualTo: googleUser!.email);
     try {
