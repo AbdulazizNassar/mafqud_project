@@ -69,6 +69,9 @@ class _supportState extends State<support> {
                       TextFormField(
                         decoration: const InputDecoration(labelText: 'Title'),
                         keyboardType: TextInputType.text,
+                        onSaved: (newValue) {
+                          title = newValue;
+                        },
                         onFieldSubmitted: (value) {
                           setState(() {
                             title = value;

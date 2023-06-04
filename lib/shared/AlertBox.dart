@@ -1,5 +1,6 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
+import 'package:mafqud_project/main.dart';
 import 'package:mafqud_project/shared/PostCards.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
@@ -90,8 +91,8 @@ signOutConfirm(context) {
           onPressed: () async {
             Navigator.of(context).pop();
             await AuthService().signOut();
-            Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: ((context) => const MainScreen())));
+            navKey.currentState!.pushReplacement(
+                MaterialPageRoute(builder: (context) => const MainScreen()));
           }),
     ],
   ).show();

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mafqud_project/screens/chat/cubit/chat_cubit.dart';
 import 'package:mafqud_project/screens/posts/DetailPage.dart';
 import 'package:mafqud_project/screens/posts/history.dart';
+import 'package:mafqud_project/screens/posts/selectImage.dart';
 import 'package:mafqud_project/services/sharedPreference.dart';
 import 'Screens/homepage/Home.dart';
 import 'screens/Authentication/register.dart';
@@ -32,9 +33,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers :[
-        BlocProvider(create:( BuildContext context )=> ChatCubit())
-      ],
+      providers: [BlocProvider(create: (BuildContext context) => ChatCubit())],
       child: MaterialApp(
         navigatorKey: navKey,
         debugShowCheckedModeBanner: false,
@@ -47,6 +46,7 @@ class MyApp extends StatelessWidget {
           navKey: navKey,
         ),
         routes: {
+          "SelectImage": (context) => const addImages(),
           "MainScreen": (context) => const MainScreen(),
           "Auth": (context) => const Auth(),
           "SignIn": (context) => const SignIn(),

@@ -5,23 +5,22 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mafqud_project/main.dart';
 import 'package:mafqud_project/screens/chat/cubit/chat_cubit.dart';
 import 'package:mafqud_project/screens/profile/profile.dart';
+import 'package:mafqud_project/services/auth.dart';
+import 'package:regexed_validator/regexed_validator.dart';
 import '../../services/imagePicker.dart';
 import '../../shared/AlertBox.dart';
+import '../../shared/constants.dart';
 import '../../shared/showToast.dart';
+import '../Authentication/forgetPass.dart';
 
 //profile screen -- to show signed in user info
 class EditProfileScreen extends StatefulWidget {
   // final ChatUser user;
-  final String? name;
-
-  final String? email;
-  late final String? image;
-  final String? phone;
-  final String? ID;
-  final String? uid;
 
   EditProfileScreen({
     this.name,
@@ -32,7 +31,13 @@ class EditProfileScreen extends StatefulWidget {
     super.key,
     this.ID,
   });
+  final String? name;
 
+  final String? email;
+  var image;
+  final String? phone;
+  final int? ID;
+  final String? uid;
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();
 }
@@ -50,9 +55,38 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     nameController = TextEditingController(text: widget.name);
     emailController = TextEditingController(text: widget.email);
     phoneController = TextEditingController(text: widget.phone);
-    idController = TextEditingController(text: widget.ID);
+    idController = TextEditingController(text: widget.ID.toString());
     phoneController = TextEditingController(text: widget.phone);
     super.initState();
+  }
+
+  updateProfileInfo() {
+    if (_formKey.currentState!.validate()) {
+      FirebaseAuth.instance.currentUser!
+          .updateEmail(emailController.text)
+          .then((value) {});
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.uid)
+          .update({
+            'name': nameController.text,
+            'email': emailController.text,
+            'phoneNum': phoneController.text,
+            'ID': int.parse(idController.text),
+            "image": widget.image
+          })
+          .then((value) => {
+                ChatCubit.get(context).getUserData(),
+                ScaffoldMessenger.of(context).showSnackBar(snackBarSuccess(
+                    "Successful", "Information Update complete")),
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (_) => const ProfileScreen())),
+              })
+          .catchError((e) {
+            print("===============");
+            print(e.toString());
+          });
+    }
   }
 
   showBottomSheet(BuildContext context) {
@@ -74,7 +108,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 InkWell(
                   onTap: () async {
                     file = await picker.pickImage(source: ImageSource.gallery);
-                    await imgUpload(file);
+                    file = await imgUpload(file);
                     Navigator.pop(context);
                     Navigator.push(
                         context,
@@ -106,10 +140,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 InkWell(
                   onTap: () async {
                     file = await picker.pickImage(source: ImageSource.camera);
-                    await imgUpload(file);
-                    setState(() {
-                      widget.image = file!.path;
-                    });
+                    widget.image = await imgUpload(file);
+                    setState(() {});
                     showToast(
                         text: 'image updated', state: ToastStates.success);
                   },
@@ -149,7 +181,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         appBar: AppBar(
           title: const Text(
             'Edit Information',
-            style: TextStyle(color: Colors.black),
+            style: TextStyle(color: Colors.white),
           ),
           centerTitle: true,
           leading: IconButton(
@@ -158,10 +190,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             icon: const Icon(
               Icons.arrow_back_ios,
               size: 30,
-              color: Colors.black,
+              color: Colors.white,
             ),
           ),
-          backgroundColor: const Color.fromRGBO(59, 92, 222, 1.0),
+          backgroundColor: Colors.blue.shade900,
         ),
         body: Form(
           key: _formKey,
@@ -199,8 +231,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               ),
                         CircleAvatar(
                             radius: 20,
-                            backgroundColor:
-                                const Color.fromRGBO(59, 92, 222, 1.0),
+                            backgroundColor: Colors.blue.shade900,
                             child: IconButton(
                               icon: const Icon(
                                 Icons.edit,
@@ -216,16 +247,39 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height * .05),
-                // about input field
+                SizedBox(
+                  height: 60,
+                  child: TextFormField(
+                    expands: false,
+                    initialValue: "***********",
+                    readOnly: true,
+                    maxLines: 1,
+                    minLines: 1,
+                    decoration: InputDecoration(
+                      labelText: 'password',
+                      prefixIcon: const Icon(Icons.key, color: Colors.blue),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                      hintText: '*********',
+                      suffix: IconButton(
+                        onPressed: () {
+                          showChangePassDialog(context);
+                        },
+                        icon: Icon(
+                          Icons.edit,
+                          color: Colors.blue.shade900,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: MediaQuery.of(context).size.height * .02),
                 TextFormField(
-                  //initialValue: widget.email,
                   controller: emailController,
-                  // onSaved: (val) => APIs.me.email = val ?? '',
                   validator: (val) =>
                       val != null && val.isNotEmpty ? null : 'Required Field',
                   decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.email,
-                          color: Color.fromRGBO(59, 92, 222, 1.0)),
+                      prefixIcon: const Icon(Icons.email, color: Colors.blue),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12)),
                       hintText: 'example@mail.com',
@@ -241,8 +295,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   validator: (val) =>
                       val != null && val.isNotEmpty ? null : 'Required Field',
                   decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person,
-                          color: Color.fromRGBO(59, 92, 222, 1.0)),
+                      prefixIcon: const Icon(Icons.person, color: Colors.blue),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12)),
                       hintText: 'name',
@@ -256,8 +309,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   validator: (val) =>
                       val != null && val.isNotEmpty ? null : 'Required Field',
                   decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.phone,
-                          color: Color.fromRGBO(59, 92, 222, 1.0)),
+                      prefixIcon: const Icon(Icons.phone, color: Colors.blue),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12)),
                       hintText: '+966 XXXXXXXXXX',
@@ -269,59 +321,199 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   validator: (val) =>
                       val != null && val.isNotEmpty ? null : 'Required Field',
                   decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.card_giftcard,
-                          color: Color.fromRGBO(59, 92, 222, 1.0)),
+                      prefixIcon:
+                          const Icon(Icons.card_giftcard, color: Colors.blue),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12)),
                       hintText: '',
                       label: const Text('ID')),
                 ),
-                // for adding some space
+
                 SizedBox(height: MediaQuery.of(context).size.height * .05),
+
                 // update profile button
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromRGBO(59, 92, 222, 1.0),
+                      backgroundColor: Colors.blue.shade900,
                       shape: const StadiumBorder(),
                       minimumSize: Size(MediaQuery.of(context).size.width * .5,
                           MediaQuery.of(context).size.height * .06)),
                   onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      FirebaseAuth.instance.currentUser!
-                          .updateEmail(emailController.text)
-                          .then((value) {});
-                      FirebaseFirestore.instance
-                          .collection('users')
-                          .doc(widget.uid)
-                          .update({
-                            'name': nameController.text,
-                            'email': emailController.text,
-                            'phoneNum': phoneController.text,
-                            'ID': int.parse(idController.text),
-                          })
-                          .then((value) => {
-                                ChatCubit.get(context).getUserData(),
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    snackBarSuccess("Successful",
-                                        "Information Update complete")),
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (_) => const ProfileScreen())),
-                              })
-                          .catchError((e) {
-                            print(e.toString());
-                          });
-                    }
+                    updateProfileInfo();
                   },
                   child: const Text('Save Changes',
-                      style: TextStyle(fontSize: 16, color: Colors.black)),
-                )
+                      style: TextStyle(fontSize: 16, color: Colors.white)),
+                ),
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  changePassword(email, oldPass, newPass) async {
+    var cred = EmailAuthProvider.credential(
+        email: AuthService().currentUser!.email as String, password: oldPass);
+    await AuthService()
+        .currentUser!
+        .reauthenticateWithCredential(cred)
+        .then((value) {
+      AuthService().currentUser!.updatePassword(newPass).catchError((e) {});
+    });
+  }
+
+  bool obscure = true;
+  showChangePassDialog(context) {
+    final GlobalKey<FormState> _formState = GlobalKey<FormState>();
+    String oldPass = '';
+    String newPass = '';
+    showDialog(
+        barrierDismissible: true,
+        useRootNavigator: true,
+        useSafeArea: true,
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return Container(
+                padding: const EdgeInsets.all(10),
+                height: 400,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Text(
+                      "Change Password",
+                      style: Theme.of(context).textTheme.headlineLarge,
+                    ),
+                    const SizedBox(height: 30.0),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 10.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.0),
+                        color: Colors.grey.shade200,
+                      ),
+                      child: Row(
+                        children: [
+                          const SizedBox(width: 10.0),
+                          Expanded(
+                            child: Form(
+                              key: _formState,
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  TextFormField(
+                                    obscureText: obscure,
+                                    onChanged: (val) {
+                                      oldPass = val;
+                                    },
+                                    validator: (val) {
+                                      if (val!.isEmpty) {
+                                        return "Please enter a valid password";
+                                      }
+                                      return null;
+                                    },
+                                    decoration: InputDecoration(
+                                      label:
+                                          const Text("Enter current password"),
+                                      hintText: "old Password",
+                                      suffixIcon: IconButton(
+                                        icon: Icon(
+                                            obscure
+                                                ? Icons.visibility_outlined
+                                                : Icons.visibility_off_outlined,
+                                            color: Colors.blueAccent),
+                                        onPressed: () {
+                                          setState(
+                                            () {
+                                              obscure = !obscure;
+                                            },
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                  TextFormField(
+                                    obscureText: obscure,
+                                    onChanged: (val) {
+                                      newPass = val;
+                                    },
+                                    validator: (val) {
+                                      if (val!.isEmpty) {
+                                        return "Please enter a valid password";
+                                      }
+                                      return null;
+                                    },
+                                    decoration: InputDecoration(
+                                      label: const Text("Enter new password"),
+                                      hintText: "new Password",
+                                      suffixIcon: IconButton(
+                                        icon: Icon(
+                                            obscure
+                                                ? Icons.visibility_outlined
+                                                : Icons.visibility_off_outlined,
+                                            color: Colors.blueAccent),
+                                        onPressed: () {
+                                          setState(
+                                            () {
+                                              obscure = !obscure;
+                                            },
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Center(
+                      child: SizedBox(
+                        height: 50,
+                        width: 300,
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            var formData = _formState.currentState;
+                            if (formData!.validate()) {
+                              try {
+                                formData.save();
+                                await changePassword(
+                                    AuthService().currentUser!.email,
+                                    oldPass,
+                                    newPass);
+                                navKey.currentState!.pop();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    snackBarSuccess("Successfull",
+                                        "Password has been changed"));
+                              } catch (e) {
+                                showToast(
+                                    text: "invalid password",
+                                    state: ToastStates.error);
+                              }
+                            }
+                          },
+                          style: btnStyle,
+                          child: const Text(
+                            "Send",
+                            style: TextStyle(fontSize: 25, color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              );
+            },
+          ));
+        });
   }
 }

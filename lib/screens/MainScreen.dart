@@ -7,6 +7,9 @@ import 'package:mafqud_project/screens/Authentication/sign_in.dart';
 import 'package:mafqud_project/shared/loading.dart';
 import '../services/auth.dart';
 import '../shared/constants.dart';
+
+import 'chat/cubit/chat_cubit.dart';
+
 import 'posts/posts.dart';
 
 class MainScreen extends StatefulWidget {
@@ -25,6 +28,7 @@ class _MainScreenState extends State<MainScreen> {
       ? Loading()
       : Scaffold(
           appBar: AppBar(
+            automaticallyImplyLeading: false,
             title: const Text('Welcome'),
             backgroundColor: Colors.blue[900],
           ),
@@ -99,10 +103,7 @@ class _MainScreenState extends State<MainScreen> {
                         color: Colors.white,
                         size: 30.0,
                       ),
-                      style: ElevatedButton.styleFrom(
-                        shadowColor: Colors.grey,
-                        padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-                      ),
+                      style: btnStyle,
                       label: const Text("Continue with email")),
                 ),
               ),
@@ -135,11 +136,9 @@ class _MainScreenState extends State<MainScreen> {
                                 navKey: widget.navKey,
                               )));
                     },
-                    style: ElevatedButton.styleFrom(
-                      shadowColor: Colors.grey,
-                      padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-                    ),
+                    style:btnStyle
                   )),
+
 
               const SizedBox(
                 height: 40,

@@ -48,7 +48,8 @@ deleteChat(UserModel model, context) async {
   await myUsersRef.delete();
 }
 
-class _ChatListScreenState extends State<ChatListScreen> {
+class _ChatListScreenState extends State<ChatListScreen>
+    with WidgetsBindingObserver {
   @override
   void initState() {
     // TODO: implement initState
@@ -117,19 +118,39 @@ class _ChatListScreenState extends State<ChatListScreen> {
                                       icon: Icons.delete,
                                       label: 'Delete',
                                     ),
-                                  ]),
-                              child: buildChatItem(
-                                  context,
-                                  ChatCubit.get(context).users![index],
-                                  message),
-                            );
-                          },
-                          separatorBuilder: (context, index) => Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 0,
-                            ),
-                            child: Container(
-                              height: 0,
+
+                                    children: [
+                                      SlidableAction(
+                                        onPressed: (BuildContext context) {
+                                          setState(() {
+                                            isLoading = true;
+                                          });
+                                          deleteChat(ChatCubit.get(context)
+                                              .users![index]);
+                                          setState(() {
+                                            isLoading = false;
+                                          });
+                                        },
+                                        backgroundColor:
+                                            const Color(0xFFFE4A49),
+                                        foregroundColor: Colors.white,
+                                        icon: Icons.delete,
+                                        label: 'Delete',
+                                      ),
+                                    ]),
+                                child: buildChatItem(
+                                    context,
+                                    ChatCubit.get(context).users![index],
+                                    message),
+                              );
+                            },
+                            separatorBuilder: (context, index) => Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 0,
+                              ),
+                              child: Container(
+                                height: 0,
+                              ),
                             ),
                           ),
                           itemCount: ChatCubit.get(context).users!.length,

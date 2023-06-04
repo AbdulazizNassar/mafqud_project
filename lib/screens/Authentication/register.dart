@@ -31,6 +31,10 @@ class _RegisterState extends State<Register> {
           .registerWithEmailAndPassword(name, email, password, idNum, PhoneNum);
       uId = response!.user!.uid;
       ChatCubit.get(context).getUserData();
+      navKey.currentState!.pushReplacement(MaterialPageRoute(
+          builder: (context) => Posts(
+                navKey: navKey,
+              )));
     }
   }
 
@@ -239,13 +243,7 @@ class _RegisterState extends State<Register> {
                                               isLoading = true;
                                             });
                                             await signup();
-                                            navKey.currentState!
-                                                .pushReplacement(
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            Posts(
-                                                              navKey: navKey,
-                                                            )));
+
                                             setState(() {
                                               isLoading = false;
                                             });

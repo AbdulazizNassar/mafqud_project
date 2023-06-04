@@ -25,19 +25,31 @@ class ChatDetailsList extends StatefulWidget {
   State<ChatDetailsList> createState() => _ChatDetailsListState();
 }
 
+
+IconData checkIcon = Icons.check;
+
 class _ChatDetailsListState extends State<ChatDetailsList> {
   var textController = TextEditingController();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (AuthService().currentUser!.uid == widget.receiverUid) {
+      setState(() {
+        checkIcon = Icons.done_all;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Builder(builder: (BuildContext context) {
       ChatCubit.get(context).getMessage(
           receiverId: widget.receiverUid!, senderUid: widget.senderUid!);
+
       return BlocConsumer<ChatCubit, ChatState>(
         listener: (context, state) {
-          if (state is SendMessageErrorState) {
-            print(state.error);
-          }
+          if (state is SendMessageErrorState) {}
         },
         builder: (context, state) {
           return Scaffold(
@@ -63,13 +75,6 @@ class _ChatDetailsListState extends State<ChatDetailsList> {
                               style: const TextStyle(height: 1.2, fontSize: 16),
                             ),
                           ],
-                        ),
-                        Text(
-                          'Active',
-                          style:
-                              Theme.of(context).textTheme.bodySmall!.copyWith(
-                                    height: 1.2,
-                                  ),
                         ),
                       ],
                     ),
@@ -148,7 +153,9 @@ class _ChatDetailsListState extends State<ChatDetailsList> {
                                   senderId: widget.senderUid!,
                                   receivername: widget.model!.name!,
                                   receiverUid: widget.receiverUid!,
+
                                   sendername: sendername as String,
+
                                 );
                                 textController.clear();
                               },
@@ -219,7 +226,23 @@ class _ChatDetailsListState extends State<ChatDetailsList> {
                             color: Colors.deepPurple,
                             child: MaterialButton(
                               onPressed: () {
-                                print("object");
+String? sendername;
+                                if (AuthService().currentUser!.displayName ==
+                                    null) {
+                                  sendername = ChatCubit.get(context).username!;
+                                } else {
+                                  sendername =
+                                      AuthService().currentUser!.displayName;
+                                }
+                                ChatCubit.get(context).sendMessage(
+                                  receiverId: widget.receiverUid!,
+                                  dateTime: Timestamp.fromDate(DateTime.now()),
+                                  text: textController.text,
+                                  senderId: widget.senderUid!,
+                                  receivername: widget.model!.name!,
+                                  receiverUid: widget.receiverUid!,
+                                  sendername: sendername as String,
+                                );
 
                                 textController.clear();
                               },
@@ -249,7 +272,9 @@ Widget buildSenderMessage(ChatMessageModel model) => Align(
       alignment: AlignmentDirectional.centerEnd,
       child: Container(
         decoration: const BoxDecoration(
+
           color: Colors.green,
+
           borderRadius: BorderRadiusDirectional.only(
             bottomStart: Radius.circular(10),
             bottomEnd: Radius.circular(10),
@@ -261,10 +286,21 @@ Widget buildSenderMessage(ChatMessageModel model) => Align(
           children: [
             Text(
               model.text!,
-              style: const TextStyle(color: Colors.white, fontSize: 22),
+
+              style: const TextStyle(color: Colors.white, fontSize: 18),
             ),
-            Text(readTimestamp(model.dateTime),
-                style: const TextStyle(color: Colors.white, fontSize: 12))
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(readTimestamp(model.dateTime),
+                    style: const TextStyle(color: Colors.white, fontSize: 12)),
+                Icon(
+                  checkIcon,
+                  color: Colors.white,
+                )
+              ],
+            )
           ],
         ),
       ),
@@ -284,7 +320,9 @@ Widget buildReceiverMessage(ChatMessageModel model) => Align(
         padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
         child: Text(
           model.text!,
+
           style: const TextStyle(color: Colors.white, fontSize: 22),
+
         ),
       ),
     );

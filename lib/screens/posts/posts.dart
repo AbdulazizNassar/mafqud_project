@@ -62,12 +62,6 @@ class _PostsState extends State<Posts> {
     super.initState();
     print(AuthService().currentUser!.uid);
     getToken();
-    setState(() {
-      getUserCurrentLocation().then((value) {
-        lat = value.latitude;
-        long = value.longitude;
-      });
-    });
   }
 
   @override
@@ -84,200 +78,217 @@ class _PostsState extends State<Posts> {
     color: Colors.white,
   );
   bool highLightedColor = false;
-  Widget postsMaterialApp(BuildContext context) {
-    return MaterialApp(
-        home: DefaultTabController(
-            length: 2,
-            child: Scaffold(
-              appBar: AppBar(
-                centerTitle: true,
-                title: customSearchBar,
-                titleSpacing: -25,
-                backgroundColor: Colors.blue[900],
-                bottom: TabBar(
-                    indicator: BoxDecoration(
-                      borderRadius: BorderRadius.circular(25),
-                    ),
-                    tabs: [
-                      tabView(Colors.green, "Found"),
-                      tabView(Colors.red, "Lost")
-                    ]),
-                actions: [
-                  IconButton(
-                    icon: const Icon(Icons.map_outlined),
-                    onPressed: () {
-                      widget.navKey.currentState!
-                          .pushReplacement(MaterialPageRoute(
-                              builder: (context) => MapPosts(
-                                    lat: lat,
-                                    long: long,
-                                    navKey: widget.navKey,
-                                  )));
-                    },
-                  ),
-                  showSearchBar(context),
-                ],
-              ),
-              drawer: const NavMenu(),
-              body: searchFlag
-                  ? TabBarView(
-                      children: [
-                        displayPosts("Found", searchString, ''),
-                        displayPosts("Lost", searchString, '')
-                      ],
-                    )
-                  : categoryFlag
-                      ? TabBarView(
-                          children: [
-                            displayPosts("Found", "",
-                                selectedMenu.toString().substring(13)),
-                            displayPosts("Lost", "",
-                                selectedMenu.toString().substring(13)),
-                          ],
-                        )
-                      : TabBarView(
-                          children: [
-                            displayPosts("Found", "", ''),
-                            displayPosts("Lost", "", ''),
-                          ],
-                        ),
-              floatingActionButton: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    FloatingActionButton(
-                      heroTag: "btn1",
-                      backgroundColor: Colors.blue[900],
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const addImages()));
-                      },
-                      child: const Icon(Icons.add),
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    Theme(
-                      data: themeData(context, highLightedColor),
-                      child: SizedBox(
-                        height: 50,
-                        width: 150,
-                        child: FloatingActionButton(
-                          heroTag: "btn2",
-                          shape: const RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(50))),
-                          onPressed: () {},
-                          backgroundColor: Colors.blue.shade900,
-                          child: PopupMenuButton<CategoryItem>(
-                            initialValue: selectedMenu,
-                            onOpened: () {
-                              if (categoryFlag) {
-                                setState(() {
-                                  categoryFlag = false;
-                                  highLightedColor = false;
-                                  categoryTitle = 'Filter';
-                                });
-                              }
-                            },
-                            onCanceled: () {
-                              setState(() {
-                                highLightedColor = false;
-                                categoryFlag = false;
-                                categoryTitle = "Filter";
-                              });
-                            },
-                            onSelected: (CategoryItem item) {
-                              if (categoryFlag) {
-                                setState(() {
-                                  categoryFlag = false;
-                                  highLightedColor = false;
-                                  categoryTitle = "Filter";
-                                });
-                              } else {
-                                setState(() {
-                                  highLightedColor = true;
-                                  categoryFlag = true;
-                                  categoryTitle = item.name;
-                                });
-                              }
-                              selectedMenu = item;
-                            },
-                            itemBuilder: (BuildContext context) =>
-                                <PopupMenuEntry<CategoryItem>>[
-                              PopupMenuItem(
-                                value: CategoryItem.Animals,
-                                child: ListTile(
-                                  leading: const Icon(
-                                    Icons.pets_outlined,
-                                    color: Colors.white,
-                                  ),
-                                  title: Text("Animals",
-                                      style: popupMenuStyle(context)),
-                                ),
-                              ),
-                              PopupMenuItem(
-                                value: CategoryItem.Electronics,
-                                child: ListTile(
-                                  leading: const Icon(
-                                    Icons.phone_outlined,
-                                    color: Colors.white,
-                                  ),
-                                  title: Text("Electronics",
-                                      style: popupMenuStyle(context)),
-                                ),
-                              ),
-                              PopupMenuItem(
-                                value: CategoryItem.Personalitems,
-                                child: ListTile(
-                                  leading: const Icon(
-                                    Icons.person_search_outlined,
-                                    color: Colors.white,
-                                  ),
-                                  title: Text("Personal Items",
-                                      style: popupMenuStyle(context)),
-                                ),
-                              ),
-                            ],
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                categoryFlag
-                                    ? const Icon(Icons.close_outlined,
-                                        color: Colors.red)
-                                    : filterIcon,
-                                Text(categoryTitle)
-                              ],
-                            ),
-                          ),
+  bool isLoading = false;
+  Widget postsMaterialApp(BuildContext context) => isLoading
+      ? Loading()
+      : MaterialApp(
+          home: DefaultTabController(
+              length: 2,
+              child: Scaffold(
+                appBar: AppBar(
+                  centerTitle: true,
+                  title: customSearchBar,
+                  titleSpacing: -25,
+                  backgroundColor: Colors.blue[900],
+                  bottom: TabBar(
+                      indicatorSize: TabBarIndicatorSize.tab,
+                      indicator: const UnderlineTabIndicator(
+                        borderSide: BorderSide(
+                          color: Colors.amber,
+                          width: 2,
                         ),
                       ),
+                      tabs: [
+                        Container(
+                          color: Colors.green.shade600,
+                          width: MediaQuery.of(context).size.width / 2,
+                          child: tabView(Colors.green, "Found"),
+                        ),
+                        Container(
+                          color: Colors.red.shade600,
+                          width: MediaQuery.of(context).size.width / 2,
+                          child: tabView(Colors.red, "Lost"),
+                        ),
+                      ]),
+                  actions: [
+                    IconButton(
+                      icon: const Icon(Icons.map_outlined),
+                      onPressed: () async {
+                        setState(() {
+                          isLoading = true;
+                        });
+                        await getUserCurrentLocation().then((value) {
+                          setState(() {
+                            lat = value.latitude;
+                            long = value.longitude;
+                          });
+                        });
+                        setState(() {
+                          isLoading = false;
+                        });
+                        navKey.currentState!.pushReplacement(MaterialPageRoute(
+                            builder: (context) => MapPosts(
+                                  lat: lat,
+                                  long: long,
+                                  navKey: widget.navKey,
+                                )));
+                      },
                     ),
-                  ]),
-            )));
-  }
+                    showSearchBar(context),
+                  ],
+                ),
+                drawer: const NavMenu(),
+                body: searchFlag
+                    ? TabBarView(
+                        children: [
+                          displayPosts("Found", searchString, ''),
+                          displayPosts("Lost", searchString, '')
+                        ],
+                      )
+                    : categoryFlag
+                        ? TabBarView(
+                            children: [
+                              displayPosts("Found", "",
+                                  selectedMenu.toString().substring(13)),
+                              displayPosts("Lost", "",
+                                  selectedMenu.toString().substring(13)),
+                            ],
+                          )
+                        : TabBarView(
+                            children: [
+                              displayPosts("Found", "", ''),
+                              displayPosts("Lost", "", ''),
+                            ],
+                          ),
+                floatingActionButton: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      FloatingActionButton(
+                        heroTag: "btn1",
+                        backgroundColor: Colors.blue[900],
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const addImages()));
+                        },
+                        child: const Icon(Icons.add),
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      filterButton(context),
+                    ]),
+              )));
 
-  Container tabView(Color? color, String title) {
-    return Container(
-      decoration:
-          BoxDecoration(borderRadius: BorderRadius.circular(25), color: color),
-      width: 150,
-      child: Tab(
-        child: Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Text(
-                title,
-                textAlign: TextAlign.center,
+  Theme filterButton(BuildContext context) {
+    return Theme(
+      data: themeData(context, highLightedColor),
+      child: SizedBox(
+        height: 50,
+        width: 150,
+        child: FloatingActionButton(
+          heroTag: "btn2",
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(50))),
+          onPressed: () {},
+          backgroundColor: Colors.blue.shade900,
+          child: PopupMenuButton<CategoryItem>(
+            initialValue: selectedMenu,
+            onOpened: () {
+              if (categoryFlag) {
+                setState(() {
+                  categoryFlag = false;
+                  highLightedColor = false;
+                  categoryTitle = 'Filter';
+                });
+              }
+            },
+            onCanceled: () {
+              setState(() {
+                highLightedColor = false;
+                categoryFlag = false;
+                categoryTitle = "Filter";
+              });
+            },
+            onSelected: (CategoryItem item) {
+              if (categoryFlag) {
+                setState(() {
+                  categoryFlag = false;
+                  highLightedColor = false;
+                  categoryTitle = "Filter";
+                });
+              } else {
+                setState(() {
+                  highLightedColor = true;
+                  categoryFlag = true;
+                  if (item.name == "Personalitems") {
+                    categoryTitle =
+                        "${item.name.substring(0, 8)} ${item.name.substring(8)}";
+                  } else {
+                    categoryTitle = item.name;
+                  }
+                });
+              }
+              selectedMenu = item;
+            },
+            itemBuilder: (BuildContext context) =>
+                <PopupMenuEntry<CategoryItem>>[
+              PopupMenuItem(
+                value: CategoryItem.Animals,
+                child: ListTile(
+                  leading: const Icon(
+                    Icons.pets_outlined,
+                    color: Colors.white,
+                  ),
+                  title: Text("Animals", style: popupMenuStyle(context)),
+                ),
+              ),
+              PopupMenuItem(
+                value: CategoryItem.Electronics,
+                child: ListTile(
+                  leading: const Icon(
+                    Icons.phone_outlined,
+                    color: Colors.white,
+                  ),
+                  title: Text("Electronics", style: popupMenuStyle(context)),
+                ),
+              ),
+              PopupMenuItem(
+                value: CategoryItem.Personalitems,
+                child: ListTile(
+                  leading: const Icon(
+                    Icons.person_search_outlined,
+                    color: Colors.white,
+                  ),
+                  title: Text("Personal Items", style: popupMenuStyle(context)),
+                ),
               ),
             ],
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                categoryFlag
+                    ? const Icon(Icons.close_outlined, color: Colors.red)
+                    : filterIcon,
+                Text(categoryTitle)
+              ],
+            ),
           ),
+        ),
+      ),
+    );
+  }
+
+  tabView(Color? color, String title) {
+    return Tab(
+      child: Center(
+        child: Text(
+          title,
+          textAlign: TextAlign.center,
+          style: const TextStyle(color: Colors.white, fontSize: 25),
         ),
       ),
     );
@@ -437,6 +448,9 @@ class _PostsState extends State<Posts> {
 
   Iterable<QueryDocumentSnapshot<Object?>> searchByCategory(
       AsyncSnapshot<QuerySnapshot<Object?>> snapshot, String category) {
+    if (category == 'Personalitems') {
+      category = "${category.substring(0, 8)} ${category.substring(8)}";
+    }
     return snapshot.data!.docs.where((QueryDocumentSnapshot<Object?> element) =>
         element['category'].toString().contains(category));
   }

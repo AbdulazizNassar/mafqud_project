@@ -88,6 +88,15 @@ class _EditPostState extends State<EditPost> {
         backgroundColor: Colors.blue[900],
         actions: [
           IconButton(
+            onPressed: () {
+              validateInfo();
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blue[900],
+            ),
+            icon: const Icon(Icons.check_box_outlined),
+          ),
+          IconButton(
               onPressed: () async {
                 await deletePost(context);
               },
@@ -328,18 +337,6 @@ class _EditPostState extends State<EditPost> {
               Text(
                 msg,
                 style: const TextStyle(color: Colors.red),
-              ),
-              const SizedBox(height: 2),
-              Center(
-                child: ElevatedButton(
-                  onPressed: () {
-                    validateInfo();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue[900],
-                  ),
-                  child: const Text("Change Location"),
-                ),
               ),
             ],
           ),

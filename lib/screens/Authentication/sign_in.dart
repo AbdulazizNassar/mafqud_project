@@ -9,6 +9,7 @@ import 'package:mafqud_project/services/auth.dart';
 import 'package:regexed_validator/regexed_validator.dart';
 import '../../services/firebase_exceptions.dart';
 import '../chat/cubit/chat_cubit.dart';
+import 'forgetPass.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key, this.navKey});
@@ -30,7 +31,6 @@ class _SignInState extends State<SignIn> {
       UserCredential response =
           await AuthService().signInWithEmailAndPassword(email, password);
       uId = response.user!.uid;
-      print(uId);
       ChatCubit.get(context).getUserData();
       widget.navKey.currentState.pushReplacement(MaterialPageRoute(
           builder: (context) => Posts(
@@ -119,29 +119,9 @@ class _SignInState extends State<SignIn> {
                                   : null,
                               obscureText: _passwordVisible,
                             ),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: InkWell(
-                                child: const Text(
-                                  'Forgot your password?',
-                                  style: TextStyle(color: Colors.grey),
-                                ),
-                                onTap: () async {
-                                  AuthStatus status = await AuthService()
-                                      .resetPassword(email: email);
-                                  if (status.name == "unknown" ||
-                                      status.name == "invalidEmail") {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        snackBarError("Erorr",
-                                            "Email is not registered try creating an account"));
-                                  } else {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        snackBarSuccess("Success",
-                                            "Check your email to reset password"));
-                                  }
-                                },
-                              ),
-                            ),
+                            const Align(
+                                alignment: Alignment.centerRight,
+                                child: forgotPasswordPopUp()),
                             SizedBox(
                               height: SizeConfig.defaultSize * 2,
                             ),
@@ -221,7 +201,7 @@ class _SignInState extends State<SignIn> {
                           ),
                         ],
                       ),
-                      child: Center(
+                      child: const Center(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [

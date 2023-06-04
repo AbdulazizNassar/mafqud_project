@@ -11,6 +11,7 @@ import 'package:mafqud_project/main.dart';
 import 'package:mafqud_project/shared/AlertBox.dart';
 import '../../screens/posts/posts.dart';
 import '../../shared/PostCards.dart';
+import '../../shared/constants.dart';
 import '../../shared/loading.dart';
 
 class MapPosts extends StatefulWidget {
@@ -34,48 +35,78 @@ class _MapPostsState extends State<MapPosts> {
   @override
   void initState() {
     super.initState();
-    PostMapBuilder();
+    postMapBuilder('');
   }
 
   @override
   void dispose() {
     super.dispose();
-    widget.navKey.currentState!.pushReplacement(MaterialPageRoute(
+    navKey.currentState!.pushReplacement(MaterialPageRoute(
         builder: (context) => Posts(
               navKey: navKey,
             )));
   }
 
-  // ignore: non_constant_identifier_names
-  PostMapBuilder() async {
+  postMapBuilder(String category) async {
     if (mounted) {
       setState(() {
         isLoading = true;
       });
+      _markers.clear();
+      if (categoryTitle != 'Filter') {
+        await FirebaseFirestore.instance
+            .collection("Posts")
+            .where('category', isEqualTo: category)
+            .get()
+            .then((value) => value.docs.forEach((post) {
+                  setState(() {
+                    _markers.add(Marker(
+                      icon: post["status"] == 'Found'
+                          ? BitmapDescriptor.defaultMarkerWithHue(
+                              BitmapDescriptor.hueGreen)
+                          : BitmapDescriptor.defaultMarkerWithHue(
+                              BitmapDescriptor.hueRed),
+                      markerId: MarkerId(post.id),
+                      position: LatLng(post["Lat"], post["Lng"]),
+                      onTap: () {
+                        try {
+                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
-      await FirebaseFirestore.instance
-          .collection("Posts")
-          .get()
-          .then((value) => value.docs.forEach((post) {
-                setState(() {
-                  _markers.add(Marker(
-                    markerId: MarkerId(post.id),
-                    position: LatLng(post["Lat"], post["Lng"]),
-                    onTap: () {
-                      try {
-                        final _context = widget.navKey.currentContext;
-                        if (_context != null) {
-                          ScaffoldMessenger.of(_context).hideCurrentSnackBar();
-
-                          snackBarPostDetails(post, _context);
+                          snackBarPostDetails(post, context);
+                        } catch (e) {
+                          print(e);
                         }
-                      } catch (e) {
-                        print(e);
-                      }
-                    },
-                  ));
-                });
-              }));
+                      },
+                    ));
+                  });
+                }));
+      } else {
+        await FirebaseFirestore.instance
+            .collection("Posts")
+            .get()
+            .then((value) => value.docs.forEach((post) {
+                  setState(() {
+                    _markers.add(Marker(
+                      icon: post["status"] == 'Found'
+                          ? BitmapDescriptor.defaultMarkerWithHue(
+                              BitmapDescriptor.hueGreen)
+                          : BitmapDescriptor.defaultMarkerWithHue(
+                              BitmapDescriptor.hueRed),
+                      markerId: MarkerId(post.id),
+                      position: LatLng(post["Lat"], post["Lng"]),
+                      onTap: () {
+                        try {
+                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+                          snackBarPostDetails(post, context);
+                        } catch (e) {
+                          print(e);
+                        }
+                      },
+                    ));
+                  });
+                }));
+      }
 
       setState(() {
         isLoading = false;
@@ -94,7 +125,129 @@ class _MapPostsState extends State<MapPosts> {
     return await Geolocator.getCurrentPosition();
   }
 
+  Theme filterButton(BuildContext context) {
+    return Theme(
+      data: themeData(context, highLightedColor),
+      child: SizedBox(
+        height: 50,
+        width: 150,
+        child: TextButton(
+          onPressed: () {},
+          child: PopupMenuButton<CategoryItem>(
+            initialValue: selectedMenu,
+            onOpened: () {
+              if (categoryFlag) {
+                setState(() {
+                  categoryFlag = false;
+                  highLightedColor = false;
+                  categoryTitle = 'Filter';
+                });
+              }
+            },
+            onCanceled: () {
+              setState(() {
+                highLightedColor = false;
+                categoryFlag = false;
+                categoryTitle = "Filter";
+              });
+              postMapBuilder(categoryTitle);
+            },
+            onSelected: (CategoryItem item) {
+              if (categoryFlag) {
+                setState(() {
+                  categoryFlag = false;
+                  highLightedColor = false;
+                  categoryTitle = "Filter";
+                });
+              } else {
+                setState(() {
+                  highLightedColor = true;
+                  categoryFlag = true;
+                  if (item.name == "Personalitems") {
+                    categoryTitle =
+                        "${item.name.substring(0, 8)} ${item.name.substring(8)}";
+                  } else {
+                    categoryTitle = item.name;
+                  }
+                });
+              }
+              selectedMenu = item;
+              postMapBuilder(categoryTitle);
+            },
+            itemBuilder: (BuildContext context) =>
+                <PopupMenuEntry<CategoryItem>>[
+              PopupMenuItem(
+                value: CategoryItem.Animals,
+                child: ListTile(
+                  leading: const Icon(
+                    Icons.pets_outlined,
+                    color: Colors.white,
+                  ),
+                  title: Text("Animals", style: popupMenuStyle(context)),
+                ),
+              ),
+              PopupMenuItem(
+                value: CategoryItem.Electronics,
+                child: ListTile(
+                  leading: const Icon(
+                    Icons.phone_outlined,
+                    color: Colors.white,
+                  ),
+                  title: Text("Electronics", style: popupMenuStyle(context)),
+                ),
+              ),
+              PopupMenuItem(
+                value: CategoryItem.Personalitems,
+                child: ListTile(
+                  leading: const Icon(
+                    Icons.person_search_outlined,
+                    color: Colors.white,
+                  ),
+                  title: Text("Personal Items", style: popupMenuStyle(context)),
+                ),
+              ),
+            ],
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                categoryFlag
+                    ? IconButton(
+                        onPressed: () {
+                          setState(() {
+                            highLightedColor = false;
+                            categoryFlag = false;
+                            categoryTitle = "Filter";
+                          });
+                          postMapBuilder(categoryTitle);
+                        },
+                        icon:
+                            const Icon(Icons.close_outlined, color: Colors.red))
+                    : filterIcon,
+                Text(
+                  categoryTitle,
+                  style: const TextStyle(color: Colors.white),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Position? userLocation;
+  bool searchFlag = false;
+  bool categoryFlag = false;
+  Icon customIcon = const Icon(Icons.search);
+  Widget customSearchBar = const Text('Posts');
+  CategoryItem? selectedMenu;
+  String categoryTitle = 'Filter';
+  Icon filterIcon = const Icon(
+    Icons.filter_alt_outlined,
+    color: Colors.white,
+  );
+  bool highLightedColor = false;
 
   bool isLoading = false;
   @override
@@ -135,6 +288,7 @@ class _MapPostsState extends State<MapPosts> {
                       } catch (_) {}
                     },
                     icon: const Icon(Icons.list_sharp)),
+                filterButton(context),
               ],
             ),
             body: Stack(children: [
@@ -142,7 +296,6 @@ class _MapPostsState extends State<MapPosts> {
                 onTap: (_) {
                   ScaffoldMessenger.of(context).hideCurrentSnackBar();
                 },
-
                 //Map widget from google_maps_flutter package
                 zoomGesturesEnabled: true, //enable Zoom in, out on map
                 myLocationEnabled: true,

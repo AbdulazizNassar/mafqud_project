@@ -64,4 +64,8 @@ TextStyle? popupMenuStyle(BuildContext context) {
   return Theme.of(context).textTheme.bodyLarge;
 }
 
+ButtonStyle btnStyle = ElevatedButton.styleFrom(
+    shadowColor: Colors.grey,
+    padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+    backgroundColor: Colors.blue.shade900);
 String? uId = 'start';

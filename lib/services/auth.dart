@@ -86,14 +86,18 @@ class AuthService {
         .collection('users')
         .where("email", isEqualTo: googleUser!.email);
     if (c != null) {
+
       try {
-        await _firestore.collection("users").doc(currentUser!.uid).set({
+        await _firestore
+            .collection("users")
+            .doc(AuthService().currentUser!.uid)
+            .set({
           'name': googleUser.displayName,
           'email': googleUser.email,
           'ID': 'none',
           'phoneNum': 'none',
           "uid": currentUser!.uid,
-          'image': ' ',
+          'image': '',
           'rating': 0.0,
           'numOfRating': 1,
         });

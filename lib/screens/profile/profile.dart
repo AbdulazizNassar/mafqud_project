@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mafqud_project/screens/MenuItems/support.dart';
 import '../../shared/NavMenu.dart';
+import '../Authentication/forgetPass.dart';
 import 'edit_profile.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -19,7 +20,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String? myEmail;
   String? myPassword;
   String? myPhoneNum;
-  String? ID;
+  int? ID;
   String? myImage;
   String? uid;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -195,6 +196,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           )
                         ],
                       ),
+
                       // Container(
                       //   padding: const EdgeInsets.all(30),
                       //   child: Row(
@@ -252,7 +254,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         myImage = ds.get('image') as String;
         name = ds.get('name') as String;
         myPhoneNum = ds.get('phoneNum') as String;
-        ID = ds.get('ID') as String;
+        ID = ds.get('ID');
       }).catchError((e) {
         if (kDebugMode) {
           print(e);

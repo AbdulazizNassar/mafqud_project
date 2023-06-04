@@ -195,7 +195,7 @@ Widget buildMenuItems(BuildContext context) => Container(
           ),
           ListTile(
             leading: const Icon(Icons.history_outlined),
-            title: const Text("History"),
+            title: const Text("My Posts"),
             onTap: () => Navigator.of(context)
                 .push(MaterialPageRoute(builder: (context) => const History())),
           ),

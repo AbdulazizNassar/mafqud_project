@@ -149,6 +149,7 @@ class ChatDetailsScreen extends StatelessWidget {
                                   sendername: sendername as String,
                                 );
                                 textController.clear();
+
                               },
                               minWidth: 1,
                               child: const Icon(
