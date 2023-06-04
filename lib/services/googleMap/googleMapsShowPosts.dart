@@ -257,6 +257,7 @@ class _MapPostsState extends State<MapPosts> {
         : Scaffold(
             appBar: AppBar(
               title: const Text("Posts"),
+              automaticallyImplyLeading: false,
               centerTitle: true,
               backgroundColor: Colors.blue.shade900,
               leading: IconButton(
