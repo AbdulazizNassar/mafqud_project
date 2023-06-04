@@ -82,15 +82,13 @@ class AuthService {
       accessToken: googleAuth?.accessToken,
       idToken: googleAuth?.idToken,
     );
-    Query<Map<String, dynamic>> c = await FirebaseFirestore.instance
-        .collection('users')
-        .where("email", isEqualTo: googleUser!.email);
+
     try {
       await _firestore
           .collection("users")
           .doc(AuthService().currentUser!.uid)
           .set({
-        'name': googleUser.displayName,
+        'name': googleUser!.displayName,
         'email': googleUser.email,
         'ID': 'none',
         'phoneNum': 'none',

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mafqud_project/shared/size_config.dart';
 
-import '../services/auth.dart';
-
 const textInputDecoration = InputDecoration(
   fillColor: Colors.white,
   filled: true,

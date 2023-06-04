@@ -8,8 +8,6 @@ import 'package:mafqud_project/shared/loading.dart';
 import '../services/auth.dart';
 import '../shared/constants.dart';
 
-import 'chat/cubit/chat_cubit.dart';
-
 import 'posts/posts.dart';
 
 class MainScreen extends StatefulWidget {
