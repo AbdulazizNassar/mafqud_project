@@ -456,7 +456,8 @@ class _PostsState extends State<Posts> {
   Iterable<QueryDocumentSnapshot<Object?>> searchByTitle(
       AsyncSnapshot<QuerySnapshot<Object?>> snapshot, String searchValue) {
     return snapshot.data!.docs.where((QueryDocumentSnapshot<Object?> element) =>
-        element['title'].toString().toLowerCase().contains(searchValue));
+        element['title'].toString().toLowerCase().contains(searchValue) ||
+        element['description'].toString().toLowerCase().contains(searchValue));
   }
 
   Iterable<QueryDocumentSnapshot<Object?>> searchByCategory(
