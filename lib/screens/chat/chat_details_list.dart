@@ -3,6 +3,7 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mafqud_project/models/userModel.dart';
+import 'package:mafqud_project/services/auth.dart';
 
 import '../../models/messageModel.dart';
 import '../../shared/DateTime.dart';
@@ -129,7 +130,15 @@ class ChatDetailsList extends StatelessWidget {
                             height: 50,
                             color: Colors.deepPurple,
                             child: MaterialButton(
-                              onPressed: () {
+                              onPressed: () async {
+                                String? sendername;
+                                if (AuthService().currentUser!.displayName ==
+                                    null) {
+                                  sendername = ChatCubit.get(context).username!;
+                                } else {
+                                  sendername =
+                                      AuthService().currentUser!.displayName;
+                                }
                                 ChatCubit.get(context).sendMessage(
                                   receiverId: receiverUid!,
                                   dateTime: Timestamp.fromDate(DateTime.now()),
@@ -137,7 +146,7 @@ class ChatDetailsList extends StatelessWidget {
                                   senderId: senderUid!,
                                   receivername: model!.name!,
                                   receiverUid: receiverUid!,
-                                  sendername: ChatCubit.get(context).username!,
+                                  sendername: sendername as String,
                                 );
                                 textController.clear();
                               },
@@ -208,15 +217,7 @@ class ChatDetailsList extends StatelessWidget {
                             color: Colors.deepPurple,
                             child: MaterialButton(
                               onPressed: () {
-                                ChatCubit.get(context).sendMessage(
-                                  receiverId: receiverUid!,
-                                  dateTime: Timestamp.fromDate(DateTime.now()),
-                                  text: textController.text,
-                                  senderId: senderUid!,
-                                  receivername: model!.name!,
-                                  receiverUid: receiverUid!,
-                                  sendername: ChatCubit.get(context).username!,
-                                );
+                                print("object");
 
                                 textController.clear();
                               },
