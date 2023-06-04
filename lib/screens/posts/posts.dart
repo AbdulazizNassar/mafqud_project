@@ -63,9 +63,7 @@ class _PostsState extends State<Posts> {
     getToken();
     controller.addListener(() {
       if (controller.position.pixels == controller.position.maxScrollExtent) {
-        setState(() {
-          numOfPosts += 10;
-        });
+        setState(() {});
       }
     });
   }
@@ -385,14 +383,42 @@ class _PostsState extends State<Posts> {
   }
 
   final ScrollController controller = ScrollController();
-
+  DocumentSnapshot? lastDoc;
   int numOfPosts = 10;
+  bool isMoreData = true;
+  Future<QuerySnapshot<Object?>> paginatedData(String status) async {
+    late QuerySnapshot querySnapshot;
+    if (lastDoc == null) {
+      querySnapshot =
+          await postsRef.where('status', isEqualTo: status).limit(10).get();
+    } else {
+      querySnapshot = await postsRef
+          .limit(10)
+          .where('status', isEqualTo: status)
+          .startAfterDocument(lastDoc!)
+          .get();
+    }
+    lastDoc = querySnapshot.docs.last;
+    if (querySnapshot.docs.length < 10) {
+      querySnapshot = await postsRef
+          .where('status', isEqualTo: status)
+          .limit(querySnapshot.docs.length)
+          .get();
+      isMoreData = false;
+    } else {
+      isMoreData = true;
+    }
+
+    return querySnapshot;
+  }
 
   FutureBuilder<QuerySnapshot<Object?>> displayPosts(
-      String status, String searchValue, String category) {
+    String status,
+    String searchValue,
+    String category,
+  ) {
     return FutureBuilder<QuerySnapshot>(
-        future:
-            postsRef.where("status", isEqualTo: status).limit(numOfPosts).get(),
+        future: paginatedData(status),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
