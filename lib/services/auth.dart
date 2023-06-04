@@ -85,24 +85,22 @@ class AuthService {
     Query<Map<String, dynamic>> c = FirebaseFirestore.instance
         .collection('users')
         .where("email", isEqualTo: googleUser!.email);
-    if (c != null) {
-      try {
-        await _firestore
-            .collection("users")
-            .doc(AuthService().currentUser!.uid)
-            .set({
-          'name': googleUser.displayName,
-          'email': googleUser.email,
-          'ID': 'none',
-          'phoneNum': 'none',
-          "uid": currentUser!.uid,
-          'image': ' ',
-          'rating': 0.0,
-          'numOfRating': 1,
-        });
-        ChatCubit.get(context).getUserData();
-      } catch (e) {}
-    }
+    try {
+      await _firestore
+          .collection("users")
+          .doc(AuthService().currentUser!.uid)
+          .set({
+        'name': googleUser.displayName,
+        'email': googleUser.email,
+        'ID': 'none',
+        'phoneNum': 'none',
+        "uid": currentUser!.uid,
+        'image': ' ',
+        'rating': 0.0,
+        'numOfRating': 1,
+      });
+      ChatCubit.get(context).getUserData();
+    } catch (e) {}
 
     // Once signed in, return the UserCredential
     return await FirebaseAuth.instance.signInWithCredential(credential);

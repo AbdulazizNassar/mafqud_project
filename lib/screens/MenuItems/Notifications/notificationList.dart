@@ -1,14 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:mafqud_project/main.dart';
 import 'package:mafqud_project/models/userModel.dart';
 import 'package:mafqud_project/screens/MenuItems/Notifications/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:mafqud_project/screens/MenuItems/Notifications/notificationTiles.dart';
+import 'package:mafqud_project/screens/chat/chat_details_list.dart';
 import 'package:mafqud_project/screens/chat/chat_notification.dart';
 import 'package:mafqud_project/shared/loading.dart';
 
 import '../../../services/auth.dart';
+import '../../chat/cubit/chat_cubit.dart';
 
 class NotificationList extends StatefulWidget {
   const NotificationList({Key? key}) : super(key: key);
@@ -84,14 +87,12 @@ class _NotificationListState extends State<NotificationList> {
                 ]),
             child: InkWell(
               onTap: () async {
-                await Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => ChatNotification(
-                              senderUid: snapshot[i]['uid'],
-                              receiverUid: snapshot[i]['uidReceiver'],
-                              receiverName: snapshot[i]['nameReceiver'],
-                            )));
+                await navKey.currentState!.pushReplacement(MaterialPageRoute(
+                    builder: (_) => ChatDetailsList(
+                          receiverUid: snapshot[i]['uid'],
+                          senderUid: snapshot[i]['uidReceiver'],
+                          receiverName: snapshot[i]['nameReceiver'],
+                        )));
                 await notificationsRef
                     .doc(snapshot[i].id)
                     .update({'status': "old"});

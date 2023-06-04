@@ -13,18 +13,17 @@ import 'cubit/chat_state.dart';
 class ChatDetailsList extends StatefulWidget {
   final String? senderUid;
   final String? receiverUid;
-  final UserModel? model;
+  final String? receiverName;
   const ChatDetailsList({
     this.receiverUid,
     this.senderUid,
-    this.model,
+    this.receiverName,
     Key? key,
   }) : super(key: key);
 
   @override
   State<ChatDetailsList> createState() => _ChatDetailsListState();
 }
-
 
 IconData checkIcon = Icons.check;
 
@@ -71,7 +70,7 @@ class _ChatDetailsListState extends State<ChatDetailsList> {
                         Row(
                           children: [
                             Text(
-                              '${widget.model!.name}',
+                              '${widget.receiverName}',
                               style: const TextStyle(height: 1.2, fontSize: 16),
                             ),
                           ],
@@ -151,11 +150,9 @@ class _ChatDetailsListState extends State<ChatDetailsList> {
                                   dateTime: Timestamp.fromDate(DateTime.now()),
                                   text: textController.text,
                                   senderId: widget.senderUid!,
-                                  receivername: widget.model!.name!,
+                                  receivername: widget.receiverName as String,
                                   receiverUid: widget.receiverUid!,
-
                                   sendername: sendername as String,
-
                                 );
                                 textController.clear();
                               },
@@ -226,7 +223,7 @@ class _ChatDetailsListState extends State<ChatDetailsList> {
                             color: Colors.deepPurple,
                             child: MaterialButton(
                               onPressed: () {
-String? sendername;
+                                String? sendername;
                                 if (AuthService().currentUser!.displayName ==
                                     null) {
                                   sendername = ChatCubit.get(context).username!;
@@ -239,7 +236,7 @@ String? sendername;
                                   dateTime: Timestamp.fromDate(DateTime.now()),
                                   text: textController.text,
                                   senderId: widget.senderUid!,
-                                  receivername: widget.model!.name!,
+                                  receivername: widget.receiverName as String,
                                   receiverUid: widget.receiverUid!,
                                   sendername: sendername as String,
                                 );
@@ -272,9 +269,7 @@ Widget buildSenderMessage(ChatMessageModel model) => Align(
       alignment: AlignmentDirectional.centerEnd,
       child: Container(
         decoration: const BoxDecoration(
-
           color: Colors.green,
-
           borderRadius: BorderRadiusDirectional.only(
             bottomStart: Radius.circular(10),
             bottomEnd: Radius.circular(10),
@@ -286,7 +281,6 @@ Widget buildSenderMessage(ChatMessageModel model) => Align(
           children: [
             Text(
               model.text!,
-
               style: const TextStyle(color: Colors.white, fontSize: 18),
             ),
             Row(
@@ -320,9 +314,7 @@ Widget buildReceiverMessage(ChatMessageModel model) => Align(
         padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
         child: Text(
           model.text!,
-
           style: const TextStyle(color: Colors.white, fontSize: 22),
-
         ),
       ),
     );

@@ -66,7 +66,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               width: 15,
                             ),
                             Stack(alignment: Alignment.bottomRight, children: [
-                              myImage! == ''
+                              myImage! == ' '
                                   ? const CircleAvatar(
                                       radius: 60,
                                       child: Image(

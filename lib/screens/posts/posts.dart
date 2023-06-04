@@ -60,8 +60,14 @@ class _PostsState extends State<Posts> {
   @override
   void initState() {
     super.initState();
-    print(AuthService().currentUser!.uid);
     getToken();
+    controller.addListener(() {
+      if (controller.position.pixels == controller.position.maxScrollExtent) {
+        setState(() {
+          numOfPosts += 10;
+        });
+      }
+    });
   }
 
   @override
@@ -378,14 +384,20 @@ class _PostsState extends State<Posts> {
     );
   }
 
-  List<String> list = [];
+  final ScrollController controller = ScrollController();
+
+  int numOfPosts = 10;
+
   FutureBuilder<QuerySnapshot<Object?>> displayPosts(
       String status, String searchValue, String category) {
     return FutureBuilder<QuerySnapshot>(
-        future: postsRef.where("status", isEqualTo: status).get(),
+        future:
+            postsRef.where("status", isEqualTo: status).limit(numOfPosts).get(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Loading();
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           } else {
             if (snapshot.data!.docs.isEmpty) {
               return noPostFoundMsg;
@@ -410,6 +422,7 @@ class _PostsState extends State<Posts> {
             }
             if (searchValue.isEmpty) {
               return ListView.builder(
+                controller: controller,
                 itemCount: snapshot.data!.docs.length,
                 itemBuilder: (context, index) {
                   return PostCards(

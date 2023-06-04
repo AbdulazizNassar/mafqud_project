@@ -151,7 +151,7 @@ class _ChatListScreenState extends State<ChatListScreen>
                     builder: (_) => ChatDetailsList(
                           senderUid: uId,
                           receiverUid: model.uid,
-                          model: model,
+                          receiverName: model.name,
                         )));
           },
           child: ListTile(
