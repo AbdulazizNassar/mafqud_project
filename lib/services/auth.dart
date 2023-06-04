@@ -25,7 +25,7 @@ class AuthService {
       'ID': int.parse(ID),
       'phoneNum': phoneNum,
       "uid": _auth.currentUser!.uid,
-      'image': '',
+      'image': ' ',
       'rating': 0.0,
       'numOfRating': 1,
     });
@@ -85,7 +85,7 @@ class AuthService {
     Query<Map<String, dynamic>> c = FirebaseFirestore.instance
         .collection('users')
         .where("email", isEqualTo: googleUser!.email);
-    if (c.count() == 0) {
+    if (c != null) {
       try {
         await _firestore.collection("users").doc(currentUser!.uid).set({
           'name': googleUser.displayName,

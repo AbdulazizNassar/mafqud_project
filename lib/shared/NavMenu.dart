@@ -96,7 +96,7 @@ buildHeader(BuildContext context) => isLoading
                 if (snapshot.connectionState == ConnectionState.done) {
                   var user = snapshot.data!.docs.first;
                   return Column(children: [
-                    user['image'] == ''
+                    user['image'] == ' '
                         ? const CircleAvatar(
                             radius: 60,
                             child: Image(

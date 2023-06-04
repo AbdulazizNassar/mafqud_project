@@ -131,6 +131,14 @@ class ChatDetailsScreen extends StatelessWidget {
                             color: Colors.deepPurple,
                             child: MaterialButton(
                               onPressed: () {
+                                String? sendername;
+                                if (AuthService().currentUser!.displayName ==
+                                    null) {
+                                  sendername = ChatCubit.get(context).username!;
+                                } else {
+                                  sendername =
+                                      AuthService().currentUser!.displayName;
+                                }
                                 ChatCubit.get(context).sendMessage(
                                   receiverId: receiverUid!,
                                   dateTime: Timestamp.fromDate(DateTime.now()),
@@ -138,9 +146,7 @@ class ChatDetailsScreen extends StatelessWidget {
                                   senderId: senderUid!,
                                   receivername: userData!['name'],
                                   receiverUid: receiverUid!,
-                                  sendername: AuthService()
-                                      .currentUser!
-                                      .displayName as String,
+                                  sendername: sendername as String,
                                 );
                                 textController.clear();
                               },
@@ -210,7 +216,15 @@ class ChatDetailsScreen extends StatelessWidget {
                             height: 50,
                             color: Colors.deepPurple,
                             child: MaterialButton(
-                              onPressed: () {
+                              onPressed: () async {
+                                String? sendername;
+                                if (AuthService().currentUser!.displayName ==
+                                    null) {
+                                  sendername = ChatCubit.get(context).username!;
+                                } else {
+                                  sendername =
+                                      AuthService().currentUser!.displayName;
+                                }
                                 ChatCubit.get(context).sendMessage(
                                   receiverId: receiverUid!,
                                   dateTime: Timestamp.fromDate(DateTime.now()),
@@ -218,8 +232,7 @@ class ChatDetailsScreen extends StatelessWidget {
                                   senderId: senderUid!,
                                   receivername: userData!['name'],
                                   receiverUid: receiverUid!,
-                                  sendername:
-                                      AuthService().currentUser!.displayName!,
+                                  sendername: sendername as String,
                                 );
                                 textController.clear();
                               },

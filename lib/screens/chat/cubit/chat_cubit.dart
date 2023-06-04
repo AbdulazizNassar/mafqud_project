@@ -35,7 +35,7 @@ class ChatCubit extends Cubit<ChatState> {
     emit(AllUsersLoadingState());
     FirebaseFirestore.instance
         .collection('users')
-        .doc(AuthService().currentUser!.uid)
+        .doc(uId)
         .collection('myUsers')
         .get()
         .then((value) {

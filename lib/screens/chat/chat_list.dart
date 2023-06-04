@@ -24,7 +24,7 @@ class ChatListScreen extends StatefulWidget {
 
 bool isLoading = false;
 
-deleteChat(UserModel model , context ) async {
+deleteChat(UserModel model, context) async {
   String currentUser = AuthService().currentUser!.uid;
   //delete messages
   CollectionReference<Map<String, dynamic>> messagesRef = FirebaseFirestore
@@ -46,17 +46,20 @@ deleteChat(UserModel model , context ) async {
       .collection('myUsers')
       .doc(model.uid);
   await myUsersRef.delete();
- 
 }
 
 class _ChatListScreenState extends State<ChatListScreen> {
   @override
+  void initState() {
+    // TODO: implement initState
+    print(ChatCubit.get(context).users!.isEmpty);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocConsumer<ChatCubit, ChatState>(
-      listener: (context, state) {
-      },
+      listener: (context, state) {},
       builder: (context, state) {
-
         return ConditionalBuilder(
             condition: ChatCubit.get(context).users!.isNotEmpty &&
                 ChatCubit.get(context).messages.isNotEmpty,
@@ -73,7 +76,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                           physics: const BouncingScrollPhysics(),
                           itemBuilder: (context, index) {
                             //get most recent message
-                          var message = ChatCubit.get(context).messages.last;
+                            var message = ChatCubit.get(context).messages.last;
                             return Slidable(
                               key: UniqueKey(),
                               endActionPane: ActionPane(
@@ -84,7 +87,8 @@ class _ChatListScreenState extends State<ChatListScreen> {
                                         isLoading = true;
                                       });
                                       deleteChat(
-                                          ChatCubit.get(context).users![index] , context);
+                                          ChatCubit.get(context).users![index],
+                                          context);
                                       setState(() {
                                         isLoading = false;
                                         ChatCubit.get(context).getChatList();
@@ -98,8 +102,10 @@ class _ChatListScreenState extends State<ChatListScreen> {
                                           isLoading = true;
                                         });
                                         setState(() {
-                                          deleteChat(ChatCubit.get(context)
-                                              .users![index] ,context);
+                                          deleteChat(
+                                              ChatCubit.get(context)
+                                                  .users![index],
+                                              context);
                                         });
                                         setState(() {
                                           isLoading = false;
@@ -115,7 +121,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                               child: buildChatItem(
                                   context,
                                   ChatCubit.get(context).users![index],
-                                  message ),
+                                  message),
                             );
                           },
                           separatorBuilder: (context, index) => Padding(
@@ -166,7 +172,6 @@ Widget buildChatItem(context, UserModel model, ChatMessageModel messages) =>
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: ListTile(
-
             leading: const CircleAvatar(
                 radius: 25,
                 child: Image(

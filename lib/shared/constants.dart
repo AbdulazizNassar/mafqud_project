@@ -64,4 +64,4 @@ TextStyle? popupMenuStyle(BuildContext context) {
   return Theme.of(context).textTheme.bodyLarge;
 }
 
-String? uId = AuthService().currentUser!.uid;
+String? uId = 'start';
