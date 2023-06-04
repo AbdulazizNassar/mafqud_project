@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mafqud_project/main.dart';
 import 'package:mafqud_project/screens/MenuItems/Notifications/constant.dart';
 import 'package:mafqud_project/screens/chat/chat_list.dart';
 import 'package:mafqud_project/screens/chat/cubit/chat_cubit.dart';
@@ -95,7 +96,7 @@ buildHeader(BuildContext context) => isLoading
                 if (snapshot.connectionState == ConnectionState.done) {
                   var user = snapshot.data!.docs.first;
                   return Column(children: [
-                    user['image'] == ''
+                    user['image'] == ' '
                         ? const CircleAvatar(
                             radius: 60,
                             child: Image(
@@ -203,7 +204,7 @@ Widget buildMenuItems(BuildContext context) => Container(
             title: const Text("Messages"),
             onTap: () {
               ChatCubit.get(context).getChatList();
-              Navigator.push(context,
+              navKey.currentState!.push(
                   MaterialPageRoute(builder: (_) => const ChatListScreen()));
             },
           ),

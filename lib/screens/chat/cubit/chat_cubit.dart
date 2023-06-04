@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mafqud_project/models/userModel.dart';
+import 'package:mafqud_project/services/auth.dart';
 import 'package:mafqud_project/services/notification.dart';
 import 'package:mafqud_project/shared/constants.dart';
 import '../../../models/messageModel.dart';
@@ -23,8 +24,6 @@ class ChatCubit extends Cubit<ChatState> {
     FirebaseFirestore.instance.collection('users').doc(uId).get().then((value) {
       userData = UserModel.fromJson(value.data()!);
       username = value.data()!['name'];
-      print(userData!.name);
-      print(username);
       emit(GetUserSuccessState());
     }).catchError((error) {
       print(error);
@@ -91,7 +90,7 @@ class ChatCubit extends Cubit<ChatState> {
     sendPushMessage(
         "You've got a new message ", 'from $sendername', snap['token'],
         uidReceiver: receiverId, nameReceiver: receivername);
-    FirebaseFirestore.instance
+    await FirebaseFirestore.instance
         .collection('users')
         .doc(senderId)
         .collection('chats')
@@ -156,7 +155,7 @@ class ChatCubit extends Cubit<ChatState> {
       for (var element in event.docs) {
         messages.add(ChatMessageModel.fromJson(element.data()));
       }
-      emit(GetMessagesSuccessState());
+      emit(GetMessagesSuccessState(messageModel: messages));
     });
   }
 }

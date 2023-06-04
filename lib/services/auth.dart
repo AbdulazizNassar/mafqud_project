@@ -25,7 +25,7 @@ class AuthService {
       'ID': int.parse(ID),
       'phoneNum': phoneNum,
       "uid": _auth.currentUser!.uid,
-      'image': '',
+      'image': ' ',
       'rating': 0.0,
       'numOfRating': 1,
     });
@@ -82,11 +82,11 @@ class AuthService {
       accessToken: googleAuth?.accessToken,
       idToken: googleAuth?.idToken,
     );
-    dynamic x = await _firestore
-        .collection("users")
-        .where('email', isEqualTo: googleUser!.email)
-        .get();
-    if (x == null) {
+    Query<Map<String, dynamic>> c = FirebaseFirestore.instance
+        .collection('users')
+        .where("email", isEqualTo: googleUser!.email);
+    if (c != null) {
+
       try {
         await _firestore
             .collection("users")
@@ -101,7 +101,7 @@ class AuthService {
           'rating': 0.0,
           'numOfRating': 1,
         });
-        // ChatCubit.get(context).getUserData();
+        ChatCubit.get(context).getUserData();
       } catch (e) {}
     }
 

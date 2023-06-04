@@ -14,8 +14,7 @@ class ChatDetailsList extends StatefulWidget {
   final String? senderUid;
   final String? receiverUid;
   final UserModel? model;
-
-  ChatDetailsList({
+  const ChatDetailsList({
     this.receiverUid,
     this.senderUid,
     this.model,
@@ -25,6 +24,7 @@ class ChatDetailsList extends StatefulWidget {
   @override
   State<ChatDetailsList> createState() => _ChatDetailsListState();
 }
+
 
 IconData checkIcon = Icons.check;
 
@@ -137,7 +137,15 @@ class _ChatDetailsListState extends State<ChatDetailsList> {
                             height: 50,
                             color: Colors.deepPurple,
                             child: MaterialButton(
-                              onPressed: () {
+                              onPressed: () async {
+                                String? sendername;
+                                if (AuthService().currentUser!.displayName ==
+                                    null) {
+                                  sendername = ChatCubit.get(context).username!;
+                                } else {
+                                  sendername =
+                                      AuthService().currentUser!.displayName;
+                                }
                                 ChatCubit.get(context).sendMessage(
                                   receiverId: widget.receiverUid!,
                                   dateTime: Timestamp.fromDate(DateTime.now()),
@@ -145,7 +153,9 @@ class _ChatDetailsListState extends State<ChatDetailsList> {
                                   senderId: widget.senderUid!,
                                   receivername: widget.model!.name!,
                                   receiverUid: widget.receiverUid!,
-                                  sendername: ChatCubit.get(context).username!,
+
+                                  sendername: sendername as String,
+
                                 );
                                 textController.clear();
                               },
@@ -216,6 +226,14 @@ class _ChatDetailsListState extends State<ChatDetailsList> {
                             color: Colors.deepPurple,
                             child: MaterialButton(
                               onPressed: () {
+String? sendername;
+                                if (AuthService().currentUser!.displayName ==
+                                    null) {
+                                  sendername = ChatCubit.get(context).username!;
+                                } else {
+                                  sendername =
+                                      AuthService().currentUser!.displayName;
+                                }
                                 ChatCubit.get(context).sendMessage(
                                   receiverId: widget.receiverUid!,
                                   dateTime: Timestamp.fromDate(DateTime.now()),
@@ -223,7 +241,7 @@ class _ChatDetailsListState extends State<ChatDetailsList> {
                                   senderId: widget.senderUid!,
                                   receivername: widget.model!.name!,
                                   receiverUid: widget.receiverUid!,
-                                  sendername: ChatCubit.get(context).username!,
+                                  sendername: sendername as String,
                                 );
 
                                 textController.clear();
@@ -254,7 +272,9 @@ Widget buildSenderMessage(ChatMessageModel model) => Align(
       alignment: AlignmentDirectional.centerEnd,
       child: Container(
         decoration: const BoxDecoration(
-          color: Colors.deepPurple,
+
+          color: Colors.green,
+
           borderRadius: BorderRadiusDirectional.only(
             bottomStart: Radius.circular(10),
             bottomEnd: Radius.circular(10),
@@ -266,6 +286,7 @@ Widget buildSenderMessage(ChatMessageModel model) => Align(
           children: [
             Text(
               model.text!,
+
               style: const TextStyle(color: Colors.white, fontSize: 18),
             ),
             Row(
@@ -299,7 +320,9 @@ Widget buildReceiverMessage(ChatMessageModel model) => Align(
         padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
         child: Text(
           model.text!,
-          style: const TextStyle(color: Colors.white, fontSize: 18),
+
+          style: const TextStyle(color: Colors.white, fontSize: 22),
+
         ),
       ),
     );

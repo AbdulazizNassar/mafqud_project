@@ -3,6 +3,7 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mafqud_project/models/userModel.dart';
+import 'package:mafqud_project/services/auth.dart';
 
 import '../../models/messageModel.dart';
 import 'cubit/chat_cubit.dart';
@@ -130,21 +131,25 @@ class ChatDetailsScreen extends StatelessWidget {
                             color: Colors.deepPurple,
                             child: MaterialButton(
                               onPressed: () {
-                                try {
-                                  ChatCubit.get(context).sendMessage(
-                                    receiverId: receiverUid!,
-                                    dateTime:
-                                        Timestamp.fromDate(DateTime.now()),
-                                    text: textController.text,
-                                    senderId: senderUid!,
-                                    receivername: userData!['name'],
-                                    receiverUid: receiverUid!,
-                                    sendername: senderName!,
-                                  );
-                                  textController.clear();
-                                } catch (e) {
-                                  print(e);
+                                String? sendername;
+                                if (AuthService().currentUser!.displayName ==
+                                    null) {
+                                  sendername = ChatCubit.get(context).username!;
+                                } else {
+                                  sendername =
+                                      AuthService().currentUser!.displayName;
                                 }
+                                ChatCubit.get(context).sendMessage(
+                                  receiverId: receiverUid!,
+                                  dateTime: Timestamp.fromDate(DateTime.now()),
+                                  text: textController.text,
+                                  senderId: senderUid!,
+                                  receivername: userData!['name'],
+                                  receiverUid: receiverUid!,
+                                  sendername: sendername as String,
+                                );
+                                textController.clear();
+
                               },
                               minWidth: 1,
                               child: const Icon(
@@ -212,7 +217,15 @@ class ChatDetailsScreen extends StatelessWidget {
                             height: 50,
                             color: Colors.deepPurple,
                             child: MaterialButton(
-                              onPressed: () {
+                              onPressed: () async {
+                                String? sendername;
+                                if (AuthService().currentUser!.displayName ==
+                                    null) {
+                                  sendername = ChatCubit.get(context).username!;
+                                } else {
+                                  sendername =
+                                      AuthService().currentUser!.displayName;
+                                }
                                 ChatCubit.get(context).sendMessage(
                                   receiverId: receiverUid!,
                                   dateTime: Timestamp.fromDate(DateTime.now()),
@@ -220,7 +233,7 @@ class ChatDetailsScreen extends StatelessWidget {
                                   senderId: senderUid!,
                                   receivername: userData!['name'],
                                   receiverUid: receiverUid!,
-                                  sendername: senderName!,
+                                  sendername: sendername as String,
                                 );
                                 textController.clear();
                               },
@@ -249,7 +262,7 @@ class ChatDetailsScreen extends StatelessWidget {
         alignment: AlignmentDirectional.centerEnd,
         child: Container(
           decoration: const BoxDecoration(
-            color: Colors.deepPurple,
+            color: Colors.green,
             borderRadius: BorderRadiusDirectional.only(
               bottomStart: Radius.circular(10),
               bottomEnd: Radius.circular(10),
@@ -259,7 +272,7 @@ class ChatDetailsScreen extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
           child: Text(
             model.text!,
-            style: const TextStyle(color: Colors.white, fontSize: 18),
+            style: const TextStyle(color: Colors.white, fontSize: 22),
           ),
         ),
       );
@@ -267,9 +280,9 @@ class ChatDetailsScreen extends StatelessWidget {
   Widget buildReceiverMessage(ChatMessageModel model) => Align(
         alignment: AlignmentDirectional.centerStart,
         child: Container(
-          decoration: BoxDecoration(
-            color: Colors.grey[300],
-            borderRadius: const BorderRadiusDirectional.only(
+          decoration: const BoxDecoration(
+            color: Colors.blue,
+            borderRadius: BorderRadiusDirectional.only(
               bottomEnd: Radius.circular(10),
               bottomStart: Radius.circular(10),
               topEnd: Radius.circular(10),
@@ -278,7 +291,7 @@ class ChatDetailsScreen extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
           child: Text(
             model.text!,
-            style: const TextStyle(color: Colors.white, fontSize: 18),
+            style: const TextStyle(color: Colors.white, fontSize: 22),
           ),
         ),
       );

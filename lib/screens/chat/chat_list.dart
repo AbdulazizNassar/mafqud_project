@@ -23,7 +23,8 @@ class ChatListScreen extends StatefulWidget {
 }
 
 bool isLoading = false;
-deleteChat(UserModel model) async {
+
+deleteChat(UserModel model, context) async {
   String currentUser = AuthService().currentUser!.uid;
   //delete messages
   CollectionReference<Map<String, dynamic>> messagesRef = FirebaseFirestore
@@ -50,43 +51,74 @@ deleteChat(UserModel model) async {
 class _ChatListScreenState extends State<ChatListScreen>
     with WidgetsBindingObserver {
   @override
-  Widget build(BuildContext context) => BlocConsumer<ChatCubit, ChatState>(
-        listener: (context, state) {},
-        builder: (context, state) {
-          return ConditionalBuilder(
-              condition: ChatCubit.get(context).users!.isNotEmpty &&
-                  ChatCubit.get(context).messages.isNotEmpty,
-              builder: (context) => Scaffold(
-                    appBar: AppBar(
-                      title: const Text('Messages'),
-                      backgroundColor: Colors.blue[900],
-                      centerTitle: true,
-                    ),
-                    drawer: const NavMenu(),
-                    body: isLoading
-                        ? Loading()
-                        : ListView.separated(
-                            physics: const BouncingScrollPhysics(),
-                            itemBuilder: (context, index) {
-                              //get most recent message
-                              var message =
-                                  ChatCubit.get(context).messages.last;
-                              return Slidable(
-                                key: UniqueKey(),
-                                endActionPane: ActionPane(
-                                    motion: const ScrollMotion(),
-                                    dismissible: DismissiblePane(
-                                      onDismissed: () {
+  void initState() {
+    // TODO: implement initState
+    print(ChatCubit.get(context).users!.isEmpty);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<ChatCubit, ChatState>(
+      listener: (context, state) {},
+      builder: (context, state) {
+        return ConditionalBuilder(
+            condition: ChatCubit.get(context).users!.isNotEmpty &&
+                ChatCubit.get(context).messages.isNotEmpty,
+            builder: (context) => Scaffold(
+                  appBar: AppBar(
+                    title: const Text('Messages'),
+                    backgroundColor: Colors.blue[900],
+                    centerTitle: true,
+                  ),
+                  drawer: const NavMenu(),
+                  body: isLoading
+                      ? Loading()
+                      : ListView.separated(
+                          physics: const BouncingScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            //get most recent message
+                            var message = ChatCubit.get(context).messages.last;
+                            return Slidable(
+                              key: UniqueKey(),
+                              endActionPane: ActionPane(
+                                  motion: const ScrollMotion(),
+                                  dismissible: DismissiblePane(
+                                    onDismissed: () {
+                                      setState(() {
+                                        isLoading = true;
+                                      });
+                                      deleteChat(
+                                          ChatCubit.get(context).users![index],
+                                          context);
+                                      setState(() {
+                                        isLoading = false;
+                                        ChatCubit.get(context).getChatList();
+                                      });
+                                    },
+                                  ),
+                                  children: [
+                                    SlidableAction(
+                                      onPressed: (BuildContext context) {
                                         setState(() {
                                           isLoading = true;
                                         });
-                                        deleteChat(ChatCubit.get(context)
-                                            .users![index]);
+                                        setState(() {
+                                          deleteChat(
+                                              ChatCubit.get(context)
+                                                  .users![index],
+                                              context);
+                                        });
                                         setState(() {
                                           isLoading = false;
+                                          ChatCubit.get(context).getChatList();
                                         });
                                       },
+                                      backgroundColor: const Color(0xFFFE4A49),
+                                      foregroundColor: Colors.white,
+                                      icon: Icons.delete,
+                                      label: 'Delete',
                                     ),
+
                                     children: [
                                       SlidableAction(
                                         onPressed: (BuildContext context) {
@@ -120,40 +152,46 @@ class _ChatListScreenState extends State<ChatListScreen>
                                 height: 0,
                               ),
                             ),
-                            itemCount: ChatCubit.get(context).users!.length,
                           ),
-                  ),
-              fallback: (context) => Scaffold(
-                  appBar: AppBar(
-                    title: const Text('Messages'),
-                    backgroundColor: Colors.blue[900],
-                    centerTitle: true,
-                  ),
-                  drawer: const NavMenu(),
-                  body: const Center(
-                    child: Text(
-                      "No messages found",
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.red,
-                      ),
+                          itemCount: ChatCubit.get(context).users!.length,
+                        ),
+                ),
+            fallback: (context) => Scaffold(
+                appBar: AppBar(
+                  title: const Text('Messages'),
+                  backgroundColor: Colors.blue[900],
+                  centerTitle: true,
+                ),
+                drawer: const NavMenu(),
+                body: const Center(
+                  child: Text(
+                    "No messages found",
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.red,
                     ),
-                  )));
+                  ),
+                )));
+      },
+    );
+  }
+}
+
+Widget buildChatItem(context, UserModel model, ChatMessageModel messages) =>
+    InkWell(
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (_) => ChatDetailsList(
+                        senderUid: uId,
+                        receiverUid: model.uid,
+                        model: model,
+                      )));
         },
-      );
-  Widget buildChatItem(context, UserModel model, ChatMessageModel messages) =>
-      InkWell(
-          onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (_) => ChatDetailsList(
-                          senderUid: uId,
-                          receiverUid: model.uid,
-                          model: model,
-                        )));
-          },
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
           child: ListTile(
             leading: const CircleAvatar(
                 radius: 25,
@@ -167,12 +205,12 @@ class _ChatListScreenState extends State<ChatListScreen>
                 height: 1.2,
               ),
             ),
-            //show last message
-            subtitle: uId == messages.receiverId
-                ? Text(
-                    '${model.name}: ${messages.text}',
-                  )
-                : Text("You: ${messages.text}"),
+            // //show last message
+            // subtitle: uId == messages.receiverId
+            //     ? Text(
+            //         '${model.name}: ${messages.text}',
+            //       )
+            //     : Text("You: ${messages.text}"),
             trailing: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -181,8 +219,8 @@ class _ChatListScreenState extends State<ChatListScreen>
               ],
             ),
             enabled: true,
-          ));
-}
+          ),
+        ));
 
 class NewWidget extends StatelessWidget {
   const NewWidget({
