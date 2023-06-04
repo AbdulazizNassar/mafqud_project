@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mafqud_project/shared/size_config.dart';
 
+import '../services/auth.dart';
+
 const textInputDecoration = InputDecoration(
   fillColor: Colors.white,
   filled: true,
@@ -62,4 +64,4 @@ TextStyle? popupMenuStyle(BuildContext context) {
   return Theme.of(context).textTheme.bodyLarge;
 }
 
-String? uId = 'start';
+String? uId = AuthService().currentUser!.uid;
