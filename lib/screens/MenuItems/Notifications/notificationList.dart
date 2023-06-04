@@ -87,7 +87,7 @@ class _NotificationListState extends State<NotificationList> {
                 ]),
             child: InkWell(
               onTap: () async {
-                await navKey.currentState!.pushReplacement(MaterialPageRoute(
+                navKey.currentState!.push(MaterialPageRoute(
                     builder: (_) => ChatDetailsList(
                           receiverUid: snapshot[i]['uid'],
                           senderUid: snapshot[i]['uidReceiver'],
