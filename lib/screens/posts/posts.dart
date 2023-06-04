@@ -63,11 +63,10 @@ class _PostsState extends State<Posts> {
   void initState() {
     super.initState();
     getToken();
-
     controller.addListener(() {
       if (controller.position.pixels == controller.position.maxScrollExtent) {
         setState(() {
-          limit += 10;
+          numOfPosts += 10;
         });
       }
     });
@@ -387,28 +386,14 @@ class _PostsState extends State<Posts> {
     );
   }
 
-  DocumentSnapshot? lastDoc;
-  Future<QuerySnapshot> getPosts(int limit, String status) async {
-    late Future<QuerySnapshot<Map<String, dynamic>>> querySnapshot;
-    if (lastDoc == null) {
-      querySnapshot =
-          postsRef.limit(limit).where('status', isEqualTo: status).get();
-    } else {
-      querySnapshot = postsRef.limit(limit).startAfterDocument(lastDoc!).get();
-    }
+  int numOfPosts = 10;
 
-    return querySnapshot;
-  }
-
-  int limit = 10;
-  bool _hasNext = true;
-  bool _isFetchingUsers = false;
   FutureBuilder<QuerySnapshot<Object?>> displayPosts(
       String status, String searchValue, String category) {
     return FutureBuilder<QuerySnapshot>(
-        future: getPosts(limit, status),
+        future:
+            postsRef.where('status', isEqualTo: status).limit(numOfPosts).get(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          _isFetchingUsers = true;
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: CircularProgressIndicator(),
@@ -416,11 +401,6 @@ class _PostsState extends State<Posts> {
           } else {
             if (snapshot.data!.docs.isEmpty) {
               return noPostFoundMsg;
-            }
-            if (snapshot.data!.docs.length < limit) {
-              setState(() {
-                lastDoc = snapshot.data!.docs.last;
-              });
             }
             if (category.isNotEmpty) {
               Iterable<QueryDocumentSnapshot<Object?>> categoryQuery =
