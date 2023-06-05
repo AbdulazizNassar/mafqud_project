@@ -7,12 +7,9 @@ import '../services/imagePicker.dart';
 import '../services/showPostDetails.dart';
 
 class PostCards extends StatelessWidget {
-  PostCards({
-    super.key,
-    required this.posts,
-    this.image,
-  });
+  PostCards({super.key, required this.posts, this.image, this.postID});
   final posts;
+  final postID;
   dynamic image;
 
   @override
@@ -21,7 +18,10 @@ class PostCards extends StatelessWidget {
       onTap: () async {
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
         await showPostDetailsPage(
-            posts: posts, context: context, images: posts["image"]);
+            posts: posts,
+            context: context,
+            images: posts["image"],
+            postID: postID);
       },
       child: Card(
         child: Row(

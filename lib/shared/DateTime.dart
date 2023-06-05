@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'package:mafqud_project/services/auth.dart';
+import 'package:mafqud_project/services/notification.dart';
 
 String readTimestamp(Timestamp? timestamp) {
   var now = DateTime.now();
@@ -28,4 +30,30 @@ String readTimestamp(Timestamp? timestamp) {
   }
 
   return time;
+}
+
+timeStampDiff() async {
+  QuerySnapshot<Map<String, dynamic>> posts = await FirebaseFirestore.instance
+      .collection('Posts')
+      .where('userID', isEqualTo: AuthService().currentUser!.uid)
+      .get();
+
+  posts.docs.forEach((element) async {
+    QuerySnapshot<Map<String, dynamic>> notifications = await FirebaseFirestore
+        .instance
+        .collection('notifications')
+        .where('postID', isEqualTo: element.id)
+        .get();
+    var diff =
+        element['expiry']!.toDate().difference(element['Date']!.toDate());
+
+    if (diff.inDays == 2 && notifications.docs.isEmpty) {
+      sendPushMessage(
+          "Update post",
+          "Post will automatically delete after 3 days if not updated",
+          await getTokenByUID(element['userID']),
+          uidReceiver: AuthService().currentUser!.uid,
+          postID: element.id);
+    }
+  });
 }

@@ -16,6 +16,11 @@ Icon msgIcon = Icon(
   size: 50,
   color: Colors.blue.shade900,
 );
+Icon alertIcon = Icon(
+  Icons.update,
+  size: 50,
+  color: Colors.blue.shade900,
+);
 
 var newIndicator = Positioned(
     right: 0,

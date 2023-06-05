@@ -14,9 +14,15 @@ class Details extends StatefulWidget {
   final locality;
   final subLocality;
   final images;
+  final postID;
 
   const Details(
-      {super.key, this.posts, this.locality, this.subLocality, this.images});
+      {super.key,
+      this.posts,
+      this.locality,
+      this.subLocality,
+      this.images,
+      this.postID});
 
   @override
   State<Details> createState() => _DetailsState();
@@ -47,10 +53,45 @@ class _DetailsState extends State<Details> with TickerProviderStateMixin {
             color: Colors.white,
           ),
         ),
+        actions: [_showUpdateButton(context)],
       ),
       body: _buildProductDetailsPage(context),
       bottomNavigationBar: _buildBottomNavigationBar(context),
     );
+  }
+
+  _showUpdateButton(context) {
+    if (widget.posts['userID'] == AuthService().currentUser!.uid &&
+        widget.posts['expiry']!
+                .toDate()
+                .difference(widget.posts['Date']!.toDate())
+                .inDays ==
+            2) {
+      return TextButton(
+          onPressed: () async {
+            await FirebaseFirestore.instance
+                .collection('Posts')
+                .doc(widget.postID)
+                .update({
+              'expiry':
+                  widget.posts['expiry'].toDate().add(const Duration(days: 14)),
+            });
+          },
+          child: const Row(
+            children: [
+              Text(
+                "Update Post",
+                style: TextStyle(color: Colors.white),
+              ),
+              Icon(
+                Icons.update,
+                color: Colors.white,
+              )
+            ],
+          ));
+    } else {
+      return const Text("");
+    }
   }
 
   buildProductImagesWidgets(dynamic posts) {

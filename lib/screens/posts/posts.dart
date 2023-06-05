@@ -4,6 +4,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:mafqud_project/main.dart';
 import 'package:mafqud_project/services/googleMap/googleMapsShowPosts.dart';
 import 'package:mafqud_project/services/notification.dart';
+import 'package:mafqud_project/shared/DateTime.dart';
 import 'package:mafqud_project/shared/NavMenu.dart';
 import 'package:mafqud_project/shared/constants.dart';
 import '../../shared/AlertBox.dart';
@@ -62,10 +63,17 @@ class _PostsState extends State<Posts> {
   void initState() {
     super.initState();
     getToken();
+    timeStampDiff();
+
     controller.addListener(() {
       if (controller.position.pixels == controller.position.maxScrollExtent) {
         setState(() {
           numOfPosts += 10;
+        });
+      }
+      if (controller.offset == 0.0) {
+        setState(() {
+          lastDoc = null;
         });
       }
     });
@@ -87,7 +95,9 @@ class _PostsState extends State<Posts> {
   bool highLightedColor = false;
   bool isLoading = false;
   Widget postsMaterialApp(BuildContext context) => isLoading
-      ? Loading()
+      ? const Center(
+          child: CircularProgressIndicator(),
+        )
       : MaterialApp(
           home: DefaultTabController(
               length: 2,
@@ -386,12 +396,20 @@ class _PostsState extends State<Posts> {
   }
 
   int numOfPosts = 10;
-
+  DocumentSnapshot? lastDoc;
   FutureBuilder<QuerySnapshot<Object?>> displayPosts(
       String status, String searchValue, String category) {
     return FutureBuilder<QuerySnapshot>(
-        future:
-            postsRef.where('status', isEqualTo: status).limit(numOfPosts).get(),
+        future: lastDoc == null
+            ? postsRef
+                .where('status', isEqualTo: status)
+                .limit(numOfPosts)
+                .get()
+            : postsRef
+                .where('status', isEqualTo: status)
+                .limit(numOfPosts)
+                .startAtDocument(lastDoc!)
+                .get(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
@@ -401,6 +419,7 @@ class _PostsState extends State<Posts> {
             if (snapshot.data!.docs.isEmpty) {
               return noPostFoundMsg;
             }
+            lastDoc ??= snapshot.data!.docs.last;
             if (category.isNotEmpty) {
               Iterable<QueryDocumentSnapshot<Object?>> categoryQuery =
                   searchByCategory(snapshot, category);
@@ -413,6 +432,7 @@ class _PostsState extends State<Posts> {
                       return PostCards(
                         posts: post,
                         image: post['image'],
+                        postID: post.id,
                       );
                     })
                   ],
@@ -424,8 +444,11 @@ class _PostsState extends State<Posts> {
                 controller: controller,
                 itemCount: snapshot.data!.docs.length,
                 itemBuilder: (context, index) {
+                  var snap = snapshot.data!.docs;
+
                   return PostCards(
-                    posts: snapshot.data!.docs[index],
+                    posts: snap[index],
+                    postID: snap[index].id,
                   );
                 },
               );
@@ -442,6 +465,7 @@ class _PostsState extends State<Posts> {
                       return PostCards(
                         posts: post,
                         image: post["image"],
+                        postID: post.id,
                       );
                     })
                   ],

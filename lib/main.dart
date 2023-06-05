@@ -5,8 +5,9 @@ import 'package:mafqud_project/screens/chat/cubit/chat_cubit.dart';
 import 'package:mafqud_project/screens/posts/DetailPage.dart';
 import 'package:mafqud_project/screens/posts/history.dart';
 import 'package:mafqud_project/screens/posts/selectImage.dart';
+import 'package:mafqud_project/services/auth.dart';
 import 'package:mafqud_project/services/sharedPreference.dart';
-import 'Screens/homepage/Home.dart';
+import 'package:mafqud_project/shared/DateTime.dart';
 import 'screens/Authentication/register.dart';
 import 'screens/Authentication/sign_in.dart';
 import 'screens/posts/addPost.dart';
@@ -25,7 +26,6 @@ void main() async {
   );
   await CacheHelper.init();
   navKey = GlobalKey();
-
   runApp(MyApp());
 }
 
@@ -51,7 +51,6 @@ class MyApp extends StatelessWidget {
           "Auth": (context) => const Auth(),
           "SignIn": (context) => const SignIn(),
           "Register": (context) => const Register(),
-          "Home": (context) => const Home(),
           "Posts": (context) => Posts(
                 navKey: navKey,
               ),

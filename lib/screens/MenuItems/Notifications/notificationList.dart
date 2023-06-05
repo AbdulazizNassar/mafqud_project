@@ -6,9 +6,11 @@ import 'package:mafqud_project/screens/MenuItems/Notifications/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:mafqud_project/screens/MenuItems/Notifications/notificationTiles.dart';
 import 'package:mafqud_project/screens/chat/chat_details_list.dart';
+import 'package:mafqud_project/screens/posts/selectImage.dart';
 import 'package:mafqud_project/shared/loading.dart';
 
 import '../../../services/auth.dart';
+import '../../../services/showPostDetails.dart';
 
 class NotificationList extends StatefulWidget {
   const NotificationList({Key? key}) : super(key: key);
@@ -84,12 +86,25 @@ class _NotificationListState extends State<NotificationList> {
                 ]),
             child: InkWell(
               onTap: () async {
-                navKey.currentState!.push(MaterialPageRoute(
-                    builder: (_) => ChatDetailsList(
-                          receiverUid: snapshot[i]['uid'],
-                          senderUid: snapshot[i]['uidReceiver'],
-                          receiverName: snapshot[i]['nameReceiver'],
-                        )));
+                if (snapshot[i]['postID'] != null) {
+                  DocumentSnapshot post = await FirebaseFirestore.instance
+                      .collection('Posts')
+                      .doc(snapshot[i]['postID'])
+                      .get();
+                  await showPostDetailsPage(
+                      posts: post,
+                      context: context,
+                      images: post["image"],
+                      postID: post.id);
+                } else {
+                  navKey.currentState!.push(MaterialPageRoute(
+                      builder: (_) => ChatDetailsList(
+                            receiverUid: snapshot[i]['uid'],
+                            senderUid: snapshot[i]['uidReceiver'],
+                            receiverName: snapshot[i]['nameReceiver'],
+                          )));
+                }
+
                 await notificationsRef
                     .doc(snapshot[i].id)
                     .update({'status': "old"});
