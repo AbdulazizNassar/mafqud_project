@@ -33,10 +33,8 @@ String readTimestamp(Timestamp? timestamp) {
 }
 
 timeStampDiff() async {
-  QuerySnapshot<Map<String, dynamic>> posts = await FirebaseFirestore.instance
-      .collection('Posts')
-      .where('userID', isEqualTo: AuthService().currentUser!.uid)
-      .get();
+  QuerySnapshot<Map<String, dynamic>> posts =
+      await FirebaseFirestore.instance.collection('Posts').get();
 
   posts.docs.forEach((element) async {
     QuerySnapshot<Map<String, dynamic>> notifications = await FirebaseFirestore
@@ -52,7 +50,7 @@ timeStampDiff() async {
           "Update post",
           "Post will automatically delete after 3 days if not updated",
           await getTokenByUID(element['userID']),
-          uidReceiver: AuthService().currentUser!.uid,
+          uidReceiver: element['userID'],
           postID: element.id);
     }
   });

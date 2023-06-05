@@ -70,6 +70,9 @@ class _addImagesState extends State<addImages> {
                   onTap: () async {
                     file = await ImagePicker()
                         .pickImage(source: ImageSource.gallery);
+                    if (file == null) {
+                      return;
+                    }
                     if (widget.posts != null) {
                       list.add(await imgUpload(file));
                       setState(() {
@@ -85,7 +88,7 @@ class _addImagesState extends State<addImages> {
                   child: Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(10),
-                    child:  Row(
+                    child: const Row(
                       children: [
                         Icon(
                           Icons.photo_outlined,
@@ -106,6 +109,9 @@ class _addImagesState extends State<addImages> {
                   onTap: () async {
                     file = await ImagePicker()
                         .pickImage(source: ImageSource.camera);
+                    if (file == null) {
+                      return;
+                    }
                     if (widget.posts != null) {
                       list.add(await imgUpload(file));
                       setState(() {
@@ -121,7 +127,7 @@ class _addImagesState extends State<addImages> {
                   child: Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(10),
-                    child:  Row(
+                    child: const Row(
                       children: [
                         Icon(
                           Icons.camera,

@@ -55,7 +55,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     nameController = TextEditingController(text: widget.name);
     emailController = TextEditingController(text: widget.email);
     phoneController = TextEditingController(text: widget.phone);
-    idController = TextEditingController(text: widget.ID.toString());
+    idController = TextEditingController(
+        text: widget.ID.toString() == "null" ? 'none' : widget.ID.toString());
     phoneController = TextEditingController(text: widget.phone);
     super.initState();
   }
@@ -82,10 +83,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (_) => const ProfileScreen())),
               })
-          .catchError((e) {
-            print("===============");
-            print(e.toString());
-          });
+          .catchError((e) {});
     }
   }
 
@@ -120,7 +118,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   child: Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(10),
-                    child:  Row(
+                    child: const Row(
                       children: [
                         Icon(
                           Icons.photo_outlined,
@@ -148,7 +146,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   child: Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(10),
-                    child:  Row(
+                    child: const Row(
                       children: [
                         Icon(
                           Icons.camera,
@@ -217,7 +215,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         width: 15,
                       ),
                       Stack(alignment: Alignment.bottomRight, children: [
-                        widget.image! == ''
+                        widget.image! == ' ' || widget.image == ''
                             ? const CircleAvatar(
                                 radius: 60,
                                 child: Image(
@@ -306,6 +304,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 // about input field
                 TextFormField(
                   controller: phoneController,
+                  onTap: () {
+                    if (phoneController.text == 'none') {
+                      idController.clear();
+                    }
+                  },
                   validator: (val) =>
                       val != null && val.isNotEmpty ? null : 'Required Field',
                   decoration: InputDecoration(
@@ -318,6 +321,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 SizedBox(height: MediaQuery.of(context).size.height * .02),
                 TextFormField(
                   controller: idController,
+                  onTap: () {
+                    if (idController.text == 'none') {
+                      idController.clear();
+                    }
+                  },
                   validator: (val) =>
                       val != null && val.isNotEmpty ? null : 'Required Field',
                   decoration: InputDecoration(

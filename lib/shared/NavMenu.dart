@@ -158,8 +158,9 @@ Widget buildMenuItems(BuildContext context) => Container(
           ListTile(
             leading: const Icon(Icons.message_outlined),
             title: const Text("Messages"),
-            onTap: () {
+            onTap: () async {
               ChatCubit.get(context).getChatList();
+
               navKey.currentState!.push(
                   MaterialPageRoute(builder: (_) => const ChatListScreen()));
             },

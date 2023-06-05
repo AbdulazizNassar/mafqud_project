@@ -82,23 +82,28 @@ class AuthService {
       accessToken: googleAuth?.accessToken,
       idToken: googleAuth?.idToken,
     );
-
-    try {
-      await _firestore
-          .collection("users")
-          .doc(AuthService().currentUser!.uid)
-          .set({
-        'name': googleUser!.displayName,
-        'email': googleUser.email,
-        'ID': 'none',
-        'phoneNum': 'none',
-        "uid": currentUser!.uid,
-        'image': ' ',
-        'rating': 0.0,
-        'numOfRating': 1,
-      });
-      ChatCubit.get(context).getUserData();
-    } catch (e) {}
+    QuerySnapshot<Map<String, dynamic>> snap = await FirebaseFirestore.instance
+        .collection('users')
+        .where('email', isEqualTo: googleUser!.email)
+        .get();
+    if (snap.docs.isEmpty) {
+      try {
+        await _firestore
+            .collection("users")
+            .doc(AuthService().currentUser!.uid)
+            .set({
+          'name': googleUser!.displayName,
+          'email': googleUser.email,
+          'ID': 'none',
+          'phoneNum': 'none',
+          "uid": currentUser!.uid,
+          'image': ' ',
+          'rating': 0.0,
+          'numOfRating': 1,
+        });
+        ChatCubit.get(context).getUserData();
+      } catch (e) {}
+    }
 
     // Once signed in, return the UserCredential
     return await FirebaseAuth.instance.signInWithCredential(credential);

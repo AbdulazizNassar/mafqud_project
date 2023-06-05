@@ -26,6 +26,8 @@ void main() async {
   );
   await CacheHelper.init();
   navKey = GlobalKey();
+  await timeStampDiff();
+
   runApp(MyApp());
 }
 

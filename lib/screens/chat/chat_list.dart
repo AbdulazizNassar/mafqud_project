@@ -69,8 +69,8 @@ class _ChatListScreenState extends State<ChatListScreen>
                             physics: const BouncingScrollPhysics(),
                             itemBuilder: (context, index) {
                               //get most recent message
-                              var message =
-                                  ChatCubit.get(context).messages.last;
+                              var message = ChatCubit.get(context).messages;
+
                               return Slidable(
                                 key: UniqueKey(),
                                 endActionPane: ActionPane(
@@ -109,7 +109,7 @@ class _ChatListScreenState extends State<ChatListScreen>
                                 child: buildChatItem(
                                     context,
                                     ChatCubit.get(context).users![index],
-                                    message),
+                                    ChatCubit.get(context).messages.last),
                               );
                             },
                             separatorBuilder: (context, index) => Padding(
