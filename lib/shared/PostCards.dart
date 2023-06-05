@@ -44,7 +44,7 @@ class PostCards extends StatelessWidget {
                       children: [
                         Container(
                             padding: const EdgeInsets.only(top: 5),
-                            child: Text("${posts['category']}")),
+                            child: Text(" ${posts['category']}")),
                         Row(
                           children: [
                             const Icon(
@@ -66,7 +66,7 @@ class PostCards extends StatelessWidget {
                               color: Colors.green,
                             ),
                             Text(
-                              " ${posts["reward"]}",
+                              "${posts["reward"]}",
                               style: const TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 15),
                             )
@@ -74,11 +74,6 @@ class PostCards extends StatelessWidget {
                         )
                       ]),
                 )),
-
-            // Text(
-            //   readTimestamp(posts["Date"]),
-            //   style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-            // ),
             const Icon(
               Icons.keyboard_double_arrow_right_outlined,
               size: 30,
