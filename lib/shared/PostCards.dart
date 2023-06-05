@@ -59,9 +59,18 @@ class PostCards extends StatelessWidget {
                             ),
                           ],
                         ),
-                        Container(
-                          child: Text("Reward: ${posts["reward"]}", style: const TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 15),),
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.attach_money_outlined,
+                              color: Colors.green,
+                            ),
+                            Text(
+                              " ${posts["reward"]}",
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 15),
+                            )
+                          ],
                         )
                       ]),
                 )),
