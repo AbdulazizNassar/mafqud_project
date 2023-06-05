@@ -192,7 +192,7 @@ buildDetailsAndMaterialWidgets(dynamic widget, dynamic data,
                   tabs: const <Widget>[
                     Tab(
                       child: Text(
-                        "DETAILS",
+                        "Details",
                         style: TextStyle(
                           color: Colors.black,
                         ),
