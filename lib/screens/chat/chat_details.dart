@@ -139,17 +139,20 @@ class ChatDetailsScreen extends StatelessWidget {
                                   sendername =
                                       AuthService().currentUser!.displayName;
                                 }
-                                ChatCubit.get(context).sendMessage(
-                                  receiverId: receiverUid!,
-                                  dateTime: Timestamp.fromDate(DateTime.now()),
-                                  text: textController.text,
-                                  senderId: senderUid!,
-                                  receivername: userData!['name'],
-                                  receiverUid: receiverUid!,
-                                  sendername: sendername as String,
-                                );
-                                textController.clear();
+                                if (textController.text.isNotEmpty) {
+                                  ChatCubit.get(context).sendMessage(
+                                    receiverId: receiverUid!,
+                                    dateTime:
+                                        Timestamp.fromDate(DateTime.now()),
+                                    text: textController.text,
+                                    senderId: senderUid!,
+                                    receivername: userData!['name'],
+                                    receiverUid: receiverUid!,
+                                    sendername: sendername as String,
+                                  );
+                                }
 
+                                textController.clear();
                               },
                               minWidth: 1,
                               child: const Icon(

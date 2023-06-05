@@ -127,50 +127,47 @@ buildCategoryInfoWidget(dynamic posts) {
 buildAuthorInfoWidget(dynamic data) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 12.0),
-    child: Row(
-      children: <Widget>[
-        // const Text(
-        //   'Author:',
-        //   style: TextStyle(fontSize: 16.0, color: Colors.black),
-        // ),
-        const Icon(
-          Icons.person_pin_circle_outlined,
-          size: 28,
-        ),
-        const SizedBox(
-          width: 12.0,
-        ),
-        Text(
-          "${data!['name']}",
-          style: TextStyle(
-            fontSize: 18.0,
-            color: Colors.blue[700],
+    child: FittedBox(
+      child: Row(
+        children: <Widget>[
+          const Icon(
+            Icons.person_pin_circle_outlined,
+            size: 28,
           ),
-        ),
-
-        const SizedBox(
-          width: 50,
-        ),
-        Icon(
-          Icons.star,
-          color: Colors.yellow.shade700,
-          size: 35,
-        ),
-        Text(
-          "${(data!['rating'] / data!['numOfRating'] as double).round()}",
-          style: textStyle,
-        ),
-        const SizedBox(
-          width: 10,
-        ),
-        Text(
-          "(${data!['numOfRating']})",
-          style: TextStyle(
-            fontSize: 18.0,
-            color: Colors.blue[700],
+          const SizedBox(
+            width: 12.0,
           ),
-        ),
-      ],
+          Text(
+            "${data!['name']}",
+            style: TextStyle(
+              fontSize: 18.0,
+              color: Colors.blue[700],
+            ),
+          ),
+          const SizedBox(
+            width: 50,
+          ),
+          Icon(
+            Icons.star,
+            color: Colors.yellow.shade700,
+            size: 35,
+          ),
+          Text(
+            "${(data!['rating'] / data!['numOfRating'] as double).round()}",
+            style: textStyle,
+          ),
+          const SizedBox(
+            width: 10,
+          ),
+          Text(
+            "(${data!['numOfRating']})",
+            style: TextStyle(
+              fontSize: 18.0,
+              color: Colors.blue[700],
+            ),
+          ),
+        ],
+      ),
     ),
   );
 }
@@ -231,9 +228,11 @@ buildDetailsAndMaterialWidgets(dynamic widget, dynamic data,
                                   size: 40,
                                   color: Colors.blue.shade900,
                                 ),
-                                Text(
-                                    "${widget.locality}, ${widget.subLocality}",
-                                    style: textStyle),
+                                FittedBox(
+                                  child: Text(
+                                      "${widget.locality}, ${widget.subLocality}",
+                                      style: textStyle),
+                                ),
                               ],
                             ),
                           ),

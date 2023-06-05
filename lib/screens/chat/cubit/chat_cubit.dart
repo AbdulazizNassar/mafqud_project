@@ -18,10 +18,14 @@ class ChatCubit extends Cubit<ChatState> {
 
   UserModel? userData;
 
-  getUserData() {
+  getUserData() async {
     users = [];
     emit(GetUserLoadingState());
-    FirebaseFirestore.instance.collection('users').doc(uId).get().then((value) {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uId)
+        .get()
+        .then((value) {
       userData = UserModel.fromJson(value.data()!);
       username = value.data()!['name'];
       emit(GetUserSuccessState());
@@ -30,12 +34,12 @@ class ChatCubit extends Cubit<ChatState> {
     });
   }
 
-  void getChatList() {
+  void getChatList() async {
     users = [];
     emit(AllUsersLoadingState());
-    FirebaseFirestore.instance
+    await FirebaseFirestore.instance
         .collection('users')
-        .doc(uId)
+        .doc(AuthService().currentUser!.uid)
         .collection('myUsers')
         .get()
         .then((value) {
@@ -48,18 +52,16 @@ class ChatCubit extends Cubit<ChatState> {
     });
   }
 
-  void getChatItem({required String uidReciever}) {
+  void getChatItem({required String uidReciever}) async {
     emit(AllUsersLoadingState());
-    FirebaseFirestore.instance
+    await FirebaseFirestore.instance
         .collection('users')
-        .doc(uId)
+        .doc(AuthService().currentUser!.uid)
         .collection('myUsers')
         .doc(uidReciever)
         .get()
         .then((value) {
       userItem = UserModel.fromJson(value.data()!);
-      print(userItem!.uid);
-      print(userItem!.name);
 
       emit(GetChatItemSuccessState(model: userItem!));
     }).catchError((error) {
@@ -105,7 +107,7 @@ class ChatCubit extends Cubit<ChatState> {
 
     //set receiver chats
 
-    FirebaseFirestore.instance
+    await FirebaseFirestore.instance
         .collection('users')
         .doc(receiverId)
         .collection('chats')
@@ -118,7 +120,7 @@ class ChatCubit extends Cubit<ChatState> {
       emit(SendMessageErrorState(error.toString()));
     });
 
-    FirebaseFirestore.instance
+    await FirebaseFirestore.instance
         .collection('users')
         .doc(senderId)
         .collection('myUsers')
@@ -127,7 +129,7 @@ class ChatCubit extends Cubit<ChatState> {
       'name': receivername,
       'uid': receiverUid,
     });
-    FirebaseFirestore.instance
+    await FirebaseFirestore.instance
         .collection('users')
         .doc(receiverId)
         .collection('myUsers')
@@ -140,8 +142,9 @@ class ChatCubit extends Cubit<ChatState> {
 
   List<ChatMessageModel> messages = [];
 
-  void getMessage({required String receiverId, required String senderUid}) {
-    FirebaseFirestore.instance
+  void getMessage(
+      {required String receiverId, required String senderUid}) async {
+    await FirebaseFirestore.instance
         .collection('users')
         .doc(senderUid)
         .collection('chats')

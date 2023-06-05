@@ -63,7 +63,6 @@ class _PostsState extends State<Posts> {
   void initState() {
     super.initState();
     getToken();
-    timeStampDiff();
 
     controller.addListener(() {
       if (controller.position.pixels == controller.position.maxScrollExtent) {
