@@ -95,9 +95,7 @@ class _PostsState extends State<Posts> {
   bool highLightedColor = false;
   bool isLoading = false;
   Widget postsMaterialApp(BuildContext context) => isLoading
-      ? const Center(
-          child: CircularProgressIndicator(),
-        )
+      ? Loading()
       : MaterialApp(
           home: DefaultTabController(
               length: 2,
@@ -339,6 +337,13 @@ class _PostsState extends State<Posts> {
         key: _formKey,
         child: TextFormField(
           controller: _controller,
+          onChanged: (value) {
+            searchString = value;
+            switchPage();
+          },
+          onTapOutside: (event) {
+            showSearchBar(context);
+          },
           validator: (value) {
             if (value == '') {
               setState(() {
@@ -419,7 +424,9 @@ class _PostsState extends State<Posts> {
             if (snapshot.data!.docs.isEmpty) {
               return noPostFoundMsg;
             }
-            lastDoc ??= snapshot.data!.docs.last;
+            if (snapshot.data!.docs.length > numOfPosts) {
+              lastDoc ??= snapshot.data!.docs.last;
+            }
             if (category.isNotEmpty) {
               Iterable<QueryDocumentSnapshot<Object?>> categoryQuery =
                   searchByCategory(snapshot, category);
