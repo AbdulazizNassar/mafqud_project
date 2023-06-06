@@ -9,7 +9,7 @@ import '../screens/chat/cubit/chat_cubit.dart';
 
 Widget Bottombar(BuildContext context) {
   const border = Border(
-    left: BorderSide(width: 3.0, color: Colors.white),
+    left: BorderSide(width: 1.0, color: Colors.white),
   );
   return BottomAppBar(
     color: Colors.blue[900],
@@ -43,10 +43,7 @@ Widget Bottombar(BuildContext context) {
           height: 60,
           child: InkWell(
             child: Container(
-                decoration: BoxDecoration(
-                  border: border,
-                  color: Colors.blue.shade900,
-                ),
+                color: Colors.blue.shade900,
                 child: ElevatedButton(
                   style: btnStyle,
                   onPressed: () {
@@ -66,10 +63,7 @@ Widget Bottombar(BuildContext context) {
           height: 60,
           child: InkWell(
             child: Container(
-                decoration: BoxDecoration(
-                  border: border,
-                  color: Colors.blue.shade900,
-                ),
+                color: Colors.blue.shade900,
                 child: IconButton(
                   style: btnStyle,
                   onPressed: () {
