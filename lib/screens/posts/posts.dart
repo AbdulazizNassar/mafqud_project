@@ -40,10 +40,12 @@ class _PostsState extends State<Posts> {
       data.save();
       setState(() {
         searchFlag = true;
+        lastDoc = null;
       });
     } else {
       setState(() {
         searchFlag = false;
+        lastDoc = null;
       });
     }
   }
@@ -87,7 +89,6 @@ class _PostsState extends State<Posts> {
     Icons.filter_alt_outlined,
     color: Colors.white,
   );
-
   bool highLightedColor = false;
   bool isLoading = false;
   Widget postsMaterialApp(BuildContext context) => isLoading
@@ -315,6 +316,8 @@ class _PostsState extends State<Posts> {
       icon: customIcon,
       onPressed: () {
         setState(() {
+          lastDoc = null;
+
           if (customIcon.icon == Icons.search) {
             customIcon = const Icon(Icons.cancel);
             customSearchBar = ListTile(
@@ -325,6 +328,7 @@ class _PostsState extends State<Posts> {
             customSearchBar = const Text('Posts');
             setState(() {
               searchFlag = false;
+              lastDoc = null;
             });
           }
         });
@@ -450,7 +454,6 @@ class _PostsState extends State<Posts> {
             }
             if (searchValue.isEmpty) {
               lastDoc = snapshot.data!.docs.last;
-
               return ListView.builder(
                 controller: controller,
                 itemCount: snapshot.data!.docs.length,
@@ -463,6 +466,8 @@ class _PostsState extends State<Posts> {
                 },
               );
             } else {
+              lastDoc = snapshot.data!.docs.last;
+
               //return all posts containing title
               Iterable<QueryDocumentSnapshot<Object?>> titleQuery =
                   searchByTitle(snapshot, searchValue);
