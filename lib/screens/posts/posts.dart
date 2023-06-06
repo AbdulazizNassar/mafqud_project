@@ -72,6 +72,11 @@ class _PostsState extends State<Posts> {
         setState(() {
           numOfPosts += 10;
         });
+      } else if (controller.offset == 0.0 && !controller.position.outOfRange) {
+        setState(() {
+          lastDoc = null;
+          numOfPosts = 10;
+        });
       }
     });
   }
@@ -123,6 +128,7 @@ class _PostsState extends State<Posts> {
                         ),
                       ]),
                   actions: [
+                    Refresh(),
                     IconButton(
                       icon: const Icon(Icons.map_outlined),
                       onPressed: () async {
@@ -155,7 +161,8 @@ class _PostsState extends State<Posts> {
                     ? TabBarView(
                         children: [
                           displayPosts("Found", searchString, ''),
-                          displayPosts("Lost", searchString, '')
+                          displayPosts("Lost", searchString, ''),
+                          Refresh()
                         ],
                       )
                     : categoryFlag
@@ -191,9 +198,20 @@ class _PostsState extends State<Posts> {
                       const SizedBox(
                         height: 15,
                       ),
-                      filterButton(context),
+                      filterButton(context)
                     ]),
               )));
+
+  IconButton Refresh() {
+    return IconButton(
+      onPressed: () {
+        setState(() {
+          lastDoc = null;
+        });
+      },
+      icon: Icon(Icons.refresh),
+    );
+  }
 
   Theme filterButton(BuildContext context) {
     return Theme(
@@ -456,6 +474,7 @@ class _PostsState extends State<Posts> {
               lastDoc = snapshot.data!.docs.last;
               return ListView.builder(
                 controller: controller,
+                physics: AlwaysScrollableScrollPhysics(),
                 itemCount: snapshot.data!.docs.length,
                 itemBuilder: (context, index) {
                   var snap = snapshot.data!.docs;
