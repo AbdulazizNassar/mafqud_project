@@ -125,8 +125,7 @@ class _MainScreenState extends State<MainScreen> {
                         UserCredential? response =
                             await AuthService().signInWithGoogle(context);
                         uId = response.user!.uid;
-                        print("uId");
-                        print(uId);
+
                         setState(() {
                           isLoading = false;
                         });

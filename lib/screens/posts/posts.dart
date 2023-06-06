@@ -153,7 +153,7 @@ class _PostsState extends State<Posts> {
                     showSearchBar(context),
                   ],
                 ),
-                drawer: const NavMenu(),
+                drawer: NavMenu(),
                 body: searchFlag
                     ? TabBarView(
                         children: [

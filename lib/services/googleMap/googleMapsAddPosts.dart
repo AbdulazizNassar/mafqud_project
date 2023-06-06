@@ -10,6 +10,7 @@ import 'package:mafqud_project/services/auth.dart';
 import 'package:mafqud_project/shared/AlertBox.dart';
 import 'package:mafqud_project/shared/loading.dart';
 
+import '../../screens/posts/editPost.dart';
 import '../../screens/posts/posts.dart';
 
 class MapScreen extends StatefulWidget {
@@ -77,7 +78,7 @@ class _MapScreenState extends State<MapScreen> {
     if (widget.lat != null) {
       setState(() {
         _markers.add(Marker(
-          markerId: const MarkerId('1'),
+          markerId: MarkerId('2'),
           position: LatLng(widget.lat, widget.long),
         ));
       });
@@ -113,13 +114,14 @@ class _MapScreenState extends State<MapScreen> {
       ? Loading()
       : Scaffold(
           appBar: AppBar(
+            automaticallyImplyLeading: false,
             title: const Text("Select Location 3/3"),
             centerTitle: true,
             backgroundColor: Colors.blue.shade900,
             leading: IconButton(
               icon: const Icon(Icons.arrow_back_ios_new_outlined),
               onPressed: () {
-                Navigator.of(context).pop();
+                navKey.currentState!.pop();
               },
             ),
             actions: [

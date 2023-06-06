@@ -7,6 +7,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mafqud_project/main.dart';
 import 'package:mafqud_project/screens/posts/addPost.dart';
 import 'package:mafqud_project/screens/posts/editPost.dart';
+import 'package:mafqud_project/screens/posts/history.dart';
 import 'package:mafqud_project/shared/loading.dart';
 import 'package:path/path.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -166,6 +167,13 @@ class _addImagesState extends State<addImages> {
       : SafeArea(
           child: Scaffold(
               appBar: AppBar(
+                automaticallyImplyLeading: false,
+                leading: IconButton(
+                    onPressed: () {
+                      navKey.currentState!.push(
+                          MaterialPageRoute(builder: (_) => const History()));
+                    },
+                    icon: const Icon(Icons.arrow_back_ios_new_outlined)),
                 actions: [
                   IconButton(
                       onPressed: () async {

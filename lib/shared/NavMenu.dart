@@ -26,6 +26,7 @@ class NavMenu extends StatefulWidget {
 }
 
 dynamic notificationIcon;
+bool isLoading = false;
 
 class _NavMenuState extends State<NavMenu> {
   bool isLoading = false;

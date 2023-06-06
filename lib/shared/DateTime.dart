@@ -32,7 +32,7 @@ String readTimestamp(Timestamp? timestamp) {
   return time;
 }
 
-timeStampDiff() async {
+sendUpdatePost() async {
   QuerySnapshot<Map<String, dynamic>> posts =
       await FirebaseFirestore.instance.collection('Posts').get();
 
