@@ -6,6 +6,7 @@ import 'package:mafqud_project/main.dart';
 import 'package:mafqud_project/screens/MenuItems/Notifications/constant.dart';
 import 'package:mafqud_project/screens/posts/editPost.dart';
 import 'package:mafqud_project/screens/posts/selectImage.dart';
+import 'package:mafqud_project/shared/bottomNav.dart';
 import 'package:mafqud_project/shared/loading.dart';
 
 import '../../services/auth.dart';
@@ -25,13 +26,14 @@ class _HistoryState extends State<History> {
   CollectionReference postsRef = FirebaseFirestore.instance.collection('Posts');
 
   @override
-  Widget build(BuildContext context) => isLoading
+Widget build(BuildContext context) => isLoading
       ? Loading()
       : Scaffold(
-          appBar: AppBar(
-            title: const Text("My Posts"),
-            backgroundColor: Colors.blue[900],
-          ),
+         appBar: AppBar(
+        title: const Text("My Posts"),
+        backgroundColor: Colors.blue[900],
+      ),
+      bottomNavigationBar: Bottombar(context),
           drawer: const NavMenu(),
           body: FutureBuilder(
               future: postsRef
@@ -66,6 +68,13 @@ class _HistoryState extends State<History> {
                 return const Text(".");
               }),
         );
+}
+
+class ListPosts extends StatelessWidget {
+  final posts;
+  final docID;
+
+  
 
   bool isLoading = false;
   deletePost(post, docID) async {
@@ -156,5 +165,5 @@ class _HistoryState extends State<History> {
         ),
       ),
     );
-  }
+  
 }
