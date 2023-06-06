@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mafqud_project/screens/MenuItems/support.dart';
 import '../../shared/NavMenu.dart';
+import '../../shared/bottomNav.dart';
 import '../Authentication/forgetPass.dart';
 import 'edit_profile.dart';
 
@@ -29,6 +30,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
+      bottomNavigationBar: Bottombar(context),
       drawer: const NavMenu(),
       appBar: AppBar(
           centerTitle: true,

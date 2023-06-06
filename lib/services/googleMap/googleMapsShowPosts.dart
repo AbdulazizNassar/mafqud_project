@@ -32,6 +32,7 @@ class _MapPostsState extends State<MapPosts> {
   GoogleMapController? mapController; //contrller for Google map
   CameraPosition? cameraPosition;
   String location = "Search Location";
+
   @override
   void initState() {
     super.initState();

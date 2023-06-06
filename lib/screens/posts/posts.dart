@@ -67,11 +67,14 @@ class _PostsState extends State<Posts> {
     controller.addListener(() {
       if (controller.position.pixels == controller.position.maxScrollExtent) {
         setState(() {
-          numOfPosts += 10;
+          numOfPosts += 5;
         });
       }
       if (controller.offset == 0.0) {
         setState(() {
+          if (numOfPosts > 0) {
+            numOfPosts -= 5;
+          }
           lastDoc = null;
         });
       }
@@ -400,7 +403,7 @@ class _PostsState extends State<Posts> {
     );
   }
 
-  int numOfPosts = 10;
+  int numOfPosts = 6;
   DocumentSnapshot? lastDoc;
   FutureBuilder<QuerySnapshot<Object?>> displayPosts(
       String status, String searchValue, String category) {
@@ -425,7 +428,9 @@ class _PostsState extends State<Posts> {
               return noPostFoundMsg;
             }
             if (snapshot.data!.docs.length > numOfPosts) {
-              lastDoc ??= snapshot.data!.docs.last;
+              setState(() {
+                lastDoc ??= snapshot.data!.docs.last;
+              });
             }
             if (category.isNotEmpty) {
               Iterable<QueryDocumentSnapshot<Object?>> categoryQuery =
@@ -452,7 +457,7 @@ class _PostsState extends State<Posts> {
                 itemCount: snapshot.data!.docs.length,
                 itemBuilder: (context, index) {
                   var snap = snapshot.data!.docs;
-
+                  lastDoc = snap.last;
                   return PostCards(
                     posts: snap[index],
                     postID: snap[index].id,

@@ -45,7 +45,7 @@ sendUpdatePost() async {
     var diff =
         element['expiry']!.toDate().difference(element['Date']!.toDate());
 
-    if (diff.inDays == 2 && notifications.docs.isEmpty) {
+    if (diff.inDays == 3 && notifications.docs.isEmpty) {
       sendPushMessage(
           "Update post",
           "Post will automatically delete after 3 days if not updated",
