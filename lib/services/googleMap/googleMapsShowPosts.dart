@@ -63,7 +63,7 @@ class _MapPostsState extends State<MapPosts> {
                       onTap: () {
                         try {
                           ScaffoldMessenger.of(context).hideCurrentSnackBar();
-
+                          ScaffoldMessenger.of(context).clearSnackBars;
                           snackBarPostDetails(post, context);
                         } catch (e) {
                           print(e);
@@ -89,6 +89,7 @@ class _MapPostsState extends State<MapPosts> {
                       onTap: () {
                         try {
                           ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                          ScaffoldMessenger.of(context).clearSnackBars;
 
                           snackBarPostDetails(post, context);
                         } catch (e) {
