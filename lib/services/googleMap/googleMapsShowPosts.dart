@@ -129,8 +129,6 @@ class _MapPostsState extends State<MapPosts> {
     return Theme(
       data: themeData(context, highLightedColor),
       child: SizedBox(
-        height: 50,
-        width: 150,
         child: TextButton(
           onPressed: () {},
           child: PopupMenuButton<CategoryItem>(
@@ -224,9 +222,11 @@ class _MapPostsState extends State<MapPosts> {
                         icon:
                             const Icon(Icons.close_outlined, color: Colors.red))
                     : filterIcon,
-                Text(
-                  categoryTitle,
-                  style: const TextStyle(color: Colors.white),
+                FittedBox(
+                  child: Text(
+                    categoryTitle,
+                    style: const TextStyle(color: Colors.white),
+                  ),
                 )
               ],
             ),
@@ -388,7 +388,7 @@ class _MapPostsState extends State<MapPosts> {
                       });
                     },
                     child: const Icon(Icons.location_on_sharp)),
-              )
+              ),
             ]));
   }
 }
