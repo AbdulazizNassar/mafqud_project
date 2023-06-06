@@ -5,6 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mafqud_project/main.dart';
+import 'package:mafqud_project/screens/posts/selectImage.dart';
 import 'package:mafqud_project/services/auth.dart';
 import 'package:mafqud_project/services/googleMap/googleMapsAddPosts.dart';
 import 'package:mafqud_project/shared/Lists.dart';
@@ -33,10 +34,6 @@ class _EditPostState extends State<EditPost> {
 
   final _formKey = GlobalKey<FormState>();
   CollectionReference post = FirebaseFirestore.instance.collection("Posts");
-  deletePost(context) async {
-    await post.doc(widget.docID).delete();
-    Navigator.of(context).pushReplacementNamed("History");
-  }
 
   @override
   void initState() {
@@ -63,7 +60,7 @@ class _EditPostState extends State<EditPost> {
     var data = _formKey.currentState;
     if (data!.validate()) {
       data.save();
-      navKey.currentState!.pushReplacement(MaterialPageRoute(
+      navKey.currentState!.push(MaterialPageRoute(
           builder: (context) => MapScreen(
                 title: title,
                 lat: widget.posts['Lat'],
@@ -84,8 +81,18 @@ class _EditPostState extends State<EditPost> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Text("Update Post"),
         backgroundColor: Colors.blue[900],
+        leading: IconButton(
+            onPressed: () {
+              navKey.currentState!.push(MaterialPageRoute(
+                  builder: (_) => addImages(
+                        posts: widget.posts,
+                        docID: widget.docID,
+                      )));
+            },
+            icon: const Icon(Icons.arrow_back_ios_new_outlined)),
         actions: [
           IconButton(
             onPressed: () {
@@ -96,14 +103,6 @@ class _EditPostState extends State<EditPost> {
             ),
             icon: const Icon(Icons.check_box_outlined),
           ),
-          IconButton(
-              onPressed: () async {
-                await deletePost(context);
-              },
-              icon: const Icon(
-                Icons.delete_forever_outlined,
-                color: Colors.red,
-              ))
         ],
       ),
       body: Form(

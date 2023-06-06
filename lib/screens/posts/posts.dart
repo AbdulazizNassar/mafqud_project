@@ -155,6 +155,7 @@ class _PostsState extends State<Posts> {
                 ),
                 drawer: const NavMenu(),
                 bottomNavigationBar: Bottombar(context),
+
                 body: searchFlag
                     ? TabBarView(
                         children: [
