@@ -12,71 +12,69 @@ Widget Bottombar(BuildContext context) {
     color: Colors.blue[900],
     padding: const EdgeInsets.all(2),
     child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        InkWell(
-          child: Container(
-          color: Colors.blue[900],
-          width: 130,
+        SizedBox(
+          width: 100,
           height: 60,
-          child: ElevatedButton(
-            style: btnStyle,
-            onPressed: (){
-              ChatCubit.get(context).getChatList();
-                            navKey.currentState!
-                  .push(MaterialPageRoute(builder: (context) => const ChatListScreen()));
-            },
-            child: Icon(
-              Icons.message_outlined,
-              size: 32,
-              color: Color.fromARGB(255, 228, 228, 228),
-              
-            ),
-          )
-          
+          child: InkWell(
+            child: Container(
+                color: Colors.blue[900],
+                child: ElevatedButton(
+                  style: btnStyle,
+                  onPressed: () {
+                    ChatCubit.get(context).getChatList();
+                    navKey.currentState!.push(MaterialPageRoute(
+                        builder: (context) => const ChatListScreen()));
+                  },
+                  child: const Icon(
+                    Icons.message_outlined,
+                    size: 32,
+                    color: Color.fromARGB(255, 228, 228, 228),
+                  ),
+                )),
+          ),
         ),
-        ),InkWell(
-          child: Container(
-          color: Colors.blue[900],
-          width: 130,
+        SizedBox(
+          width: 100,
           height: 60,
-          child: ElevatedButton(
-            style: btnStyle,
-            onPressed: (){
-                            navKey.currentState!
-                  .push(MaterialPageRoute(builder: (context) => const Posts()));
-            },
-            child: Icon(
-              Icons.home_outlined,
-              size: 32,
-              color: Color.fromARGB(255, 228, 228, 228),
-              
-            ),
-          )
-          
+          child: InkWell(
+            child: Container(
+                color: Colors.blue[900],
+                child: ElevatedButton(
+                  style: btnStyle,
+                  onPressed: () {
+                    navKey.currentState!.push(
+                        MaterialPageRoute(builder: (context) => const Posts()));
+                  },
+                  child: const Icon(
+                    Icons.home_outlined,
+                    size: 32,
+                    color: Color.fromARGB(255, 228, 228, 228),
+                  ),
+                )),
+          ),
         ),
-        ),
-        InkWell(
-          child: Container(
-          color: Colors.blue[900],
-          width: 130,
+        SizedBox(
+          width: 110,
           height: 60,
-          child: ElevatedButton(
-            style: btnStyle,
-            onPressed: (){
-                            navKey.currentState!
-                  .push(MaterialPageRoute(builder: (context) => const History()));
-            },
-            child: Icon(
-              Icons.history_outlined,
-              size: 32,
-              color: Color.fromARGB(255, 228, 228, 228),
-              
-            ),
-          )
-          
+          child: InkWell(
+            child: Container(
+                color: Colors.blue[900],
+                child: ElevatedButton(
+                  style: btnStyle,
+                  onPressed: () {
+                    navKey.currentState!.push(MaterialPageRoute(
+                        builder: (context) => const History()));
+                  },
+                  child: const Icon(
+                    Icons.history_outlined,
+                    size: 32,
+                    color: Color.fromARGB(255, 228, 228, 228),
+                  ),
+                )),
+          ),
         ),
-        ), 
       ],
     ),
   );

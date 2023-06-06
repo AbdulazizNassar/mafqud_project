@@ -4,7 +4,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:mafqud_project/main.dart';
 import 'package:mafqud_project/services/googleMap/googleMapsShowPosts.dart';
 import 'package:mafqud_project/services/notification.dart';
-import 'package:mafqud_project/shared/DateTime.dart';
 import 'package:mafqud_project/shared/NavMenu.dart';
 import 'package:mafqud_project/shared/constants.dart';
 import '../../shared/AlertBox.dart';
@@ -48,7 +47,6 @@ class _PostsState extends State<Posts> {
       });
     }
   }
-
 
   final ScrollController controller = ScrollController();
 
@@ -155,7 +153,6 @@ class _PostsState extends State<Posts> {
                 ),
                 drawer: const NavMenu(),
                 bottomNavigationBar: Bottombar(context),
-
                 body: searchFlag
                     ? TabBarView(
                         children: [

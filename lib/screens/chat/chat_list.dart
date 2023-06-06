@@ -62,7 +62,6 @@ class _ChatListScreenState extends State<ChatListScreen>
                       title: const Text('Messages'),
                       backgroundColor: Colors.blue[900],
                       centerTitle: true,
-                      
                     ),
                     bottomNavigationBar: Bottombar(context),
                     drawer: const NavMenu(),
@@ -72,7 +71,7 @@ class _ChatListScreenState extends State<ChatListScreen>
                             physics: const BouncingScrollPhysics(),
                             itemBuilder: (context, index) {
                               //get most recent message
-                              var message = ChatCubit.get(context).messages;
+                              ChatCubit.get(context).messages;
 
                               return Slidable(
                                 key: UniqueKey(),

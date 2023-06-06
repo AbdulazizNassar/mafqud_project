@@ -5,7 +5,6 @@ import 'package:mafqud_project/screens/chat/cubit/chat_cubit.dart';
 import 'package:mafqud_project/screens/posts/DetailPage.dart';
 import 'package:mafqud_project/screens/posts/history.dart';
 import 'package:mafqud_project/screens/posts/selectImage.dart';
-import 'package:mafqud_project/services/auth.dart';
 import 'package:mafqud_project/services/sharedPreference.dart';
 import 'package:mafqud_project/shared/DateTime.dart';
 import 'screens/Authentication/register.dart';
