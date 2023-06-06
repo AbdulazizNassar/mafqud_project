@@ -15,7 +15,7 @@ Widget Bottombar(BuildContext context) {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         SizedBox(
-          width: 100,
+          width: MediaQuery.of(context).size.width / 3,
           height: 60,
           child: InkWell(
             child: Container(
@@ -36,7 +36,7 @@ Widget Bottombar(BuildContext context) {
           ),
         ),
         SizedBox(
-          width: 100,
+          width: MediaQuery.of(context).size.width / 3,
           height: 60,
           child: InkWell(
             child: Container(
@@ -56,7 +56,7 @@ Widget Bottombar(BuildContext context) {
           ),
         ),
         SizedBox(
-          width: 110,
+          width: MediaQuery.of(context).size.width / 4,
           height: 60,
           child: InkWell(
             child: Container(
