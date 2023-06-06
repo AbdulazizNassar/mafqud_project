@@ -26,14 +26,14 @@ class _HistoryState extends State<History> {
   CollectionReference postsRef = FirebaseFirestore.instance.collection('Posts');
 
   @override
-Widget build(BuildContext context) => isLoading
+  Widget build(BuildContext context) => isLoading
       ? Loading()
       : Scaffold(
-         appBar: AppBar(
-        title: const Text("My Posts"),
-        backgroundColor: Colors.blue[900],
-      ),
-      bottomNavigationBar: Bottombar(context),
+          appBar: AppBar(
+            title: const Text("My Posts"),
+            backgroundColor: Colors.blue[900],
+          ),
+          bottomNavigationBar: Bottombar(context),
           drawer: const NavMenu(),
           body: FutureBuilder(
               future: postsRef
@@ -68,13 +68,6 @@ Widget build(BuildContext context) => isLoading
                 return const Text(".");
               }),
         );
-}
-
-class ListPosts extends StatelessWidget {
-  final posts;
-  final docID;
-
-  
 
   bool isLoading = false;
   deletePost(post, docID) async {
@@ -165,5 +158,5 @@ class ListPosts extends StatelessWidget {
         ),
       ),
     );
-  
+  }
 }

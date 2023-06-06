@@ -1,62 +1,54 @@
-
 import 'package:flutter/material.dart';
+import 'package:mafqud_project/main.dart';
 import 'package:mafqud_project/screens/chat/chat_list.dart';
 import 'package:mafqud_project/screens/posts/history.dart';
 import 'package:mafqud_project/screens/posts/posts.dart';
 
+import '../screens/chat/cubit/chat_cubit.dart';
 
-class bottomNav extends StatefulWidget {
-  const bottomNav({super.key});
-
-  @override
-  State<bottomNav> createState() => _bottomNavState();
-}
-
-class _bottomNavState extends State<bottomNav> {
-  @override
-
-    Widget build(BuildContext context) {
-    return Scaffold(
-     );
-  }
-}
-
-Widget Bottombar(BuildContext context){
+Widget Bottombar(BuildContext context) {
   return BottomAppBar(
     color: Colors.blue[900],
-    padding: EdgeInsets.all(2),
+    padding: const EdgeInsets.all(2),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
-
       children: [
         IconButton(
-          icon:Icon(Icons.message_outlined, size: 32,color: Color.fromARGB(255, 228, 228, 228),),
-          onPressed: (){
-            Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const ChatListScreen()));
-          },
+          icon: const Icon(
+            Icons.message_outlined,
+            size: 32,
+            color: Color.fromARGB(255, 228, 228, 228),
           ),
-          IconButton(
-          icon:Icon(Icons.home_outlined,size: 32,color: Color.fromARGB(255, 228, 228, 228),),
-          onPressed: (){
-            Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const Posts()));
+          onPressed: () {
+            ChatCubit.get(context).getChatList();
+
+            navKey.currentState!.pushReplacement(MaterialPageRoute(
+                builder: (context) => const ChatListScreen()));
           },
+        ),
+        IconButton(
+          icon: const Icon(
+            Icons.home_outlined,
+            size: 32,
+            color: Color.fromARGB(255, 228, 228, 228),
           ),
-          IconButton(
-          icon:Icon(Icons.history,size: 32,color: Color.fromARGB(255, 228, 228, 228),),
-          onPressed: (){
-            Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const History()));
+          onPressed: () {
+            navKey.currentState!.pushReplacement(
+                MaterialPageRoute(builder: (context) => const Posts()));
           },
+        ),
+        IconButton(
+          icon: const Icon(
+            Icons.history,
+            size: 32,
+            color: Color.fromARGB(255, 228, 228, 228),
           ),
+          onPressed: () {
+            navKey.currentState!
+                .push(MaterialPageRoute(builder: (context) => const History()));
+          },
+        ),
       ],
     ),
   );
 }
-
-
-
-
-
-
