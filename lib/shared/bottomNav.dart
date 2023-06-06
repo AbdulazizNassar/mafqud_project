@@ -10,7 +10,7 @@ import '../screens/chat/cubit/chat_cubit.dart';
 Widget Bottombar(BuildContext context) {
   return BottomAppBar(
     color: Colors.blue[900],
-    padding: const EdgeInsets.all(2),
+    padding: const EdgeInsets.all(0),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
@@ -56,7 +56,7 @@ Widget Bottombar(BuildContext context) {
           ),
         ),
         SizedBox(
-          width: MediaQuery.of(context).size.width / 4,
+          width: MediaQuery.of(context).size.width / 3,
           height: 60,
           child: InkWell(
             child: Container(
