@@ -8,6 +8,9 @@ import 'package:mafqud_project/shared/constants.dart';
 import '../screens/chat/cubit/chat_cubit.dart';
 
 Widget Bottombar(BuildContext context) {
+  const border = Border(
+    left: BorderSide(width: 3.0, color: Colors.white),
+  );
   return BottomAppBar(
     color: Colors.blue[900],
     padding: const EdgeInsets.all(2),
@@ -40,7 +43,10 @@ Widget Bottombar(BuildContext context) {
           height: 60,
           child: InkWell(
             child: Container(
-                color: Colors.blue[900],
+                decoration: BoxDecoration(
+                  border: border,
+                  color: Colors.blue.shade900,
+                ),
                 child: ElevatedButton(
                   style: btnStyle,
                   onPressed: () {
@@ -60,14 +66,17 @@ Widget Bottombar(BuildContext context) {
           height: 60,
           child: InkWell(
             child: Container(
-                color: Colors.blue[900],
-                child: ElevatedButton(
+                decoration: BoxDecoration(
+                  border: border,
+                  color: Colors.blue.shade900,
+                ),
+                child: IconButton(
                   style: btnStyle,
                   onPressed: () {
                     navKey.currentState!.push(MaterialPageRoute(
                         builder: (context) => const History()));
                   },
-                  child: const Icon(
+                  icon: const Icon(
                     Icons.history_outlined,
                     size: 32,
                     color: Color.fromARGB(255, 228, 228, 228),
