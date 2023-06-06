@@ -78,7 +78,7 @@ class _MapScreenState extends State<MapScreen> {
     if (widget.lat != null) {
       setState(() {
         _markers.add(Marker(
-          markerId: MarkerId('2'),
+          markerId: MarkerId('1'),
           position: LatLng(widget.lat, widget.long),
         ));
       });

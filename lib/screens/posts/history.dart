@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:mafqud_project/main.dart';
+import 'package:mafqud_project/screens/MenuItems/Notifications/constant.dart';
 import 'package:mafqud_project/screens/posts/editPost.dart';
 import 'package:mafqud_project/screens/posts/selectImage.dart';
 import 'package:mafqud_project/shared/loading.dart';
@@ -146,10 +147,7 @@ class _HistoryState extends State<History> {
                 style:
                     const TextStyle(fontWeight: FontWeight.w100, fontSize: 15),
               ),
-              const Icon(
-                Icons.edit,
-                size: 30,
-              ),
+              deleteIcon,
               const SizedBox(
                 height: 90,
               )
