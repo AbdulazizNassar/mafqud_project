@@ -39,15 +39,6 @@ class _MapPostsState extends State<MapPosts> {
     postMapBuilder('');
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    navKey.currentState!.pushReplacement(MaterialPageRoute(
-        builder: (context) => Posts(
-              navKey: navKey,
-            )));
-  }
-
   postMapBuilder(String category) async {
     if (mounted) {
       setState(() {
@@ -269,7 +260,10 @@ class _MapPostsState extends State<MapPosts> {
                       isLoading = true;
                     });
 
-                    dispose();
+                    navKey.currentState!.pushReplacement(MaterialPageRoute(
+                        builder: (context) => Posts(
+                              navKey: navKey,
+                            )));
                     setState(() {
                       isLoading = false;
                     });
@@ -283,7 +277,10 @@ class _MapPostsState extends State<MapPosts> {
                         setState(() {
                           isLoading = true;
                         });
-                        dispose();
+                        navKey.currentState!.pushReplacement(MaterialPageRoute(
+                            builder: (context) => Posts(
+                                  navKey: navKey,
+                                )));
                         setState(() {
                           isLoading = false;
                         });
