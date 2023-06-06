@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:mafqud_project/main.dart';
 import 'package:mafqud_project/screens/posts/editPost.dart';
 import 'package:mafqud_project/screens/posts/selectImage.dart';
+import 'package:mafqud_project/shared/bottomNav.dart';
 import 'package:mafqud_project/shared/loading.dart';
 
 import '../../services/auth.dart';
@@ -29,6 +30,7 @@ class _HistoryState extends State<History> {
         title: const Text("My Posts"),
         backgroundColor: Colors.blue[900],
       ),
+      bottomNavigationBar: Bottombar(context),
       drawer: const NavMenu(),
       body: FutureBuilder(
           future: postsRef

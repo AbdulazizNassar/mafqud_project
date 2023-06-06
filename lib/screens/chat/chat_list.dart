@@ -10,6 +10,7 @@ import 'package:mafqud_project/screens/MenuItems/Notifications/constant.dart';
 import 'package:mafqud_project/shared/loading.dart';
 import '../../shared/DateTime.dart';
 import '../../shared/NavMenu.dart';
+import '../../shared/bottomNav.dart';
 import '../../shared/constants.dart';
 import 'chat_details_list.dart';
 import 'cubit/chat_cubit.dart';
@@ -61,7 +62,9 @@ class _ChatListScreenState extends State<ChatListScreen>
                       title: const Text('Messages'),
                       backgroundColor: Colors.blue[900],
                       centerTitle: true,
+                      
                     ),
+                    bottomNavigationBar: Bottombar(context),
                     drawer: const NavMenu(),
                     body: isLoading
                         ? Loading()
@@ -129,6 +132,7 @@ class _ChatListScreenState extends State<ChatListScreen>
                     backgroundColor: Colors.blue[900],
                     centerTitle: true,
                   ),
+                  bottomNavigationBar: Bottombar(context),
                   drawer: const NavMenu(),
                   body: const Center(
                     child: Text(

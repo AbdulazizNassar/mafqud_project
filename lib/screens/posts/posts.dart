@@ -11,6 +11,7 @@ import '../../shared/AlertBox.dart';
 import '../../shared/PostCards.dart';
 import '../../shared/loading.dart';
 import 'package:mafqud_project/screens/posts/selectImage.dart';
+import 'package:mafqud_project/shared/bottomNav.dart';
 
 class Posts extends StatefulWidget {
   final String? searchValue;
@@ -47,6 +48,7 @@ class _PostsState extends State<Posts> {
       });
     }
   }
+
 
   final ScrollController controller = ScrollController();
 
@@ -152,6 +154,7 @@ class _PostsState extends State<Posts> {
                   ],
                 ),
                 drawer: const NavMenu(),
+                bottomNavigationBar: Bottombar(context),
                 body: searchFlag
                     ? TabBarView(
                         children: [
