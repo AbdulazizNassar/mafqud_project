@@ -65,17 +65,10 @@ class _PostsState extends State<Posts> {
     getToken();
 
     controller.addListener(() {
-      if (controller.position.pixels == controller.position.maxScrollExtent) {
+      if (controller.offset >= controller.position.maxScrollExtent &&
+          !controller.position.outOfRange) {
         setState(() {
-          numOfPosts += 5;
-        });
-      }
-      if (controller.offset == 0.0) {
-        setState(() {
-          if (numOfPosts > 0) {
-            numOfPosts -= 5;
-          }
-          lastDoc = null;
+          numOfPosts += 10;
         });
       }
     });
@@ -94,6 +87,7 @@ class _PostsState extends State<Posts> {
     Icons.filter_alt_outlined,
     color: Colors.white,
   );
+
   bool highLightedColor = false;
   bool isLoading = false;
   Widget postsMaterialApp(BuildContext context) => isLoading
@@ -220,6 +214,7 @@ class _PostsState extends State<Posts> {
                   categoryFlag = false;
                   highLightedColor = false;
                   categoryTitle = 'Filter';
+                  lastDoc = null;
                 });
               }
             },
@@ -228,6 +223,7 @@ class _PostsState extends State<Posts> {
                 highLightedColor = false;
                 categoryFlag = false;
                 categoryTitle = "Filter";
+                lastDoc = null;
               });
             },
             onSelected: (CategoryItem item) {
@@ -236,11 +232,13 @@ class _PostsState extends State<Posts> {
                   categoryFlag = false;
                   highLightedColor = false;
                   categoryTitle = "Filter";
+                  lastDoc = null;
                 });
               } else {
                 setState(() {
                   highLightedColor = true;
                   categoryFlag = true;
+                  lastDoc = null;
                   if (item.name == "Personalitems") {
                     categoryTitle =
                         "${item.name.substring(0, 8)} ${item.name.substring(8)}";
@@ -403,10 +401,13 @@ class _PostsState extends State<Posts> {
     );
   }
 
-  int numOfPosts = 6;
+  int numOfPosts = 10;
   DocumentSnapshot? lastDoc;
   FutureBuilder<QuerySnapshot<Object?>> displayPosts(
-      String status, String searchValue, String category) {
+    String status,
+    String searchValue,
+    String category,
+  ) {
     return FutureBuilder<QuerySnapshot>(
         future: lastDoc == null
             ? postsRef
@@ -427,14 +428,10 @@ class _PostsState extends State<Posts> {
             if (snapshot.data!.docs.isEmpty) {
               return noPostFoundMsg;
             }
-            if (snapshot.data!.docs.length > numOfPosts) {
-              setState(() {
-                lastDoc ??= snapshot.data!.docs.last;
-              });
-            }
             if (category.isNotEmpty) {
               Iterable<QueryDocumentSnapshot<Object?>> categoryQuery =
                   searchByCategory(snapshot, category);
+              lastDoc = snapshot.data!.docs.last;
               if (categoryQuery.isEmpty) {
                 return noPostFoundMsg;
               } else {
@@ -452,12 +449,13 @@ class _PostsState extends State<Posts> {
               }
             }
             if (searchValue.isEmpty) {
+              lastDoc = snapshot.data!.docs.last;
+
               return ListView.builder(
                 controller: controller,
                 itemCount: snapshot.data!.docs.length,
                 itemBuilder: (context, index) {
                   var snap = snapshot.data!.docs;
-                  lastDoc = snap.last;
                   return PostCards(
                     posts: snap[index],
                     postID: snap[index].id,
@@ -471,6 +469,8 @@ class _PostsState extends State<Posts> {
               if (titleQuery.isEmpty) {
                 return noPostFoundMsg;
               } else {
+                lastDoc = snapshot.data!.docs.last;
+
                 return ListView(
                   children: [
                     ...titleQuery.map((QueryDocumentSnapshot<Object?> post) {
