@@ -10,7 +10,6 @@ import 'package:google_api_headers/google_api_headers.dart';
 import 'package:mafqud_project/main.dart';
 import 'package:mafqud_project/shared/AlertBox.dart';
 import '../../screens/posts/posts.dart';
-import '../../shared/PostCards.dart';
 import '../../shared/constants.dart';
 import '../../shared/loading.dart';
 

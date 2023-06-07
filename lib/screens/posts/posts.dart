@@ -162,7 +162,6 @@ class _PostsState extends State<Posts> {
                         children: [
                           displayPosts("Found", searchString, ''),
                           displayPosts("Lost", searchString, ''),
-                          Refresh()
                         ],
                       )
                     : categoryFlag
@@ -209,7 +208,7 @@ class _PostsState extends State<Posts> {
           lastDoc = null;
         });
       },
-      icon: Icon(Icons.refresh),
+      icon: const Icon(Icons.refresh),
     );
   }
 
@@ -458,6 +457,8 @@ class _PostsState extends State<Posts> {
                 return noPostFoundMsg;
               } else {
                 return ListView(
+                  controller: controller,
+                  physics: const AlwaysScrollableScrollPhysics(),
                   children: [
                     ...categoryQuery.map((QueryDocumentSnapshot<Object?> post) {
                       return PostCards(
@@ -474,7 +475,7 @@ class _PostsState extends State<Posts> {
               lastDoc = snapshot.data!.docs.last;
               return ListView.builder(
                 controller: controller,
-                physics: AlwaysScrollableScrollPhysics(),
+                physics: const AlwaysScrollableScrollPhysics(),
                 itemCount: snapshot.data!.docs.length,
                 itemBuilder: (context, index) {
                   var snap = snapshot.data!.docs;
@@ -496,6 +497,8 @@ class _PostsState extends State<Posts> {
                 lastDoc = snapshot.data!.docs.last;
 
                 return ListView(
+                  controller: controller,
+                  physics: const AlwaysScrollableScrollPhysics(),
                   children: [
                     ...titleQuery.map((QueryDocumentSnapshot<Object?> post) {
                       return PostCards(

@@ -3,15 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:mafqud_project/main.dart';
 import 'package:mafqud_project/screens/posts/selectImage.dart';
-import 'package:mafqud_project/services/auth.dart';
 import 'package:mafqud_project/services/googleMap/googleMapsAddPosts.dart';
 import 'package:mafqud_project/shared/Lists.dart';
-
-import '../../services/googleMap/googleMapsShowPosts.dart';
-import '../../services/imagePicker.dart';
 import '../../shared/constants.dart';
 
 class EditPost extends StatefulWidget {
